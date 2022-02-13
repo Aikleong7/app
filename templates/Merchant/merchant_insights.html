@@ -2,7 +2,7 @@
 
 {% block title %}Merchant Business Insights{% endblock %}
 {%block css%}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/merchant_finances.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/merchant_insights.css') }}">
 {%endblock%}
 {% block navigation %}
 <a class="navbar-brand" href="/merchant_insights"><span style="font-weight:bold;color:#267CFC; font-size:2vw;">| Data Insights</span></a>
@@ -17,9 +17,44 @@ color:#B78BFF;
 font-weight:bold;
 }
 </style>
-<canvas id="myChart" style="width:100%;max-width:500px; border:1px solid black;" ></canvas>
-<canvas id="myChart2" style="width:100%;max-width:500px; border:1px solid black;" ></canvas>
+<canvas id="myChart2" style="max-width:49%;float:right; background-color:#deeafc;" ></canvas>
+<canvas id="myChart" style="width:100%;max-width:49%; border:0.5px solid #bababa;" ></canvas>
+<div class="data_insights">
+    <div class="insights_section">
+    <img src="{{ url_for('static', filename='image/gender.png') }}">
+        <h5>Your Audience</h5>
+        <h5 style="font-weight:400;">
+            Male: {{male}}<br>
+            Female: {{female}}
+        </h5>
+    </div>
+    <div class="insights_section">
+    <img src="{{ url_for('static', filename='image/shopping_cart_merchant.png') }}">
+        <h5>Best Customer</h5>
+        <h5 style="font-weight:400;">
+            Name: {{best_customer}}<br>
+            Email: {{best_customer_email}}
+        </h5>
+    </div>
+    <div class="insights_section">
+    <img src="{{ url_for('static', filename='image/gender.png') }}">
+        <h5>Most Popular Category</h5>
+        {%if category_dict == None %}
+        <h5 style="font-weight:400;">
+            {{popular_category}} is your most popular product category selling over
+            {{category_dict.get(popular_category).get_quantity()}} products.
+        </h5>
+        {%else%}
+        <h5>You have no Insights available</h5>
+        {%endif%}
+    </div>
+</div>
+<div style="width:100%; background-color:">
+
+</div>
+<canvas id="myChart3" style="width:100%;max-width:100%;" ></canvas>
 <script>
+<!--Pie Chart 1-->
 document.getElementById("submenu5").className += " show";
 var xValues = [];
 var yValues = [];
@@ -47,7 +82,65 @@ new Chart("myChart", {
   options: {
     title: {
       display: true,
-      text: "Products Sold By Categories"
+      text: "Products Sold By Category"
+    }
+  }
+});
+
+<!--Line Chart 2-->
+var xValues = [];
+var yValues = [];
+"{%for day in list_seven_days %}"
+xValues.push("{{day}}")
+"{%endfor%}"
+"{%for day in sorted_dict %}"
+yValues.push("{{sorted_dict.get(day)}}")
+"{%endfor%}"
+new Chart("myChart2", {
+  type: "line",
+  data: {
+    labels: xValues,
+    datasets: [{
+      fill: false,
+      lineTension: 0,
+      backgroundColor: "rgba(0,0,255,1.0)",
+      borderColor: "rgba(0,0,255,0.1)",
+      data: yValues
+    }]
+  },
+  options: {
+    legend: {display: false},
+    scales: {
+      yAxes: [{ticks: {min: 0, max:1000}}],
+    },
+    title: {
+      display: true,
+      text: "Wallet Balance the past week"
+    }
+  }
+});
+<!--Line chart 3-->
+var xValues = [];
+var yValues = [];
+"{%for day in list_seven_days %}"
+xValues.push("{{day}}")
+"{%endfor%}"
+new Chart("myChart3", {
+  type: "line",
+  data: {
+    labels: xValues,
+    datasets: [{
+      fill: false,
+      lineTension: 0,
+      backgroundColor: "rgba(0,0,255,1.0)",
+      borderColor: "rgba(0,0,255,0.1)",
+      data: yValues
+    }]
+  },
+  options: {
+    legend: {display: false},
+    scales: {
+      yAxes: [{ticks: {min: 6, max:16}}],
     }
   }
 });

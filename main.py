@@ -4510,14 +4510,6 @@ def view_transactions():
 # MERCHANT DATA INSIGHTS
 @app.route("/merchant_insights")
 def merchant_insights():
-    db = shelve.open("customer.db", "r")
-    muser_dict = {}
-    try:
-        muser_dict = db["Merchant"]
-    except:
-        print("error in retrieving merchants")
-    db.close()
-    merchant = muser_dict.get(session["user"])
     db = shelve.open("purchaseHistory.db", "r")
     try:
         purchase_history_dict = db["purchaseHistory"]
@@ -4555,7 +4547,116 @@ def merchant_insights():
         category_income_obj = category_dict.get(product_category)
         category_income_obj.add_quantity(sbp_obj.get_quantity())
         category_income_obj.add_sales(sbp_obj.get_totalPrice())
-    return render_template("merchant/merchant_insights.html", merchant=merchant, category_dict=category_dict)
+    dict_dates = []
+    db = shelve.open("customer.db", "r")
+    musers_dict = db["Merchant"]
+    db.close()
+    merchant = musers_dict.get(session["user"])
+    transaction_list = merchant.get_transactions()
+    for transaction in transaction_list:
+        dict_dates.append(transaction.get_transaction_date())
+    list_dates_sorted = sorted(dict_dates)
+    sorted_dict = {}
+    for date_insights in list_dates_sorted:
+        sorted_dict[date_insights] = 0
+    for transaction in transaction_list:
+        if transaction.get_transaction_date() not in sorted_dict:
+            print("transaction over the weekly date")
+        else:
+            sorted_dict[transaction.get_transaction_date()] = transaction.get_balance_after_transaction()
+    today = date.today()
+    today_day = today.strftime("%d")
+    list_seven_days = []
+    for i in range(0, 7):
+        week_day = int(today_day) - 6 + i
+        week_date = today.strftime("%b") + " " + str(week_day)
+        list_seven_days.append(week_date)
+    db = shelve.open("purchaseHistory.db", "r")
+    purchases_dict = db["purchaseHistory"]
+    db.close()
+    # merchant Insights on customer
+    merchant_customer = {}
+    for customer_email in purchases_dict:
+        customer = purchases_dict.get(customer_email)
+        customer_purchaseH = customer.get_purchaseHistory()
+        for count in customer_purchaseH:
+            purchase = customer_purchaseH.get(count)
+            for sbm_obj in purchase.get_merchants():
+                merchant_email = sbm_obj.get_merchantEmail()
+                merchant_customer[merchant_email] = {}
+    for customer_email in purchases_dict:
+        customer = purchases_dict.get(customer_email)
+        customer_purchaseH = customer.get_purchaseHistory()
+        for count in customer_purchaseH:
+            purchase = customer_purchaseH.get(count)
+            for sbm_obj in purchase.get_merchants():
+                merchant_email = sbm_obj.get_merchantEmail()
+                merchant_customer[merchant_email][customer_email] = []
+    for customer_email in purchases_dict:
+        customer = purchases_dict.get(customer_email)
+        customer_purchaseH = customer.get_purchaseHistory()
+        for count in customer_purchaseH:
+            purchase = customer_purchaseH.get(count)
+            for sbm_obj in purchase.get_merchants():
+                merchant_email = sbm_obj.get_merchantEmail()
+                for sbp_obj in sbm_obj.get_products():
+                    merchant_customer[merchant_email][customer_email].append(sbp_obj.get_quantity())
+    db = shelve.open("customer.db", "r")
+    customers_dict = db["Customer"]
+    db.close()
+    merchant_customer_insights = merchant_customer.get(session["user"])
+    print("Merchant hasnt sold any products")
+    list_merchants_customers_gender = []
+    try:
+        for customer in merchant_customer_insights:
+            customer_obj = customers_dict.get(customer)
+            list_merchants_customers_gender.append(customer_obj.get_gender())
+    except:
+        print("this merchant has no transactions")
+    try:
+        percentage_male = str("{:.1f}".format(
+            (list_merchants_customers_gender.count("Male") / len(list_merchants_customers_gender)) * 100)) + "%"
+        percentage_female = str("{:.1f}".format(
+            (list_merchants_customers_gender.count("Female") / len(list_merchants_customers_gender)) * 100)) + "%"
+    except ZeroDivisionError:
+        print("No customers have bought your products")
+        percentage_male = 0
+        percentage_female = 0
+    db = shelve.open("customer.db", "r")
+    customer_dict = db["Customer"]
+    db.close()
+    merchant_customer_obj = merchant_customer.get(session["user"])
+    merchant_popular_customer = {}
+    try:
+        for customer in merchant_customer_obj:
+            merchant_popular_customer[customer] = sum(merchant_customer_obj.get(customer))
+    except:
+        print("This merchant has no insights")
+    print(merchant_popular_customer)
+    popular_customer = None
+    highest_value = 0
+    for customer in merchant_popular_customer:
+        if merchant_popular_customer.get(customer) > highest_value:
+            popular_customer = customer
+        else:
+            highest_value = merchant_popular_customer.get(customer)
+    best_customer_obj = customer_dict.get(popular_customer)
+    try:
+        full_name = best_customer_obj.get_first_name() + " " + best_customer_obj.get_last_name()
+    except:
+        print("this merchant has no insights")
+        full_name = "None"
+    popular_category = None
+    highest_value_category = 0
+    for category in category_dict:
+        if category_dict.get(category).get_quantity() > highest_value_category:
+            popular_category = category
+        else:
+            highest_value_category = category_dict.get(category).get_quantity()
+    return render_template("merchant/merchant_insights.html", merchant=merchant,
+                           category_dict=category_dict, sorted_dict=sorted_dict, list_seven_days=list_seven_days
+                           , merchant_customer=merchant_customer, male=percentage_male, female=percentage_female
+                           , best_customer=full_name, best_customer_email=popular_customer, popular_category=popular_category)
 
 
 @app.route("/login_merchant", methods=["POST", "GET"])

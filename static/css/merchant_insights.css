@@ -1,0 +1,21 @@
+.data_insights{
+width:100%;
+margin-top:5%;
+}
+.insights_section{
+width:30%;
+border:1px solid black;
+border-radius:10px;
+display:inline-block;
+margin:2%;
+margin-right:0;
+height:11vw;
+overflow:auto;
+}
+.insights_section h5{
+text-align:center;
+}
+.insights_section img{
+width:20%;
+margin-left:40%;
+}
