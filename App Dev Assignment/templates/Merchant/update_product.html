@@ -1,0 +1,127 @@
+{% extends "partials/_merchant_side_navbar.html" %}
+
+{% block title %}Merchant My Products{% endblock %}
+{%block css%}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/merchant_products.css') }}">
+{%endblock%}
+{% block navigation %}
+<span>
+<a class="navbar-brand" href="/merchant_products"><span style="font-weight:bold;font-size:2vw;">
+  | My Products</span></a>
+
+<a class="navbar-brand" href="/merchant_orders"><span style="font-weight:bold;color:#267CFC; font-size:2vw;">| Update Product</span></a>
+    </span>
+{% endblock %}
+{%block content%}
+<div class="merchant_products_block">
+  <div class="m-products-sec1">
+    <ul>
+      <li><img src="{{url_for('static', filename='image/product_icon.png')}}" width="50px" style="display:inline;">
+        <h4 style="display:inline; font-weight:bold;">Products</h4></li>
+      <li><a href="/merchant_products">My Products</a></li>
+      <li><a href="#">Add New Product</a></li>
+      <li><a href="/merchant_inventory">Inventory</a></li>
+</ul>
+  </div>
+  <div class="create-product-form" id="create-product-form">
+        <hr>
+                <h5>Update Product</h5>
+        <hr>
+                {% from "partials/_formHelper.html" import render_field %}
+      <form method="post" action="">
+                    <div style="float:right; border:1px solid black; width:40%; height:10vw;">
+                        <span style="font-weight:bold; font-size:1.2vw;">Category:</span>
+                        <span id="inventory_category">{{inventory_item_category}}</span>
+                        <br>
+                        <span style="font-weight:bold; font-size:1.2vw;">Inventory Item Selected:</span>
+                        <span id="selected">{{inventory_item_name}}</span>
+                        <input type="hidden" value="{{inventory_item_name}}" id="inventory_name" name="inventory_name" >
+                        <br>
+                        <span style="font-weight:bold; font-size:1.2vw;">Quantity:</span>
+                        <span id="inventory_quantity">{{inventory_item_quantity}}</span>
+                    </div>
+                    Product Category: <div class="label_display">{{ render_field(form.product_cat, autocomplete="off",class="form-control", id="category_product") }}</div>
+                    <br>
+                    Product Sub-Category: <div class="label_display">{{ render_field(form.product_sub_cat, autocomplete="off",class="form-control") }}</div><span style="color:#757575; font-size:0.8vw;">  *If applicable to product*</span>
+                    <br>
+                    Product Name: <div class="label_display">{{ render_field(form.product_name ,autocomplete="off",class="form-control") }}</div>
+                    <p onclick="show_inventory()" id="open_inventory">Assign Inventory</p>
+                    <br>
+                    Product Price: <div class="label_display">{{ render_field(form.product_price,autocomplete="off", class="form-control") }}</div>
+                    <br>
+                    {{ render_field(form.product_desc,autocomplete="off", class="form-control", placeholder="Description(Optional)") }}
+          <br>
+                  <input type=submit value="Update Product" style=" background-color:#00a11b; color:white; border:0; font-weight:bold; padding:0.78vw;">
+      </form>
+            </div>
+    <div class="inventory_selector" id="inventory_box">
+        <span id="x-icon" onclick="close_inventory()">&times;</span>
+        <br>
+        <div style="width:100%; background-color:#f0f0f0; padding:0.78vw; font-size:2vw; font-weight:bold; text-align:center;">My Storage</div>
+        <br>
+          {% if inventory_length == 0 %}
+        <span style="color:red; font-size:1.2vw; font-weight:700;">You have No Inventory</span>
+        {% else %}
+        <span style="font-size:1.2vw; font-weight:700; color:green;">You have {{inventory_length}} Inventory Items</span>
+        {%endif%}
+        <br>
+        <br>
+        {% for inventory in inventory_list %}
+        <div class="inventory_items" style="margin:auto; margin-bottom:5%;" onclick="select_inventory({{inventory_list.index(inventory)}}, {{inventory.get_quantity()}})">
+          <span>Inventory Category:</span> {{inventory.get_category()}}
+          <br>
+          <br>
+          <span>Inventory Name:</span> {{inventory.get_name()}}
+          <br>
+          <br>
+          <span>Inventory Quantity:</span> {{inventory.get_quantity()}}
+        </div>
+        {%endfor%}
+    </div>
+    <script>
+      function show_inventory(){
+      var x = document.getElementById('inventory_box');
+      x.style.display = "block";
+      var y = document.getElementById('create-product-form');
+      y.style.opacity = "30%";
+    }
+    function close_inventory(){
+         var x = document.getElementById('inventory_box');
+      x.style.display = "none";
+            var y = document.getElementById('create-product-form');
+      y.style.opacity = "1";
+      }
+
+    function select_inventory(n, q){
+        var x = document.getElementById('inventory_name');
+        var inventory_names = []
+        {% for name in inventory_names%}
+        inventory_names.push('{{name}}')
+        {%endfor%}
+        x.value = inventory_names[n];
+        var selected = document.getElementById('selected')
+        selected.innerHTML = inventory_names[n];
+
+        var y = document.getElementById('inventory_quantity');
+        y.innerHTML = q;
+
+        var z = document.getElementById('inventory_category');
+        var inventory_categories = [];
+        {% for category in inventory_cat %}
+        inventory_categories.push('{{category}}')
+        {%endfor%}
+        z.innerHTML = inventory_categories[n];
+
+        var g = document.getElementById('inventory_box');
+        g.style.display = "none";
+        var f = document.getElementById('create-product-form');
+        f.style.opacity = "1";
+
+        var t = document.getElementById('product_category');
+        t.value = inventory_categories[n];
+    }
+
+
+</script>
+</div>
+{%endblock%}

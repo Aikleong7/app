@@ -1,0 +1,44 @@
+form {
+border-style: solid;
+text-align: center;
+margin-top: 2%;
+margin-left: 31%;
+margin-right: 31%;
+padding-top: 3%;
+padding-bottom: 2%;
+border-radius:10px;
+border-color: #BABABA;
+<!--padding-left:10%;-->
+<!--padding-left-->
+}
+#logo{
+color:black;
+text-decoration:none;
+}
+#logo:hover{
+color:#6978c6;}
+div {
+padding-left: 10%;
+padding-right: 10%;
+text-align:left;
+}
+#forget {
+color:blue;}
+
+#create{
+color:blue;
+text-align:left;
+}
+.row{
+padding:0;}
+
+.col{
+margin:0;}
+
+#login{
+color:white;
+text-align:right;
+float:right}
+
+a{
+text-decoration:none;}

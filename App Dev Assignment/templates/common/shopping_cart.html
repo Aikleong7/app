@@ -1,0 +1,85 @@
+{% extends "layouts/shopping_cart_base.html" %}
+{% block title %}Shopping Cart{% endblock %}
+{% block navigation %}
+ <a class="navbar-brand" href="{{ url_for('shopping_cart') }}"><span style="font-weight:bold;color:#267CFC;">| Shopping Cart</span></a>
+{% endblock %}
+{% block content %}
+
+{% if userEmail != None %}
+<div class="row shadow-lg p-3 mb-5 bg-white rounded" style="margin-top:70px;background-color:white;color:black;font-weight:bold;font-size:17px;width:98%;margin-left:1%;padding:10px">
+   <div class="col-6 col-md-6">Products</div>
+  <div class="col">Price</div>
+  <div class="col">Quantity</div>
+  <div class="col">Actions</div>
+</div>
+
+<!-- depending on the number of merchant keys in the shopping cart object -->
+    {% for merchantObject in merchantObject_list %}
+<div class="row"
+     style="margin-top:30px;background-color:black;color:white;font-weight:bold;font-size:17px;width:98%;margin-left:1%;padding:10px">
+    <div class="col-6 col-md-6">{{ merchantObject.get_merchantName() }}</div>
+    <div class="col"></div>
+    <div class="col"></div>
+    <div class="col"></div>
+</div>
+<!-- depending on the number of keys for products in the shopping cart object -->
+    {% for key in merchantProductdict %}
+    {% if key == merchantObject.get_merchantEmail() %}
+    {% for product in merchantProductdict[key] %}
+
+    <div class="row " style="border-style: solid; border-width: thin; border-color: #FFFFFF;background-color:white;border-color:#CACACA;font-weight:bold;font-size:17px;width:98%;margin-left:1%;padding:10px">
+        <div class="col-6 col-md-6">
+            <a href="/individual_product_page/{{product.get_productID()}}"><image src="{{ product.get_productObject().get_image() }}" style="float:left;width:100px;height:100px;margin-right:20px;border-radius:10px;"></image></a>
+            <p style="font-weight:bold;text-align:left;">{{ product.get_productObject().get_product_name() }}</p>
+        </div>
+        <div class="col">
+            {% if product.get_discountedPrice() != 0 %}
+            <p>$ {{ "{:.2f}".format(product.get_discountedPrice()) }}</p>
+            <p style="text-decoration:line-through;color:grey;margin-right:10px;">$ {{
+                "{:.2f}".format(product.get_productObject().get_product_price()) }}</p>
+            {% else %}
+            <p>$ {{ "{:.2f}".format(product.get_productObject().get_product_price()) }}</p>
+            {% endif %}
+        </div>
+        <div class="col"><p>{{product.get_quantity()}}</p></div>
+        <div class="col">
+            <div style="position:absolute;">
+                <a type="button" class="btn btn-danger" style=""
+                   href="{{ url_for('deleteFromCart', productID=product.get_productObject().get_product_id(), merchantEmail=merchantObject.get_merchantEmail()) }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white"
+                         class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                        <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"/>
+                    </svg>
+                </a>
+                <a href="{{ url_for('addToFavourite', productid=product.get_productObject().get_product_id()) }}">
+                    <button style="color:white;font-weight:bold;;background-color:#E397E4" class="btn ">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-heart"
+                             viewBox="0 0 16 16">
+                            <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                        </svg>
+                    </button>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {% endfor %}
+    {% endif %}
+    {% endfor %}
+
+    {% endfor %}
+    {% if merchantObject_list != [] %}
+        <a href="{{ url_for('checkout') }}"><button style="font-weight:bold;font-size:20px;float:right;margin-right:1%;margin-top:1%;" class="btn btn-dark">CHECKOUT</button></a>
+    {% endif %}
+{% else %}
+    <h1 style="font-weight:bold;margin-top:90px;text-align:center;">Shopping Cart is unavailable. <br>Please log in before adding items to the cart. 😥</h1>
+    <a href="/login" class="btn btn-primary d-flex justify-content-center" style="font-size:30px;font-weight:bold;margin-top:20px;">Login</a>
+    <a href="/" class="btn btn-dark d-flex justify-content-center" style="font-size:30px;font-weight:bold;margin-top:20px;">Return to Home</a>
+{% endif %}
+
+<style>
+    body{
+      background-color:#f2f2f2;
+      }
+</style>
+{% endblock %}

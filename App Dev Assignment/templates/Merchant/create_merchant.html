@@ -1,0 +1,99 @@
+{% extends "partials/login template.html" %}
+{% block title %} Create Account {% endblock %}
+
+{% block content %}
+{% from "partials/_formHelper.html" import render_field %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/create.css') }}">
+<script>
+
+function show(){
+  var x = document.getElementById("password");
+  var y = document.getElementById("password_confirm")
+  if (x.type === "password") {
+    x.type = "text";
+    y.type = "text";
+  } else {
+    x.type = "password";
+    y.type = "password";
+  }
+}
+</script>
+
+
+<br>
+<form method="POST" action="">
+<h2><a id="logo" href="/"><b>Singtopia</b> </a></h2>
+<h5>Create your Singtopia Account</h5>
+  <div class="row">
+    <div class="col">
+        {{ render_field(form.first_name, class="form-control") }}
+    </div>
+    <div class="col">
+        {{ render_field(form.last_name, class="form-control") }}
+    </div>
+  </div>
+         <div class="row">
+            <div class="col">
+              {{ render_field(form.email, class="form-control") }}
+            </div>
+            {% if warning == 1 %}
+             <p style="color:red"> *Email exist in our database, do you want to <a href="/login">Login</a> instead? </p>
+             {% endif %}
+             {% if warning == 2 %}
+             <p style="color:red"> *Email exist in our database, do you want to <a href="/login">Login</a> instead? </p>
+             {% endif %}
+         </div>
+         <div class="row">
+            <div class="col">
+              {{ render_field(form.phone, class="form-control") }}
+            </div>
+         </div>
+    <div class="row">
+        <div class="col">
+            {{ render_field(form.password, class="form-control") }}
+
+        </div>
+    <div class="col">
+        {{ render_field(form.password_confirm, class="form-control") }}
+    </div>
+
+    <small id="passwordHelpBlock" class="form-text text-muted" >
+  Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji.
+</small>
+{% if warning == 4 %}
+        <p style="color:red"> *Password does not match the requirement stated</p>
+        {% endif %}
+
+    {% if warning == 1 %}
+        <p style="color:red"> *Password does not match</p>
+ {% endif %}
+        {% if warning == 3 %}
+        <p style="color:red"> *Password does not match</p>
+ {% endif %}
+    </div>
+  <div class="row">
+      <div class="col">
+    <div class = "form-check">
+          {{ render_field(form.show_password, class="form-check-input",onchange="show()") }}
+      </div>
+      </div>
+  </div>
+
+
+<br>
+       <div class="row">
+             <div class="col">
+         <p id="create"><a href="/merchant">Sign in instead</a></p>
+             </div>
+             <div class="col">
+         <input type="submit" value="Next" id="login" class="btn btn-primary"/>
+             </div>
+     </div>
+
+
+</form>
+
+
+
+{% endblock %}

@@ -1,0 +1,23 @@
+
+#m-home-1sec{
+white-space: nowrap;
+padding-top:5%;
+width:50%;
+height:21vw;
+padding-left:2%;
+}
+
+#m-home-3sec{
+background-color:#a0d9fa;
+padding:0.78vw;
+width:40%;
+float:right;
+border-left:0.35vw solid black;
+border-bottom:0.35vw solid black;
+border-bottom-left-radius:0.78vw;
+}
+
+.home_layer2{
+width:100%;
+border:1px solid black;
+}

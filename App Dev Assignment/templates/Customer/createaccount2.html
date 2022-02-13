@@ -1,0 +1,78 @@
+{% extends "partials/login template.html" %}
+{% block title %} Create Account2 {% endblock %}
+
+{% block content %}
+{% from "partials/_formHelper.html" import render_field %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/create.css') }}">
+<script>
+
+function show(){
+  var x = document.getElementById("CSV");
+  if (x.type === "password") {
+    x.type = "text";
+  } else {
+    x.type = "password";
+  }
+}
+</script>
+
+<form method="POST" action="">
+<h2><a id="logo" href="/"><b>Singtopia</b> </a></h2>
+<h5>Create your Singtopia Account</h5>
+<p>Optional, You can always fill it up later</p>
+<p style="color:#868686">Press next to continue...</p>
+    <div class="row">
+        <div class="col">
+            {{ render_field(form.address, class="form-control") }}
+        </div>
+            {% if warning == 4 %}
+            <p style="color:red">*Address is required for your Zipcode and City</p>
+            {% endif %}
+    </div>
+    <div class="row">
+        <div class="col">
+            {{ render_field(form.city, class="form-control") }}
+        </div>
+        <div class="col">
+            {{ render_field(form.zipcode, class="form-control") }}
+        </div>
+            {% if warning == 3 %}
+            <p style="color:red">*Zipcode and City is required for your Address</p>
+            {% endif %}
+    </div>
+    <div class="row">
+        <div class="col">
+            {{ render_field(form.credit_card, class="form-control") }}
+            {% if warning == 2 %}
+            <p style="color:red">*Credit Card Number is required for your CSV</p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            {{ render_field(form.csv, class="form-control") }}
+            {% if warning == 1 %}
+            <p style="color:red">*CSV Number is required for your credit card</p>
+            {% endif %}
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col">
+            <div class = "form-check">
+            {{ render_field(form.show_csv, class="form-check-input",onchange="show()") }}
+            </div>
+
+        </div>
+    </div>
+    <br>
+    <br>
+    <div class="row">
+        <div class="col">
+            <input type="submit" value="Submit" id="login" class="btn btn-primary"/>
+        </div>
+    </div>
+
+</form>
+{% endblock %}

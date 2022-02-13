@@ -1,0 +1,103 @@
+{% extends 'partials/_merchant_side_navbar.html' %}
+{% block title %} Merchant Account{% endblock %}
+{% block navigation %}
+<span>
+<a class="navbar-brand" href="#"><span style="font-weight:bold;">| Setting</span></a>
+<a class="navbar-brand" href="#"><span style="font-weight:bold;color:#267CFC;">| Supplier</span></a>
+</span>
+{% endblock %}
+{% block content %}
+{% from "partials/_formHelper.html" import render_field %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/merchant_products.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/merchant_setting.css') }}">
+
+<style>
+
+#setting, #supplier{
+color:#B78BFF;
+font-weight:bold;
+}
+#col{
+margin-top:9%;
+margin-left:1%;
+}
+h3{
+display:inline;
+margin-left:3%;
+}
+.col3{
+padding-left:6%;
+margin-left:8%;
+padding-left:5%;
+padding-top:10%;
+margin-top:2%;
+}
+.col4{
+padding-left:3%;
+margin-left:4%;
+padding-left:5%;
+padding-top:10%;
+margin-top:2%;
+}
+.active_page{
+color:blue}
+.container{
+padding-top:10px;
+padding-bottom:10px;
+border-style:solid;
+border-radius:10px;
+width:96%;
+}
+</style>
+
+<div class="merchant_products_block">
+  <div class="m-products-sec1">
+    <ul>
+      <li><img src="static/image/setting.png" style="display:inline;">
+        <h4 style="display:inline; font-weight:bold;">Settings</h4></li>
+      <li><a href="/merchant_setting" >My Addresses</a></li>
+      <li><a href="#">Shop Settings</a></li>
+      <li><a href="/merchant_account" >Account</a></li>
+        <li><a href="/supplier" class="active_page">Partner Platforms</a></li>
+</ul>
+  </div>
+  <div class="page_header">
+    <img src="static/image/partner-removebg-preview.png" >
+    <h6 class="page_header_e">
+      Partner Platforms
+      <br>
+      <span class="page_header_note">Manage your partners</span>
+    </h6>
+  </div><br>
+<br>
+<h4 class="text-center">Supplier Partner<image src="{{url_for('static', filename='image/supplier cart.png')}}" style="height:5%;width:5%;"> </image></h4>
+
+{% for sup in supplier %}
+
+<div class="container">
+
+  <div class="row">
+    <div class="col">
+      <h4> {{sup.get_name()}}</h4>
+    </div>
+    <div class="col">
+      <h4>{{sup.get_product()}}</h4>
+    </div>
+    <div class="col">
+
+    </div>
+    <div class="col"><a href="/supplier_delete/{{sup.get_name()}}" class="btn btn-danger" style="float:right">Delete</a><a href="/supplier_individual/{{sup.get_name()}}" class="btn btn-primary" style="float:right;margin-right:5px;">View</a>
+    </div>
+<br>
+</div>
+</div>
+
+{% endfor %}
+<br>
+<a href="/add_supplier" class="btn btn-outline-dark" style="margin-left:42%;">+ Add Supplier</a>
+
+<script>
+    document.getElementById("submenu7").className += " show";
+</script>
+{% endblock %}

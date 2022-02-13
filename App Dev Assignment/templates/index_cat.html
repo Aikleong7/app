@@ -1,0 +1,82 @@
+{% extends "layouts/base.html" %}
+{% block title %} Home Page {% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+<style>
+.prod_desc{
+    background-color: #D3D3D3;
+    width: 240px;
+}
+</style>
+
+
+<ul class="categories_top">
+    <li class="categories_display"><a href="/categories/Clothing" style="color:black" >Clothing</a></li>
+    <li class="categories_display"><a href="/categories/Food&Beverage" style="color:black">Food & Beverages</a></li>
+    <li class="categories_display"><a href="/categories/Accessories" style="color:black">Accessories</a></li>
+    <li class="categories_display"><a href="/categories/Electronics" style="color:black">Electronics</a></li>
+    <li class="categories_display"><a href="/categories/Shoes" style="color:black">Shoes</a></li>
+    <li class="categories_display"><a href="/categories/Home&Living" style="color:black">Home & Living</a></li>
+    <li class="categories_display"><a href="/categories/Health&Wellness" style="color:black">Health & Wellness</a></li>
+    <li class="categories_display"><a href="/categories/Sports&Outdoor" style="color:black">Sports & Outdoors</a></li>
+    <li class="categories_display"><a href="/categories/PetNecessities" style="color:black">Pet Necessities</a></li>
+</ul>
+<br>
+
+{% if request.path == '/categories/Clothing' %}
+    <img src="../static/image/shirt_category.jpg" width="100%" height="300px">
+{% elif request.path == '/categories/Food&Beverage' %}
+    <img src="../static/image/food_category.png" width="100%" height="300px">
+{% elif request.path == '/categories/Accessories' %}
+    <img src="../static/image/accessories_category.png" width="100%" height="300px">
+{% elif request.path == '/categories/Electronics' %}
+    <img src="../static/image/electronic_category.png" width="100%" height="300px">
+{% elif request.path == '/categories/Shoes' %}
+    <img src="../static/image/shoes_category.png" width="100%" height="300px">
+{% elif request.path == '/categories/Home&Living' %}
+    <img src="../static/image/home_category.png" width="100%" height="300px">
+{% elif request.path == '/categories/Health&Wellness' %}
+    <img src="../static/image/health_category.png" width="100%" height="300px">
+{% elif request.path == '/categories/Sports&Outdoor' %}
+    <img src="../static/image/sports_category.png" width="100%" height="300px">
+{% elif request.path == '/categories/PetNecessities' %}
+    <img src="../static/image/pet_category.png" width="100%" height="300px">
+{% endif %}
+<br><br><br><br>
+
+
+<div class="container-xxl">
+    <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3">
+        {% for product in products_list %}
+        {% if product.get_quantity() > 0 %}
+        <div class="col-2.5">
+            <div class="p-3 border bg-light">
+                <a href="{{ url_for('show_individual_product',productID=product.get_product_id()) }}">
+                <img src="{{ product.get_image() }}" width=100% height=200 style="border: solid 0.5px grey"></a>
+                <div style=" width:100%; background-color:white; text-align:center;">
+                    <span style=" font-size:12px">{{ product.get_product_name() }}</span>
+                    <br><br>
+                    <span style="font-size:15px; color:#6A45FF">${{ product.get_product_price() }}</span>
+                </div>
+
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+<button id="popup" class="" onclick="myFunction()"> Get Help
+    <span class="popuptext" id="myPopup"><iframe width="350" height="370" allow="microphone;" src="https://console.dialogflow.com/api-client/demo/embedded/429e4b7c-f5c6-4562-981e-add491ba486c"></iframe></span>
+</button>
+
+
+<script>
+function myFunction() {
+  var popup = document.getElementById("myPopup");
+  popup.classList.toggle("show");
+}
+</script>
+
+{% endblock %}

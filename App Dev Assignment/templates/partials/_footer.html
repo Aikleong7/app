@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Homepage</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+
+</head>
+<br><br><br><br>
+
+
+
+  <footer style="clear:both;" class="bg-black text-left text-lg-start text-white">
+
+    <div class="container p-4">
+
+      <div class="row mt-4">
+
+        <div class="col-lg-5">
+          <h5>Singtopia</h5>
+
+          <ul class="list-unstyled mb-1">
+            <li>443 Ang Mo Kio Ave 10 #01-793, 560443, Singapore</li>
+            <li>Phone: +65 64569330</li>
+            <li>Email: SingTopia@gmail.com</li>
+            <hr style="width: 85%">
+            <table>
+              <tr>
+                <td><img src="{{url_for('static', filename='image/paypal.png')}}" width="100px" height="100px"></td>
+                <td><img src="{{url_for('static', filename='image/visa.png')}}" width="60px" height="20px"></td>
+                <td><img src="{{url_for('static', filename='image/mastercard.png')}}" width="80px" height="50px"></td>
+                <td><img src="{{url_for('static', filename='image/dbs_paylah.png')}}" width="50px" height="50px"></td>
+              </tr>
+              <tr>
+                <td><img src="{{url_for('static', filename='image/paynow.png')}}" width="100px" height="30px"></td>
+                <td><img src="{{url_for('static', filename='image/JCB.png')}}" width="50px" height="45px"></td>
+                <td><img src="{{url_for('static', filename='image/nets.png')}}" width="100px" height="100px"></td>
+                <td><img src="{{url_for('static', filename='image/asia_pay.png')}}" width="65px" height="65px"></td>
+              </tr>
+            </table>
+          </ul>
+        </div>
+
+
+
+        <div class="col-lg-2">
+          <h5>Find it Quick</h5>
+
+          <ul class="list-unstyled mb-1">
+              <li><a href="/categories/Clothing" style="color:white">Clothing</a></li>
+              <li><a href="/categories/Food&Beverage" style="color:white">Food & Beverages</a></li>
+              <li><a href="/categories/Accessories" style="color:white">Accessories</a></li>
+              <li><a href="/categories/Electronics" style="color:white">Electronics</a></li>
+              <li><a href="/categories/Shoes" style="color:white">Shoes</a></li>
+              <li><a href="/categories/Home&Living" style="color:white">Home & Living</a></li>
+              <li><a href="/categories/Health&Wellness" style="color:white">Health & Wellness</a></li>
+              <li><a href="/categories/Sports&Outdoors" style="color:white">Sports & Outdoors</a></li>
+              <li><a href="/categories/PetNecessities" style="color:white">Pet Necessities</a></li>
+          </ul>
+        </div>
+
+
+        <div class="col-lg-2">
+          <h5>Information</h5>
+
+          <ul class="list-unstyled mb-1">
+            <li><a href="{{ url_for('bout_us') }}" style="color:white">About Us</a></li>
+            <li>Contact Us</li>
+            <li>How to buy</li>
+            <li>How to sell</li>
+            <li>Return & Refund</li>
+            <li>Flash Deals</li>
+            <li>Singtopia Policies</li>
+            <li>Privacy Policy</li>
+
+          </ul>
+        </div>
+
+
+        <div class="col-lg-2">
+          <h5>Follow us</h5>
+
+          <table>
+              <tr>
+                <td><a href="https://www.instagram.com/"><img src="{{url_for('static', filename='image/ig.png')}}" width="40px" height="40px"></a></td>
+                <td><a href="https://www.facebook.com/"><img src="{{url_for('static', filename='image/facebook.png')}}" width="40px" height="40px"></a></td>
+              </tr>
+              <tr>
+                <td><a href="https://twitter.com/?lang=en"><img src="{{url_for('static', filename='image/twitter.png')}}" width="40px" height="40px"></a></td>
+                <td><a href="https://www.snapchat.com/"><img src="{{url_for('static', filename='image/snapchat.png')}}" width="40px" height="40px"></a></td>
+              </tr>
+              <tr>
+                <td><a href="https://www.tiktok.com/en/"><img src="{{url_for('static', filename='image/tiktok.png')}}" width="40px" height="40px"></a></td>
+              </tr>
+          </table>
+
+
+
+        </div>
+
+      </div>
+    </div>
+
+
+  </footer>
+
+
+
+
+
+
+    <!-- Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>

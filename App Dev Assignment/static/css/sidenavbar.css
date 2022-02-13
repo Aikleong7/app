@@ -1,0 +1,41 @@
+/* The side navigation menu */
+#sidenav {
+  height: 100vh; /* 100% Full-height */
+  background-color: black; /* Black*/
+  position: -webkit-sticky;
+  position: sticky;
+  top: 1px;
+
+}
+.row{
+margin-right:0;}
+/* The navigation menu links */
+#sidenav a {
+  padding: 5% 5% 5% 10%;
+  text-decoration: none;
+  font-size: 20px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+#sidenav p {
+  padding: 5% 5% 5% 10%;
+  text-decoration: none;
+  font-size: 20px;
+  color: white;
+  display: block;
+}
+/* When you mouse over the navigation links, change their color */
+#sidenav a:hover {
+  color: white;
+}
+#bottom {
+
+  padding: 5% 5% 5% 10%;
+  display: block;
+}
+/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}

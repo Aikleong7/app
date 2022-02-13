@@ -1,0 +1,69 @@
+{% extends 'partials/_merchant_side_navbar.html' %}
+
+{% block title %}Merchant My Products{% endblock %}
+{%block css%}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/merchant_products.css') }}">
+<style>
+  #my_product, #product{
+color:#B78BFF;
+font-weight:bold;
+}
+</style>
+{%endblock%}
+{% block navigation %}
+<a class="navbar-brand" href="/merchant_orders"><span style="font-weight:bold;color:#267CFC; font-size:2vw;">| My Products</span></a>
+{% endblock %}
+{%block content%}
+
+<div class="merchant_products_block">
+  <div class="m-products-sec1">
+    <ul>
+      <li><img src="{{url_for('static', filename='image/product_icon.png')}}" style="display:inline;">
+        <h4 style="display:inline; font-weight:bold;">Products</h4></li>
+      <li><a href="#" class="active_page">My Products</a></li>
+      <li><a href="/merchant_add_product">Add New Product</a></li>
+      <li><a href="/merchant_inventory">Inventory</a></li>
+</ul>
+  </div>
+  <div class="page_header">
+    <img src="{{url_for('static', filename='image/my_products.png')}}" >
+    <h6 class="page_header_e">
+      My Products
+      <br>
+      <span class="page_header_note">Products listed by the business . Information on the products such as reviews and performance reviews.</span>
+    </h6>
+  </div>
+    <div class="m-products-sec3">
+        <hr>
+  <img src="{{url_for('static', filename='image/search_product.png')}}" style="margin-left:5%;">
+        {% from "partials/_formHelper.html" import render_field %}
+  <h5 style="display:inline; font-size:2vw ">All Products</h5>
+               <a href="/merchant_add_product"
+          style="margin-left:20%; padding:0.78vw; font-weight:bold; background-color:blue; color:white;">Add New Product</a>
+</div>
+    <hr>
+  <div class="m-products-sec4">
+      <ul style="list-style-type:none;">
+          {% for product in product_list %}
+          <li style="display:inline-block; width:30%;  ">
+      <form class="product"
+            action="{{url_for('view_product',product=product.get_product_id())}}" method=POST>
+          <img src="{{product.get_image() }}" style="width:80%; margin-left:10%;" height="200" width="200">
+          <p><b>Product Name:</b> {{ product.get_product_name() }}</p>
+          <p><b>Price:</b> SGD${{"{:.2f}".format(product.get_product_price())}}</p>
+          <p><b>Sub-Category</b> {{ product.get_sub_cat() }}</p>
+          <input type="submit" value="View" class="btn btn-outline-primary" >
+      </form>
+          </li>
+          {%endfor%}
+      </ul>
+  </div>
+</div>
+<script>
+    function search() {
+  var x = document.getElementById("mysearch").value;
+  document.getElementById("demo").innerHTML = "You wrote: " + x;
+  }
+  document.getElementById("submenu2").className += " show"
+</script>
+{%endblock%}

@@ -1,0 +1,67 @@
+{% extends "partials/admin_sidenavbar.html" %}
+{% block title %} Admin Management {% endblock %}
+
+{% block content %}
+<style>
+#admins {
+color: white;
+text-decoration;
+font-weight:bold;
+}
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+<br>
+<a href="/add_admin" class="btn btn-outline-info">Create New +</a>
+<form method="post" action="{{ url_for('delete_admin') }}" style="display:inline">
+<button type="submit" onclick="render_delete()" class="btn btn-outline-danger">Delete</button>
+
+    <input type="text" style="display:none;" id="delete_email" value=" " name="email">
+    <p style="display:inline">Total Admin: {{ admin|length }}</p>
+</form>
+<br>
+<table class="table table-striped">
+    <thead>
+      <tr>
+          <th> </th>
+        <th>Name:</th>
+        <th>Phone: </th>
+        <th>Email: </th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for x in admin %}
+        <tr id="{{ admin[x].get_email() }}">
+         <td class="checkbox"><input type="checkbox" value="{{ admin[x].get_email() }}"> </td>
+          <td>{{ admin[x].get_first_name() }} {{ admin[x].get_last_name() }}</td>
+          <td>{{ admin[x].get_phone() }}</td>
+          <td>{{ admin[x].get_email() }}</td>
+          </tbody>
+  {% endfor %}
+</table>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"> </script>
+<script>
+    function render_delete() {
+        var email_id = [];
+        $(':checkbox:checked').each(function(i){
+          email_id[i] = $(this).val()
+          })
+
+        if(email_id.length == 0){
+          alert("Select items to delete")
+        }else{
+          console.log(email_id)
+          document.getElementById("delete_email").value = email_id;
+
+            }
+          }
+
+
+
+
+
+  </script>
+ </script>
+{% endblock %}

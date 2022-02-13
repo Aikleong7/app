@@ -1,0 +1,107 @@
+{% extends "partials/_merchant_side_navbar.html" %}
+{% block title %}Merchant Vouchers{% endblock %}
+
+{% block navigation %}
+<span>
+<a class="navbar-brand" href="/marketing_strategy"><span style="font-weight:bold;">| Marketing Strategy</span></a>
+<a class="navbar-brand" href="/merchant_shopvouchers"><span style="font-weight:bold;">| Vouchers</span></a>
+<a class="navbar-brand" href="{{update_merchant_percentageVoucher}}"><span style="font-weight:bold;color:#267CFC;">| Update Percentage Off Voucher</span></a></span>
+{% endblock %}
+{% block content %}
+{% from "partials/_formHelper.html" import render_field %}
+{% if warningDate == 1 %}
+    <div class="alert" style="">
+          <span class="closebtn" onclick="this.parentElement.style.display='none';pushdown();">&times;</span>
+        <p style="font-weight:bold;font-size:20px;">{{ warningmessage }}</p>
+        </div>
+{% endif %}
+<h1 style="margin-top:20px;font-weight:bold;">Update Shop Voucher - Percentage Off </h1>
+
+<form method="POST" action="" style="background-color:white;">
+  <div class="form-group" style="margin-top:30px;padding-top:20px;">
+    <label style="font-weight:bold;">Voucher Name:</label>
+    {{ render_field(form.name) }}
+  </div>
+  <div class="form-group">
+    <label style="font-weight:bold;float:left;">Start of Claiming Period:</label>
+    {{ render_field(form.startingDate, class=" datepicker") }}
+    <label style="font-weight:bold;margin-left:100px;">End of Claiming Period:</label>
+    {{ render_field(form.endingDate, class=" datepicker") }}
+  </div>
+
+  <div class="form-group">
+     <label style="font-weight:bold;">Minimum Amount Spent: $</label>
+    {{ render_field(form.minSpend, class="") }}
+  </div>
+
+    <br>
+     <div class="form-group">
+     <label style="font-weight:bold;">Usage Quantity:</label>
+    {{ render_field(form.usageQuantity, class="") }}
+  </div>
+
+    <br>
+    <div class="form-group">
+     <label style="font-weight:bold;">Percentage Off:</label>
+    {{ render_field(form.percentageOff, class="") }}
+  </div>
+
+    <br>
+    <div class="form-group">
+     <label style="font-weight:bold;display:inline;margin-right:10px;">Capped Price Type:</label>
+    <input style="display:inline;margin-right:5px;" type="radio" id="noLimit" name="cappedPriceType" value="noLimit" onclick="hideCappedPrice()"><p style="display:inline;margin-right:10px;">No Limit</p>
+      <input style="display:inline;margin-right:5px;" type="radio" id="setAmt" name="cappedPriceType" value="setAmt" onclick="showCappedPrice()"><p style="display:inline;">Set Amount</p>
+  </div>
+
+    <br>
+    <div class="form-group" id="cappedprice" style="display:none;padding-bottom:20px;">
+     <label style="font-weight:bold;">Capped Price: $</label>
+    {{ render_field(form.CappedPrice, class="") }}
+        <br>
+  </div>
+
+     <input style="font-size:20px;font-weight:bold;margin-left:20px;" type="submit" value="Submit" class="btn btn-primary"/>
+</form>
+<script>
+    function showCappedPrice(){
+        document.getElementById("cappedprice").style.display="block";
+    }
+    function hideCappedPrice(){
+        document.getElementById("cappedprice").style.display="none";
+    }
+</script>
+<style>
+    body{
+  background-color:#f2f2f2;
+  }
+
+  .form-group{
+  padding-left:20px;
+  }
+
+  /* The alert message box */
+        .alert {
+          padding: 20px;
+          background-color: #f44336; /* Red */
+          color: white;
+          margin-bottom: 15px;
+        }
+
+        /* The close button */
+        .closebtn {
+          margin-left: 15px;
+          color: white;
+          font-weight: bold;
+          float: right;
+          font-size: 22px;
+          line-height: 20px;
+          cursor: pointer;
+          transition: 0.3s;
+        }
+
+        /* When moving the mouse over the close button */
+        .closebtn:hover {
+          color: black;
+        }
+</style>
+{% endblock %}

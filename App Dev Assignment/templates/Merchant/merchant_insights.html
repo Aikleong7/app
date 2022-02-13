@@ -1,0 +1,55 @@
+{% extends 'partials/_merchant_side_navbar.html' %}
+
+{% block title %}Merchant Business Insights{% endblock %}
+{%block css%}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/merchant_finances.css') }}">
+{%endblock%}
+{% block navigation %}
+<a class="navbar-brand" href="/merchant_insights"><span style="font-weight:bold;color:#267CFC; font-size:2vw;">| Data Insights</span></a>
+{% endblock %}
+{%block content%}
+<script
+src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
+</script>
+<style>
+#business_insight, #data{
+color:#B78BFF;
+font-weight:bold;
+}
+</style>
+<canvas id="myChart" style="width:100%;max-width:500px; border:1px solid black;" ></canvas>
+<canvas id="myChart2" style="width:100%;max-width:500px; border:1px solid black;" ></canvas>
+<script>
+document.getElementById("submenu5").className += " show";
+var xValues = [];
+var yValues = [];
+"{%for category in category_dict%}"
+xValues.push("{{category}}");
+yValues.push("{{category_dict.get(category).get_quantity()}}");
+"{%endfor%}"
+var barColors = [
+  "#b91d47",
+  "#00aba9",
+  "#2b5797",
+  "#e8c3b9",
+  "#1e7145"
+];
+
+new Chart("myChart", {
+  type: "pie",
+  data: {
+    labels: xValues,
+    datasets: [{
+      backgroundColor: barColors,
+      data: yValues
+    }]
+  },
+  options: {
+    title: {
+      display: true,
+      text: "Products Sold By Categories"
+    }
+  }
+});
+</script>
+{%endblock%}

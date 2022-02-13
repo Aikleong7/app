@@ -1,0 +1,170 @@
+{% extends 'partials/_merchant_side_navbar.html' %}
+
+{% block title %}Merchant My Products{% endblock %}
+{%block css%}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/merchant_finances.css') }}">
+{%endblock%}
+{% block navigation %}
+<a class="navbar-brand" href="/merchant_myincome"><span style="font-weight:bold;color:#267CFC; font-size:2vw;">| My Wallet</span></a>
+{% endblock %}
+{%block content%}
+<style>
+    #my_wallet, #finance{
+color:#B78BFF;
+font-weight:bold;
+}
+
+</style>
+<div class="merchant_finances_block">
+  <div class="m-finances-sec1">
+    <ul>
+      <li><img src="{{url_for('static', filename='image/finance_icon.png')}}" style="display:inline; width:5vw;">
+        <h4 style="display:inline; font-weight:bold;">Finances</h4></li>
+      <li><a href="/merchant_myincome">My Income</a></li>
+      <li><a href="#">My Wallet</a></li>
+      <li><a href="#">Bank Accounts</a></li>
+      <li><a href="#">Finance Settings</a></li>
+</ul>
+  </div>
+    <div class="page_header">
+    <img src="{{url_for('static', filename='image/wallet.png')}}" style="width:5vw;">
+    <h6 class="page_header_e">
+      My Balance as of {{month_year_today}}
+    </h6>
+      <br>
+      {%if user.get_balance() >= 0 %}
+      <span style="margin-left:45%; font-size:1.5vw; color:#2A9C28; font-weight:bold;">SGD${{"{:.2f}".format(user.get_balance())}}</span>
+      {%else%}
+      <span style="margin-left:45%; font-size:1.5vw; color:#FF0000; font-weight:bold;">SGD${{"{:.2f}".format(user.get_balance())}}</span>
+      {%endif%}
+  </div>
+  <div id="wallet">
+    <div class="wallet-e">
+      <img src="{{url_for('static', filename='image/completed_orders.png')}}">
+      <br>
+      <a>Withdraw Funds</a>
+      <br>
+      <p>Withdraw funds from your e-wallet
+to your personal bank account</p>
+      <button id="myBtn">Withdraw</button>
+      <!-- The Modal -->
+<div id="myModal" class="modal2">
+  <div class="modal2-content">
+    <span class="close">&times;</span>
+    <span style="font-size:2vw; font-weight:bold; text-decoration:underline;">Withdraw from Wallet</span>
+    <div style="border:0.5px solid black;  padding:7px;border-radius:25px; width:70%; height:6vw; margin:auto; margin-top:5%;">
+      <img src="{{url_for('static', filename='image/wallet.png')}}" style="width:4.7vw; float:left; ">
+    <h6 style="">My Balance as of {{month_year_today}}</h6>
+       {%if user.get_balance() >= 0 %}
+      <span style="font-size:1.5vw; color:#2A9C28; font-weight:bold;">SGD${{"{:.2f}".format(user.get_balance())}}</span>
+      {%else%}
+      <span style="font-size:1.5vw; color:#FF0000; font-weight:bold;">SGD${{"{:.2f}".format(user.get_balance())}}</span>
+      {%endif%}
+  </div>
+    {% from "partials/_formHelper.html" import render_field %}
+    <form method=POST action="">
+      Amount to withdraw:{{ render_field(form1.withdraw_amount,autocomplete="off", class="form-control") }}
+      <input type="submit" value="Withdraw">
+    </form>
+  </div>
+</div>
+    </div>
+
+    <div class="wallet-e">
+      <img src="{{url_for('static', filename='image/completed_orders.png')}}">
+      <br>
+      <a>Top-Up Funds</a>
+      <p>Top-up your wallet with funds
+if your balance is running low</p>
+      <button id="topupBtn">Top-Up</button>
+      <!-- The Modal -->
+<div id="topupModal" class="modal2">
+  <!-- Modal content -->
+  <div class="modal2-content">
+    <span class="close">&times;</span>
+    <span style="font-size:2vw; font-weight:bold; text-decoration:underline;">Top Up to Wallet</span>
+    <div style="border:0.5px solid black;  padding:7px;border-radius:25px; width:70%; height:6vw; margin:auto; margin-top:5%;">
+      <img src="{{url_for('static', filename='image/wallet.png')}}" style="width:4.7vw; float:left; ">
+    <h6 style="">My Balance as of {{month_year_today}}</h6>
+       {%if user.get_balance() >= 0 %}
+      <span style="font-size:1.5vw; color:#2A9C28; font-weight:bold;">SGD${{"{:.2f}".format(user.get_balance())}}</span>
+      {%else%}
+      <span style="font-size:1.5vw; color:#FF0000; font-weight:bold;">SGD${{"{:.2f}".format(user.get_balance())}}</span>
+      {%endif%}
+  </div>
+    {% from "partials/_formHelper.html" import render_field %}
+    <form method=POST action="">
+      Amount to top-up:{{ render_field(form2.top_up_amt,autocomplete="off", class="form-control") }}
+      <input type="submit" value="Top-Up">
+    </form>
+  </div>
+</div>
+    </div>
+
+    <div class="wallet-e">
+      <img src="{{url_for('static', filename='image/completed_orders.png')}}">
+      <br>
+      <a>View Transactions</a>
+      <p>Expenses and sales are recorded
+in your transactions</p>
+       <button><a href="/view_transactions" style="font-size:1.2vw; text-decoration:none; font-weight:400;">View</a></button>
+    </div>
+  </div>
+</div>
+<script>
+  document.getElementById("submenu4").className += " show";
+
+// Get the modal
+var modal = document.getElementById("myModal");
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+
+
+// Get the modal
+var modal2 = document.getElementById("topupModal");
+
+// Get the button that opens the modal
+var btn2 = document.getElementById("topupBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[1];
+
+// When the user clicks the button, open the modal
+btn2.onclick = function() {
+  modal2.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal2.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal2.style.display = "none";
+  }
+}
+</script>
+{%endblock%}

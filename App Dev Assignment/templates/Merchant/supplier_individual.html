@@ -1,0 +1,86 @@
+{% extends 'partials/_merchant_side_navbar.html' %}
+
+{% block title %} Supplier Details {% endblock %}
+{% block content %}
+{% from "partials/_formHelper.html" import render_field %}
+<style>
+
+.modal-backdrop {display:none}
+.container{
+padding-top:10px;
+padding-bottom:10px;
+border-style:solid;
+border-radius:10px;
+width:96%;
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/merchant_products.css') }}">
+
+    <div class="page_header">
+        <a href="/supplier" style="margin-right:5%;">
+            <img src="{{url_for('static', filename='image/back.png')}}" style="width:4vw;">
+        </a>
+        <img src="{{url_for('static', filename='image/supplier cart.png')}}" style="width:3vw;">
+        <h6 class="page_header_e" style="font-size:1.4vw;">
+          Supplier Information
+          <br>
+          <span class="page_header_note">
+            Information of supplies provided by supplier and supplier contact details
+          </span>
+        </h6>
+    </div>
+
+<br>
+<br>
+<br>
+
+
+    <div class="container" style="margin-left:2%; width:98%">
+
+      <div class="row">
+        <div class="col">
+          <h4> {{supplier.get_name()}}</h4>
+        </div>
+        <div class="col">
+          <h4>{{supplier.get_product()}}</h4>
+        </div>
+      </div>
+    </div>
+<br>
+    <div style="margin-left:2%;border-style:solid; padding-top:2%; padding-left:2%; padding-bottom:2%;">
+        <h4>Company Name: <b style="margin-left:20%;">{{supplier.get_name()}}</b> <a href="/edit_supplier/{{supplier.get_name()}}" class="btn btn-warning" style="float:right;margin-right:5%;">Edit</a> </h4>
+        <br>
+        <h4>Supply Inventory: <b style="margin-left:19%;">{{supplier.get_product()}}</b></h4>
+        <br>
+        <h4>Contact Number: <b style="margin-left:19%;">{{supplier.get_phone()}}</b></h4>
+        <br>
+        <h4>Company Email: <b style="margin-left:20%;">{{supplier.get_email()}}</b></h4>
+    </div>
+<br>
+<div style="margin-left:2%;border-style:solid;">
+    <div class="row">
+        <div class="col">
+            <h4 style="margin-left:20%;">Inventory</h4>
+        </div>
+        <div class="col" >
+            <h4>Current Stock</h4>
+        </div>
+    </div>
+    <div style="border-style:solid;margin-left:2%;margin-right:2%;margin-top:2%;margin-bottom:2%;">
+        <div class="row" style="padding-top:2%; padding-bottom:2%;padding-right:2%;">
+            <div class="col">
+                <h4 style="margin-left:20%;">{{supplier.get_product()}}</h4>
+            </div>
+
+            <div class="col" style="margin-left:10%;">
+                <h4>{{inventory.get_quantity()}}<a href="/view_inventory/{{supplier.get_product()}}" class="btn btn-primary" style="float:right">Order More</a></h4>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

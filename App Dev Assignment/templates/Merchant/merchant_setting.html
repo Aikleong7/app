@@ -1,0 +1,115 @@
+{% extends 'partials/_merchant_side_navbar.html' %}
+{% block title %} Merchant Settings{% endblock %}
+{% block navigation %}
+<span>
+<a class="navbar-brand" href="#"><span style="font-weight:bold;">| Setting</span></a>
+<a class="navbar-brand" href="#"><span style="font-weight:bold;color:#267CFC;">| My Addresses</span></a>
+</span>
+{% endblock %}
+
+{% block content %}
+{% from "partials/_formHelper.html" import render_field %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/merchant_products.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/merchant_setting.css') }}">
+
+<style>
+#setting, #my_addresses{
+color:#B78BFF;
+font-weight:bold;
+}
+#col{
+margin-top:9%;
+margin-left:1%;
+}
+h3{
+display:inline;
+margin-left:3%;
+}
+.col3{
+padding-left:6%;
+margin-left:8%;
+padding-left:5%;
+padding-top:10%;
+margin-top:2%;
+}
+.col4{
+padding-left:3%;
+margin-left:4%;
+padding-left:5%;
+padding-top:10%;
+margin-top:2%;
+}
+.active_page{
+color:blue
+}
+</style>
+
+<div class="merchant_products_block">
+  <div class="m-products-sec1">
+    <ul>
+      <li><img src="static/image/setting.png" style="display:inline;">
+        <h4 style="display:inline; font-weight:bold;">Settings</h4></li>
+      <li><a href="#" class="active_page">My Addresses</a></li>
+      <li><a href="#">Shop Settings</a></li>
+      <li><a href="/merchant_account">Account</a></li>
+        <li><a href="/supplier">Partner Platforms</a></li>
+</ul>
+  </div>
+  <div class="page_header">
+    <img src="static/image/setting pin.png" >
+    <h6 class="page_header_e">
+      My Addresses
+      <br>
+      <span class="page_header_note">Your Store Addresses and warehouse addresses. Information will be viewed by suppliers and platforms</span>
+    </h6>
+  </div>
+
+<div class="col">
+    <div class="row">
+        <div class="col-5" style="margin-left:5%;">
+            <h3 class="col3">Main Store Address
+            <a href="/clear_main"><image src="{{url_for('static', filename='image/bin.jpg')}}" width="15%" id="bin" style="display:inline"></image></a> </h3>
+
+            {% if main_address == "" %}
+                <h5 class="col4">You currently do not have a registered main store</h5>
+            {% else %}
+             <h5>Postal Code: {{ main_address_postal }}</h5>
+            <h5>Address: {{ main_address }}</h5>
+            <h5>Unit No: {{ main_address_unit }}</h5>
+            {% endif %}
+            <br>
+            <br>
+
+<a href="/merchant_edit_main" class="btn btn-secondary" style="margin-left:35%;margin-bottom:2%;">
+  Edit address
+</a>
+
+
+ </div>
+        <div class="col-5" style="margin-left:11%;" >
+            <h3 class="col3" style="margin-left:12%">Storage Address
+                    <a href="/clear_storage"> <image src="{{url_for('static', filename='image/bin.jpg')}}" width="15%" id="bin" style="display:inline"></image></a></h3>
+
+            {% if storage_address == "" %}
+                <h5 class="col4">You currently do not have a registered Storage Address</h5>
+            {% else %}
+
+            <br>
+            <h5>Postal Code: {{ storage_address_postal }}</h5>
+            <h5>Address: {{ storage_address }}</h5>
+            <h5>Unit No: {{ storage_address_unit }}</h5>
+            {% endif %}
+            <br>
+
+<a href="/merchant_edit_store" class="btn btn-secondary" style="margin-left:35%;margin-bottom:2%;">
+  Edit address
+</a>
+
+
+</div>
+<script>
+document.getElementById("submenu7").className += " show";
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,599 @@
+{% extends "layouts/base.html" %}
+{% block title %} Individual Product {% endblock %}
+{% from "partials/_formHelper.html" import render_field %}
+{% block content %}
+ <!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+
+<ul class="categories_top">
+    <li class="categories_display"><a href="/categories/Clothing">Clothing</a></li>
+    <li class="categories_display"><a href="/categories/Food&Beverage">Food & Beverages</a></li>
+    <li class="categories_display"><a href="/categories/Accessories">Accessories</a></li>
+    <li class="categories_display"><a href="/categories/Electronics">Electronics</a></li>
+    <li class="categories_display"><a href="/categories/Shoes">Shoes</a></li>
+    <li class="categories_display"><a href="/categories/Home&Living">Home & Living</a></li>
+    <li class="categories_display"><a href="/categories/Health&Wellness">Health & Wellness</a></li>
+    <li class="categories_display"><a href="/categories/Sports&Outdoors">Sports & Outdoors</a></li>
+    <li class="categories_display"><a href="/categories/PetNecessities">Pet Necessities</a></li>
+</ul>
+{% from "partials/_formHelper.html" import render_field %}
+
+<!------ Include the above in your HEAD tag ---------->
+
+<div class="container" style="max-width:95%;">
+
+    <hr>
+    <div class="">
+        <div class="row">
+            <aside class="col-sm-5 border-right">
+                <article class="gallery-wrap">
+                    <div class="img-big-wrap">
+                        <div><a href="#"><img style="width:700px;height:600px;" src="{{ chosenProduct.get_image() }}"></a></div>
+                    </div>
+                </article>
+            </aside>
+            <aside class="col-sm-7" style="background-color:white;">
+                <article class="card-body p-5">
+                    <h4 style="font-weight:bold;" class="title mb-3">{{ chosenProduct.get_product_name() }}</h4>
+                    <dl class="param param-feature">
+                        <dt><!--no. of stars-->
+                            <p style="display:inline;text-decoration:underline;margin-right:5px;font-size:20px;">{{ avg }}</p>
+                            {% for x in range(avg) %}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="yellow"
+                                 class="bi bi-star-fill" viewBox="0 0 16 16" style="margin-bottom:10px;">
+                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                            </svg>
+                            {% endfor %}
+                            {% for x in range(blank) %}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                 class="bi bi-star-fill" viewBox="0 0 16 16" style="margin-bottom:10px;">
+                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                            </svg>
+                            {% endfor %}
+                            <div style="display:inline;margin-left:40px;margin-right:40px;" class="vl"></div>
+                            <!-- no. of ratings-->
+                            <p style="display:inline;text-decoration:underline;margin-right:5px;font-size:20px;">
+                                {{divide}} </p>
+                            <p style="display:inline;margin-right:5px;font-size:20px;">Ratings</p>
+                        </dt>
+
+                    </dl>
+                    <p class="price-detail-wrap">
+	<span class="price h3 text-warning">
+		<span class="currency">SG </span><span class="num">
+        {% if discountPrice != 0 %}
+        <span style='font-weight:bold;'>$ {{ "{:.2f}".format(discountPrice) }}</span>
+        <span style="text-decoration:line-through;font-weight:bold;color:grey;">$ {{ "{:.2f}".format(chosenProduct.get_product_price()) }}</span>
+
+        {% else %}
+        <span style="font-weight:bold;">$ {{ "{:.2f}".format(chosenProduct.get_product_price()) }}</span>
+        {% endif %}
+    </span>
+	</span>
+                    </p> <!-- price-detail-wrap .// -->
+                    {% if voucherFixedAmt_list !=[] or voucherPercentage_list !=[] %}
+                    <dl class="param param-feature">
+                        <dt>Shop Vouchers  <!-- Trigger/Open The Modal -->
+            <button id="myBtn" class="btn btn-primary" style="width:220px;margin-left:20px;font-weight:bold;">Show More Information</button></dt>
+                        <dd>
+                            <br>
+                            <div>
+
+                                <!-- The Modal -->
+                                <div id="myModal" class="modal">
+
+                                    <!-- Modal content -->
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h2 style="padding:10px;">{{merchantEmail}} Vouchers</h2>
+                                            <span class="close">&times;</span>
+
+                                        </div>
+
+                                        <div class="modal-body">
+                                            <div style="padding-top:10px;padding-bottom:10px;">
+
+                                                {% for voucher in voucherFixedAmt_list %}
+                                                {% if voucher.get_status()=="Ongoing" %}
+                                                <hr>
+                                                <span style="float:left;margin-right:30px;"
+                                                      class="glyphicon glyphicon-user"><img class="rounded-circle"
+                                                                                            style="width:130px;height:130px;"
+                                                                                            src="{{merchant.get_profile_picture()}}"/></span>
+                                                {% if voucher.get_discountType()=="fixedAmt" %}
+                                                <p style="font-weight:bold;text-align:left;margin-left:30px;">$ {{
+                                                    "{:.2f}".format(voucher.get_fixedAmt()) }} OFF</p>
+                                                <p>Minimum Spend: ${{ "{:.2f}".format(voucher.get_minSpend()) }}</p>
+                                                <p>Expires on: {{ voucher.get_endingDate() }}</p>
+                                                <p>Number of Voucher(s) left: {{ voucher.get_usageQuantity() }}</p>
+                                                {% else %}
+                                                <p style="font-weight:bold;text-align:left;margin-left:30px;">{{
+                                                    "{:.2f}".format(voucher.get_percentageOff()) }}% OFF</p>
+                                                <p>Minimum Spend: ${{ "{:.2f}".format(voucher.get_minSpend()) }}</p>
+                                                <p>Expires on: {{ voucher.get_endingDate() }}</p>
+                                                <p>Number of Voucher(s) left: {{ voucher.get_usageQuantity() }}</p>
+
+                                                {% endif %}
+                                                {% endif %}
+                                                <hr>
+                                                {% endfor %}
+                                                {% for voucher in voucherPercentage_list %}
+                                                {% if voucher.get_status()=="Ongoing" %}
+                                                <span style="float:left;margin-right:30px;"
+                                                      class="glyphicon glyphicon-user"><img class="rounded-circle"
+                                                                                            style="width:100px;"
+                                                                                            src="{{merchant.get_profile_picture()}}"/></span>
+                                                {% if voucher.get_discountType()=="fixedAmt" %}
+                                                <p style="font-weight:bold;text-align:left;margin-left:30px;">$ {{
+                                                    "{:.2f}".format(voucher.get_fixedAmt()) }} OFF</p>
+                                                <p>Minimum Spend: ${{ "{:.2f}".format(voucher.get_minSpend()) }}</p>
+                                                <p>Expires on: {{ voucher.get_endingDate() }}</p>
+                                                <p>Number of Voucher(s) left: {{ voucher.get_usageQuantity() }}</p>
+                                                {% else %}
+                                                <p style="font-weight:bold;text-align:left;margin-left:30px;">{{
+                                                    "{:.2f}".format(voucher.get_percentageOff()) }}% OFF</p>
+                                                <p>Minimum Spend: ${{ "{:.2f}".format(voucher.get_minSpend()) }}</p>
+                                                <p>Expires on: {{ voucher.get_endingDate() }}</p>
+                                                <p>Number of Voucher(s) left: {{ voucher.get_usageQuantity() }}</p>
+                                                {% endif %}
+                                                {% endif %}
+                                                <hr>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            {% else %}
+                                <dl class="param param-feature">
+                                    <dt>Shop Vouchers</dt>
+                                    <dd>Currently No Availble Shop Vouchers</dd>
+                                </dl>
+                                {% endif%}
+
+                            <div style="display:inline;margin-top:5px;">
+                                {% for voucher in voucherFixedAmt_list %}
+                                {% if voucher.get_status()=="Ongoing" %}
+                                <a><span
+                                        class="vouchersBlock">$ {{ "{:.2f}".format(voucher.get_fixedAmt()) }} OFF</span></a>
+                                {% endif %}
+                                {% endfor %}
+                                {% for voucher in voucherPercentage_list %}
+                                {% if voucher.get_status()=="Ongoing" %}
+                                <a><span class="vouchersBlock">{{ voucher.get_percentageOff() }} % OFF</span></a>
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+
+                        </dd>
+                    </dl>
+
+                    <dl class="param param-feature" style="">
+                        <dt>Description</dt>
+                        <dd>
+                            {% if chosenProduct.get_product_desc() != "" %}
+                            <p style="">{{
+                                chosenProduct.get_product_desc() }}</p>
+                            {% else %}
+                            <p style="">No Available Description
+                                For the Product. :(</p>
+                            {% endif %}
+                        </dd>
+                    </dl>
+
+                    <dl class="param param-feature">
+                        <dt>{% if warning == 1 %}
+                            <p style="color:red;font-weight:bold;">The number of items you picked is more than
+                                the purchase limit.</p>
+
+                            {% elif warning == 2 %}
+                            <p style="color:red;font-weight:bold;">The number of items you picked is more than
+                                the stock available.</p>
+                            {% endif %}
+                            {% if purchaseLimit != 0 %}
+                            <p style="font-weight:bold;color:grey;">Please note there is a purchase limit of {{
+                                purchaseLimit }}.</p>
+                            {% endif %}
+                        </dt>
+                        <dd></dd>
+                    </dl>
+
+                    <div class="row">
+                        <div class="col-sm-5">
+                            <dl class="param param-inline">
+                                <div style="">
+                                    <form style="background-color:white;display:inline;" method="POST"
+                                          action="{{ url_for('show_individual_product',productID=productID) }}">
+                                        <div class="form-group" style="display:inline;">
+                                            <label style="font-weight:bold;">Quantity:</label>
+                                            {{ render_field(quantity_form.quantity, class="") }}
+                                            <p style="font-weight:bold;color:#878787;">{{chosenProduct.get_quantity()}}
+                                                stock(s)
+                                                left</p>
+                                        </div>
+                                        <div style="display:inline;position:absolute;margin-bottom:10px;">
+                                            <button style="display:inline;font-weight:bold;font-size:20px;padding:10px;"
+                                                    type="submit"
+                                                    class="btn btn-dark">
+                                                {% if loggedIn == True %}
+                                                {% if inShoppingCart == False %}
+                                                Add to Cart
+                                                {% else %}
+                                                Added to Cart
+                                                {% endif %}
+                                                {% else %}
+                                                Add to Cart
+                                                {% endif%}
+                                            </button>
+                                            {% if loggedIn == True %}
+                                            {% if inFavourites == False %}
+                                            <a href="{{ url_for('addToFavourite', productid=productID) }}">
+                                                <svg style="margin-left:20px;" xmlns="http://www.w3.org/2000/svg"
+                                                     width="40"
+                                                     height="40" fill="black" class="bi bi-heart" viewBox="0 0 16 16">
+                                                    <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                                                </svg>
+                                            </a>
+                                            {% else %}
+                                            <a href="{{ url_for('deleteFromFavourite', productid=productID) }}">
+                                                <svg style="margin-left:20px;" xmlns="http://www.w3.org/2000/svg"
+                                                     width="40"
+                                                     height="40" fill="red" class="bi bi-heart-fill"
+                                                     viewBox="0 0 16 16">
+                                                    <path fill-rule="evenodd"
+                                                      d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+                                            </svg>
+                                        </a>
+                                        {% endif %}
+                                        {% else %}
+                                        <a href="/login">
+                                            <svg style="margin-left:20px;" xmlns="http://www.w3.org/2000/svg" width="40"
+                                                 height="40" fill="black" class="bi bi-heart" viewBox="0 0 16 16">
+                                                <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                                            </svg>
+                                        </a>
+                                            </div>
+                                        {% endif %}
+
+                                    </form>
+
+                                </div>
+
+                            </dl>  <!-- item-property .// -->
+                            <dl class="param param-inline">
+                                <p style="color:white;">hi</p>
+                            </dl>
+                        </div> <!-- col.// -->
+                        <!-- col.// -->
+
+                    </div> <!-- row.// -->
+
+                </article> <!-- card-body.// -->
+            </aside> <!-- col.// -->
+        </div> <!-- row.// -->
+    </div> <!-- card.// -->
+
+
+</div>
+
+<!-- merchant email -->
+<div style="background-color:white;width:95%;margin-left:30px;margin-top:40px;height:140px;">
+    <div style="float:right;margin-top:30px;margin-right:20px;">
+        <p style="display:inline;font-weight:bold;color:#969696;">Product(s):  </p><span style="color:#5F95FF;font-weight:bold;">{{tproduct}}</span>
+        <br>
+        <br>
+        <p style="display:inline;font-weight:bold;color:#969696;">Rated By:  </p><span style="color:#5F95FF;font-weight:bold;">{{rated}}</span>
+    </div>
+    <span style="float:left;margin-right:30px;" class="glyphicon glyphicon-user"><img class="rounded-circle" style="width:120px;height:120px;margin-left:10px;margin-top:10px;" src="{{merchant.get_profile_picture()}}"/></span>
+    <p style="font-weight:bold;font-size:20px;padding-top:20px;">{{merchantEmail}}</p>
+    <button class="btn btn-outline-dark" style="font-size:20px;font-weight:bold;"><a href="/merchant_store/{{ merchantEmail }}" >View Store</a></button>
+</div>
+
+<!--comments -->
+<div style="background-color:white;width:95%;margin-left:30px;margin-top:40px;" id="ratings">
+    <h3 style="font-weight:bold;color:white; background-color:black;padding:20px;">Product Latest Ratings</h3>
+    <div style="background-color:white;padding:10px;">
+         <a href="/display_comment/{{merchantEmail}}/{{productID}}" class="btn btn-outline-dark" style="float:right; margin-top:1%;">View All Ratings</a>
+            <br>
+            <h3>Rating: <b>{{lastrating}}</b></h3>
+            <br>
+            <h3>Review: <b>{{lastreview}}</b></h3>
+    </div>
+
+</div>
+
+
+<!-- merchant products-->
+<div style="margin-left:30px;margin-top:40px;">
+    {% if merchantProductList != [] %}
+    <h3 style="font-weight:bold;margin-bottom:20px;">Other Products From {{merchantEmail }}</h3>
+{% for product in merchantProductList %}
+    <a style="text-decoration:none;" href="{{ url_for('show_individual_product',productID=product.get_product_id()) }}">
+    <div style="background-color:white;width:350px;margin-left:10px;float:left;height:400px;margin-bottom:15px;font-weight:bold;">
+
+        <div style="font-weight:bold;">
+            {% if product.get_product_id() in otherProductDP_dict %}
+            <p style="color:white;background-color:#FFDE51;position:absolute;padding:10px;font-size:20px;font-weight:bold;">{{ (otherProductDP_dict[product.get_product_id()])[0] }}% Off</p>
+            {% endif %}
+            <image style="width:350px;height:200px;" src="{{product.get_image()}}"></image>
+        </div>
+        {% if product.get_product_name()|length <= 60 %}
+        <p style="padding:10px;font-size:20px;">{{ product.get_product_name() }}</p>
+        {% else %}
+        <p style="padding:10px;font-size:20px;">{{ product.get_product_name()[:61] }} ...</p>
+        {% endif %}
+        <div style="display:inline;margin-top:5px;margin-left:10px;">
+            {% for voucher in voucherFixedAmt_list %}
+                {% if voucher.get_status()=="Ongoing" %}
+                    <a><span class="vouchersBlock">$ {{ "{:.2f}".format(voucher.get_fixedAmt()) }} OFF</span></a>
+                {% endif %}
+            {% endfor %}
+            {% for voucher in voucherPercentage_list %}
+                {% if voucher.get_status()=="Ongoing" %}
+                    <a><span class="vouchersBlock">{{ voucher.get_percentageOff() }} % OFF</span></a>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div style="margin-top:10px;">
+            {% if product.get_product_id() in otherProductDP_dict %}
+            <p style="color:grey;text-decoration:line-through;display:inline;font-weight:bold;padding:10px;">${{ "{:.2f}".format(product.get_product_price()) }}</p><p style="font-size:20px;display:inline;font-weight:bold;">${{ "{:.2f}".format(otherProductDP_dict[product.get_product_id()][1]) }}</p>
+            {% else %}
+            <p style="font-size:20px;display:inline;margin-left:10px;font-weight:bold;">${{ "{:.2f}".format(product.get_product_price()) }}</p>
+            {% endif %}
+        </div>
+    </div>
+</a>
+
+{% endfor %}
+    {% endif %}
+</div>
+
+<!-- same category products -->
+<div style="margin-left:30px;margin-top:40px;clear:both;">
+    {% if sameCat_productList != [] %}
+    <h3 style="font-weight:bold;margin-bottom:20px;padding-top:40px;">Other Products From the Same Category</h3>
+    {% for product in sameCat_productList %}
+        <a style="text-decoration:none;" href="{{ url_for('show_individual_product',productID=product.get_product_id()) }}">
+    <div style="background-color:white;width:350px;margin-left:10px;float:left;height:400px;margin-bottom:15px;">
+        <div style="font-weight:bold;">
+            <div>
+            {% if product.get_product_id() in otherProductDP_dict %}
+            <p class="position-absolute" style="color:white;background-color:#FFDE51;padding:10px;font-size:20px;">{{ (otherProductDP_dict[product.get_product_id()])[0] }}% Off</p>
+            {% endif %}
+                <image style="width:350px;height:200px;" src="{{product.get_image()}}"></image>
+            </div>
+            {% if product.get_product_name()|length <= 60 %}
+                <p style="padding:10px;font-size:20px;">{{ product.get_product_name() }}</p>
+                {% else %}
+                <p style="padding:10px;font-size:20px;">{{ product.get_product_name()[:61] }} ...</p>
+                {% endif %}
+        </div>
+
+        <div style="font-weight:bold;">
+            {% if product.get_product_id() in otherProductDP_dict %}
+            <p style="color:white;background-color:#FFDE51;position:absolute;padding:10px;font-size:20px;">{{ (otherProductDP_dict[product.get_product_id()])[0] }}% Off</p>
+            {% endif %}
+        </div>
+        <div style="display:inline;margin-top:5px;margin-left:10px;">
+            {% for voucher in voucherFixedAmt_list %}
+                {% if voucher.get_status()=="Ongoing" %}
+                    <a><span class="vouchersBlock">$ {{ "{:.2f}".format(voucher.get_fixedAmt()) }} OFF</span></a>
+                {% endif %}
+            {% endfor %}
+            {% for voucher in voucherPercentage_list %}
+                {% if voucher.get_status()=="Ongoing" %}
+                    <a><span class="vouchersBlock">{{ voucher.get_percentageOff() }} % OFF</span></a>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div style="margin-top:10px;">
+            {% if product.get_product_id() in otherProductDP_dict %}
+            <p style="color:grey;text-decoration:line-through;display:inline;font-weight:bold;padding:10px;">${{ "{:.2f}".format(product.get_product_price()) }}</p><p style="font-size:20px;display:inline;font-weight:bold;">${{ "{:.2f}".format(otherProductDP_dict[product.get_product_id()][1]) }}</p>
+            {% else %}
+            <p style="font-size:20px;display:inline;margin-left:10px;font-weight:bold;">${{ "{:.2f}".format(product.get_product_price()) }}</p>
+            {% endif %}
+        </div>
+    </div>
+</a>
+    {% endfor %}
+    {% endif %}
+</div>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+{% endblock %}
+{% block style %}
+<style>
+
+    body{
+    background-color:#f2f2f2;
+    }
+
+ a{
+    text-decoration:none;
+    color:black;
+    }
+
+    a:hover{
+    color:#606060;
+    }
+
+    #description {
+    font-size:20px;
+    }
+
+    body{
+    background-color:#f2f2f2;
+    }
+
+   .vl {
+  border-left: 3px solid grey;
+  height: 15px;
+    }
+
+    .vouchersBlock{
+    background-color:#628EFF;
+    display:inline-block;
+    color:white;
+    padding:5px;
+    font-weight:bold;
+    margin-right:10px;
+    }
+
+ /* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  position: relative;
+  background-color: #fefefe;
+  margin: auto;
+  padding: 0;
+  border: 1px solid #888;
+  width: 80%;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+  -webkit-animation-name: animatetop;
+  -webkit-animation-duration: 0.4s;
+  animation-name: animatetop;
+  animation-duration: 0.4s
+}
+
+/* Add Animation */
+@-webkit-keyframes animatetop {
+  from {top:-300px; opacity:0}
+  to {top:0; opacity:1}
+}
+
+@keyframes animatetop {
+  from {top:-300px; opacity:0}
+  to {top:0; opacity:1}
+}
+
+/* The Close Button */
+.close {
+  color: white;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: red;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.modal-header {
+  padding: 2px 16px;
+  background-color: black;
+  color: white;
+}
+
+.modal-body {padding: 2px 16px;}
+
+.modal-footer {
+  padding: 2px 16px;
+  background-color: black;
+  color: white;
+}
+
+/* Style the button that is used to open and close the collapsible content */
+.collapsible {
+  background-color: white;;
+  color: #444;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.active, .collapsible:hover {
+  background-color: #ccc;
+}
+
+/* Style the collapsible content. Note: hidden by default */
+.content {
+  padding: 0 18px;
+  background-color: white;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+}
+</style>
+{% endblock %}
+{% block scripts %}
+<script>
+// Get the modal
+var modal = document.getElementById("myModal");
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+
+var coll = document.getElementsByClassName("collapsible");
+var i;
+
+for (i = 0; i < coll.length; i++) {
+  coll[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var content = this.nextElementSibling;
+    if (content.style.maxHeight){
+      content.style.maxHeight = null;
+    } else {
+      content.style.maxHeight = content.scrollHeight + "px";
+    }
+  });
+}
+
+</script>
+{% endblock %}
+

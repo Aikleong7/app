@@ -1,0 +1,45 @@
+{% extends "partials/edit_template.html" %}
+{% block title %} Edit Name {% endblock %}
+
+{% block content %}
+{% from "partials/_formHelper.html" import render_field %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+<style>
+form{
+text-align:left;
+padding-left:2%;
+padding-right:2%;
+margin-bottom:5%;
+margin-left:20%;
+margin-right:40%;}
+
+</style>
+<h2 style="margin-left:20%;"> Name </h2>
+<hr>
+<br>
+<p style="margin-left:20%;">Changes to your name will be reflected across your Singtopia Account.</p>
+
+<form action="" method="post">
+    <p style="font-weight:bold;"> Change Name</p>
+    <div class="row">
+    <div class="col">
+        {{ render_field(form.first_name, class="form-control") }}
+    </div>
+    </div>
+    <div class="row">
+    <div class="col">
+        {{ render_field(form.last_name, class="form-control") }}
+    </div>
+    </div>
+<br>
+
+       <div class="row">
+             <div class="col">
+         <p id="create"><a href="/personal">Cancel</a></p>
+             </div>
+             <div class="col">
+         <input type="submit" value="Save" id="login" class="btn btn-primary"/>
+             </div>
+     </div>
+</form>
+{% endblock %}

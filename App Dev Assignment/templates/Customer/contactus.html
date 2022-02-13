@@ -1,0 +1,50 @@
+{% extends "partials/customer_sidenavbar.html" %}
+{% block title %} Profile {% endblock %}
+
+{% block content %}
+{% from "partials/_formHelper.html" import render_field %}
+<style>
+#sidenav> :nth-child(9){
+background-color:white;
+color:black;
+}
+h3{
+text-align:center;
+margin-top:5%;
+}
+h5{
+text-align:center;
+color:#818181;
+}
+#info{
+margin-left:40%;
+width:20%;
+border: 10px solid black;
+color:black;
+background-color:black;
+}
+</style>
+
+<h3>Contact Us</h3>
+<hr id="info">
+<div class="row" style="margin-left:5%;">
+    <div class="col-6" style="padding-right:2%;margin-right:1%;border-style:solid;">
+        <form action="" method="POST" style="padding-bottom:5%;">
+            {{ render_field(form.Name, class="form-control", style="background-color:#F1F1F1") }}
+            {{ render_field(form.Email, class="form-control",style="background-color:#F1F1F1") }}
+            {{ render_field(form.Message, class="form-control", style="background-color:#F1F1F1;padding-bottom:30%;") }}
+            <br>
+            <div class="d-grid gap-2 col-12 mx-auto">
+                    <input type="submit" value="Send" id="login" class="btn btn-primary">
+            </div>
+        </form>
+    </div>
+    <div class="col-5" style="border-style:solid;">
+        <div class="container">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.661177582874!2d103.84676001340169!3d1.3799553618656786!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31da16eb64b0249d%3A0xe5f10ff680eed942!2sNanyang%20Polytechnic!5e0!3m2!1sen!2ssg!4v1640535715652!5m2!1sen!2ssg" width="400" height="400" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+        <p>180 Ang Mo Kio Ave 8, Singapore 569830</p>
+            </div>
+    </div>
+</div>
+{% endblock %}
+

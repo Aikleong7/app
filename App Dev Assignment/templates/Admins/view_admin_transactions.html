@@ -1,0 +1,41 @@
+{% extends "partials/admin_sidenavbar.html" %}
+{% block title %} Admin Wallet {% endblock %}
+
+{% block content %}
+<style>
+#wallet{
+color: white;
+text-decoration;
+font-weight:bold;
+}
+</style>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_wallet.css') }}">
+<div class="page_header" style="height:8vw;">
+    <a href="/admin_wallet"><img src="{{url_for('static', filename='image/back.png')}}" style="width:5vw;"></a>
+    <img src="{{url_for('static', filename='image/my_transactions.png')}}" style="width:5vw;margin-left:5%;">
+    <div style="float:right; margin-right:43%; margin-top:1%;">
+    <span style="font-size:2vw; font-weight:700;">View Admin Transactions</span><br>
+      <p style="font-size:1vw;">View all admin transactions</p>
+    </div>
+  </div>
+{%if list_length != 0 %}
+  <div>
+    <table class="table">
+      <thead><tr><td>Date(DD/MM/YYYY)</td><td>Transaction Type</td><td>Amount</td><td>Balance</td></tr></thead>
+      {% for transaction in transaction_list %}
+      {%if transaction.get_transaction_type() == "Admin Tax" %}
+      <tr bgcolor="#DDFFD8"><td>{{transaction.get_transaction_date()}}</td><td>{{transaction.get_transaction_type()}}</td><td>+${{transaction.get_amount()}}</td>
+        <td>${{transaction.get_balance_after_transaction()}}</td>
+      </tr>
+      {%elif transaction.get_transaction_type() == "Withdrawal"%}
+      <tr bgcolor="#FFD8D8"><td>{{transaction.get_transaction_date()}}</td><td>{{transaction.get_transaction_type()}}</td><td>-${{transaction.get_amount()}}</td>
+        <td>${{transaction.get_balance_after_transaction()}}</td>
+      </tr>
+      {%endif%}
+      {%endfor%}
+    </table>
+  </div>
+  {%else%}
+  <h5>You have no current transactions for your E-wallet</h5>
+  {%endif%}
+{%endblock%}

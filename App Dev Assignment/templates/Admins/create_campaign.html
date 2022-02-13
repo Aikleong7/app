@@ -1,0 +1,73 @@
+{% extends "partials/admin_sidenavbar.html" %}
+{% block title %}Create campaign vouchers{% endblock %}
+
+{% block content %}
+{% from "partials/_formHelper.html" import render_field %}
+<style>
+#webcam, #createcam {
+color: white;
+text-decoration;
+font-weight:bold;
+}
+</style>
+<div class="top_box_2">
+  <p style="font-family: Montserrat; line-height: 140px; font-size: 64px;">Website Campaign</p>
+</div>
+
+<div style="width: 100%">
+  <form method="POST" action="{{ url_for('create_campaign') }}">
+    <br><br>
+    <div style="float: left; margin-left: 12%; width:30%">
+    <label style="font-weight:bold">Campaign name:</label>
+    <br>
+    {{ render_field(form.campaign_name, class="form-control") }}
+    <br>
+
+
+    <label style="font-weight:bold">Start Date:</label>
+
+    {{ render_field(form.start_date, class="form-control") }}
+      <br>
+    <label style="font-weight:bold">End Date:</label>
+
+    {{ render_field(form.end_date, class="form-control") }}
+
+    </div>
+
+    <div style="float:left; margin-left:4%; width:40%">
+    <label style="font-weight:bold">Campaign image:</label>
+      <br>
+    {{ render_field(form.camp_img, class="form-control", id='inp') }}
+    {{ render_field(form.base, style="display:none;", id='image') }}
+    <br>
+    <img id="img" style="margin:auto; height:150px; width:100%">
+
+    <br><br><br>
+    </div><input type="submit" value="Submit" class="camp_btn">
+  </form>
+</div>
+
+<script>
+
+  document.getElementById("submenu3").className += " show";
+
+   function readFile() {
+
+  if (this.files && this.files[0]) {
+
+    var FR= new FileReader();
+
+    FR.addEventListener("load", function(e) {
+      document.getElementById("img").src       = e.target.result;
+
+      document.getElementById("image").value = e.target.result;
+    });
+
+    FR.readAsDataURL( this.files[0] );
+  }
+
+}
+
+document.getElementById("inp").addEventListener("change", readFile);
+</script>
+{% endblock %}

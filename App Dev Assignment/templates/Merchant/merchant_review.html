@@ -1,0 +1,35 @@
+{% extends "partials/_merchant_side_navbar.html" %}
+{% block title %}Merchant Review {% endblock %}
+{% block navigation %}
+<a class="navbar-brand" href="/merchant_review"></span><span style="font-weight:bold;color:#267CFC; font-size:2vw;">|Review</span></a>
+{% endblock %}
+{% block content %}
+<style>
+    #review, #shop{
+color:#B78BFF;
+font-weight:bold;
+}
+
+</style>
+<br>
+<div class="row row-cols-1 row-cols-md-2 g-4">
+    {% for x in product_list %}
+  <div class="col">
+    <div class="card">
+        <img src="{{  x.get_image() }}" width='200' height='200'>
+
+      <div class="card-body">
+        <p>{{x.get_product_name()}}</p>
+        <p class="card-text">{{x.get_product_cat()}}</p>
+        <p class="card-text" style="display:inline">{{x.get_product_desc()}}</p>
+          <a href="/merchant_review/{{x.get_product_id()}}" class="btn btn-primary" style="float:right;display:inline">View Reviews</a>
+      </div>
+    </div>
+  </div>
+{% endfor %}
+</div>
+<script>
+  document.getElementById("submenu6").className += " show";
+</script>
+
+{% endblock %}

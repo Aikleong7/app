@@ -1,0 +1,116 @@
+{% extends "partials/_merchant_side_navbar.html" %}
+{% block navigation %}
+<span>
+<a class="navbar-brand" href="#"><span style="font-weight:bold;">| Overview</span></a>
+
+</span>
+{% endblock %}
+{% block title %}Merchant Home{% endblock %}
+{%block content%}
+{%block css%}<link rel="stylesheet" href="{{ url_for('static', filename='css/merchant_home.css') }}">{%endblock%}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+                {% from "partials/_formHelper.html" import render_field %}
+            <div id="merchant_home_block" class="merchant_home_block">
+            <div id="m-home-3sec">
+        <h6 style="font-size:2vw; font-weight:700;">To do List</h6>
+        <p style="font-size:0.8vw;">Create a list of items you plan to do and delete them when you are done</p>
+          <table class="table">
+              <thead><tr><td style="font-size:1.5vw;">My Tasks</td></tr></thead>
+            <tbody>
+            {% if count == 0 %}
+            <tr><td>You have no current tasks <img src="{{ url_for('static', filename='image/party_emoji.png') }}" style="width:5%;"></td></tr>
+            {%else%}
+                {% for td_item in td_list %}
+                <tr><td>{{ td_item.get_td_item() }}</td>
+                    <td><form action="{{url_for('delete_td',id=td_item.get_td_item())}}" method=POST>
+                        <input type="submit" value="Delete" class="btn btn-danger"></form></td></tr>
+                {% endfor %}
+            {%endif%}
+            </tbody>
+          </table>
+        <button id="create_new_td" onclick="show()"
+                style="font-size:1vw;border:0; background-color:green; color:white; font-weight:500;padding:0.78vw;">
+            Create New Item To Do
+        </button>
+                <form method=post action = "" style="position:absolute; right:0; background-color:#c5c6c7; display:none;" id="create-td-form">
+                    {{ render_field(form.td_item,autocomplete="off", class="form-control") }}
+                  <input type=submit value=Add>
+                </form>
+  </div>
+        <div id="m-home-1sec">
+            <img src="{{ url_for('static', filename='image/user_box.png') }}" style="width:10%;">
+    <h2 style="font-size:2.2vw; display:inline-block;">Welcome {{user.get_first_name().title()}} {{user.get_last_name()}}</h2>
+            <br>
+            <br>
+            <br>
+            <div class="account_status">
+                <h6 style="">*Merchant Account Status*</h6>
+                <ul style="list-style-type:square;">
+                    {%if wallet_balance <= 100 %}
+                    <li style="color:red; font-weight:600;">Your Wallet's Balance is low. <a href="/merchant_mywallet">Top Up</a></li>
+                    {%else%}
+                    <li style="color:green; font-weight:600;">Your Wallet has a healthy balance</li>
+                    {%endif%}
+                    {%if number_of_products == 0%}
+                    <li style="color:red; font-weight:600;">You have no products listed yet. <a href="/merchant_add_product">Add New Products</a></li>
+                    {%else%}
+                    <li style="color:green; font-weight:600;">You have a total of {{number_of_products}} product(s)</li>
+                    {%endif%}
+                    <li style="color:green; font-weight:600;">All your inventory items are stocked up!</li>
+                </ul>
+            </div>
+        </div>
+                <hr>
+                <div class="home_layer2">
+                    <canvas id="myChart" style="width:100;height:100;"></canvas>
+                </div>
+            </div>
+<script>
+    function show(){
+      var x = document.getElementById('create-td-form');
+      x.style.display = "block";
+      var y = document.getElementById('create_new_td');
+      y.style.display = "none";
+    }
+
+// Bar chart
+var date = date
+var xValues = ["{{list_seven_days[0]}}", "{{list_seven_days[1]}}", "{{list_seven_days[2]}}", "{{list_seven_days[3]}}", "{{list_seven_days[4]}}", "{{list_seven_days[5]}}", "{{list_seven_days[6]}}"]
+var yValues = []
+var label = ["hello", "yes", "lol"]
+var barColors = []
+"{%for date in weekly_products_purchased_dict%}"
+yValues.push("{{weekly_products_purchased_dict[date]}}")
+"{%if weekly_products_purchased_dict[date] < 5 %}"
+barColors.push("red")
+"{%else%}"
+barColors.push("green")
+"{%endif%}"
+"{%endfor%}"
+      new Chart(document.getElementById("myChart"), {
+           type: 'bar',
+    data: {
+        labels: xValues,
+        datasets: [{
+            data: yValues,
+            backgroundColor: barColors
+        }]
+    },
+    options: {
+    legend: {display: false},
+      title: {
+      display: true,
+      text: "Products Sold In the Past Week" + " [" +  "{{list_seven_days[0]}}" + "-" + "{{list_seven_days[6]}}" + "]"
+      },
+    scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+    }
+    }
+});
+    </script>
+{% endblock %}

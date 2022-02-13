@@ -1,0 +1,128 @@
+{% extends "partials/customer_sidenavbar.html" %}
+{% block title %} Profile {% endblock %}
+
+{% block content %}
+<style>
+    #sidenav> :nth-child(8){
+background-color:white;
+color:black;
+}
+</style>
+<h1 style="text-align:center;margin-top:20px;font-weight:bold;">My Purchase History</h1>
+<div style="margin-left:50px;width:100%;">
+{% for userPh in userPH_list %}
+<div style="background-color:#F4F4F4;width:100%;">
+    <div >
+    {% for merchant in userPh.get_merchants() %}
+    <div style="background-color:#ECECEC;clear:both;margin-top:20px;">
+        <h3 style="background-color:black;color:white;padding:10px;">{{ merchant.get_merchantName() }}</h3>
+        {% for product in merchant.get_products() %}
+        <div class="product">
+            <image src="{{ product.get_productObject().get_image() }}" style="width:200px;margin:10px;float:left;height:140px;"></image>
+            <p style="margin-top:10px;font-weight:bold;font-size:20px;margin-top:10px;max-width:80%;color:black;">{{ product.get_productObject().get_product_name() }}</p>
+            <a class="btn btn-primary" href="/review/{{merchant.get_merchantEmail()}}/{{product.get_productObject().get_product_id()}}" style="float:right;font-weight:bold;margin-right:20px;font-size:20px;">Rate Now</a>
+            {% if product.get_discountedPrice() ==0 %}
+            <p style="font-weight:bold;">Price: ${{ "{:.2f}".format(product.get_originalPrice()) }}</p>
+            {% else %}
+            <p style="font-weight:bold;display:inline;">Price:  </p><p style="font-weight:bold;text-decoration: line-through;display:inline;"> ${{ "{:.2f}".format(product.get_originalPrice()) }}</p>
+            <p style="font-weight:bold;display:inline;"> ${{ "{:.2f}".format(product.get_discountedPrice()) }}</p>
+
+            {% endif %}
+            <p style="font-weight:bold;">Quantity: {{ product.get_quantity() }}</p>
+            <p style="font-weight:bold;">Total Price: ${{ "{:.2f}".format(product.get_totalPrice()) }}</p>
+
+            </div>
+        <hr>
+        {% endfor %}
+        <!-- Shop voucher used -->
+        <div>
+            {% if merchant.get_usedVoucher() != None %}
+            <image style="float:left;width:40px;margin-right:10px;margin-left:10px;" src="{{ url_for('static', filename='image/voucherChosen.png') }}"></image>
+            {% if merchant.get_usedVoucher().get_discountType()=="fixedAmt" %}
+                <p style="text-align:left;">${{ "{:.2f}".format(merchant.get_usedVoucher().get_fixedAmt()) }} OFF</p>
+                {% else %}
+                <p style="text-align:left;">{{ merchant.get_usedVoucher().get_percentageOff() }}% OFF</p>
+                {% endif %}
+            {% else %}
+            <image style="float:left;width:40px;margin-right:20px;margin-left:10px;" src="{{ url_for('static', filename='image/voucherNotChosen.png') }}"></image>
+                <p style="text-align:left;">No Shop Voucher Chosen</p>
+            {% endif %}
+
+        </div>
+        <hr>
+        {% if merchant.get_discountedTotalPrice()==0 %}
+        <p style="font-weight:bold;margin-left:10px;">Total Price: ${{ "{:.2f}".format(merchant.get_totalPrice()) }}</p>
+        {% else %}
+        <p style="font-weight:bold;margin-left:10px;display:inline;">Total Price: ${{ "{:.2f}".format(merchant.get_discountedTotalPrice()) }}</p>
+        {% endif %}
+        <p style="font-weight:bold;margin-left:10px;">Savings: ${{ "{:.2f}".format(merchant.get_savings()) }}</p>
+        <p style="font-weight:bold;margin-left:10px;;margin-bottom:10px;">Order Date: {{ userPh.get_paymentDetails().get_dateOfPayment() }}</p>
+        <hr>
+    </div>
+    {% endfor %}
+
+    <div style="padding:15px;">
+        {% if userPh.get_paymentDetails().get_shoppingCartObject().get_chosenWebsiteVoucher() == None %}
+        <image src="{{ url_for('static', filename='image/voucherNotChosen.png') }}" style="float:left;width:50px;padding-right:10px;"></image>
+        <p style="display:inline;font-weight:bold;">No Platform Vouchers Chosen</p>
+        {% else %}
+        <image style="float:left;width:40px;margin-right:10px;" src="{{ url_for('static', filename='image/voucherChosen.png') }}"></image>
+        {% if userPh.get_paymentDetails().get_shoppingCartObject().get_chosenWebsiteVoucher().get_discount_amt() < 1 %}
+            <p style="display:inline;font-weight:bold;">{{ userPh.get_paymentDetails().get_shoppingCartObject().get_chosenWebsiteVoucher().get_discount_amt()*100 }}% Off</p>
+                {% else %}
+        <p style="display:inline;font-weight:bold;">${{ userPh.get_paymentDetails().get_shoppingCartObject().get_chosenWebsiteVoucher().get_discount_amt() }} Off</p>
+        {% endif %}
+        {% endif %}
+        <hr>
+         {% if userPh.get_paymentDetails().get_shoppingCartObject().get_chosenWebsiteReward() == None %}
+        <image src="{{ url_for('static', filename='image/voucherNotChosen.png') }}" style="float:left;width:50px;padding-right:10px;"></image>
+        <p style="display:inline;font-weight:bold;">No Website Rewards Chosen</p>
+        {% else %}
+        <image style="float:left;width:40px;margin-right:10px;" src="{{ url_for('static', filename='image/voucherChosen.png') }}"></image>
+         <p style="display:inline;font-weight:bold;">${{userPh.get_paymentDetails().get_shoppingCartObject().get_chosenWebsiteReward().get_amt_rewarded()}} Off</p>
+        {% endif %}
+        <hr>
+    </div>
+    <div style="padding:15px;padding-top:5px;">
+        {% if userPh.get_paymentDetails().get_shippingOption() == "ES" %}
+        <p style="font-weight:bold;font-size:15px;">Shipping Option: Express Shipping</p>
+        <p style="font-weight:bold;font-size:15px;">Express Shipping Fee: $3.00</p>
+        {% else %}
+        <p style="font-weight:bold;font-size:15px;">Shipping Option: Free Shipping</p>
+        {% endif %}
+
+        {% if userPh.get_paymentDetails().get_shoppingCartObject().get_totalDiscountedPrice() == 0 and userPh.get_paymentDetails().get_shoppingCartObject().get_chosenWebsiteVoucher() == None and userPh.get_paymentDetails().get_shoppingCartObject().get_chosenWebsiteReward() == None %}
+            {% if userPh.get_paymentDetails().get_shippingOption() == "FS" %}
+            <p style="display:inline;font-weight:bold;font-size:20px;">Total Price: </p><span style="font-weight:bold;font-size:20px;color:#267CFC;">${{ "{:.2f}".format(userPh.get_paymentDetails().get_shoppingCartObject().get_totalPrice()) }}</span>
+            {% else %}
+            <p style="display:inline;font-weight:bold;font-size:20px;">Total Price: </p><span style="font-weight:bold;font-size:20px;color:#267CFC;">${{ "{:.2f}".format(userPh.get_paymentDetails().get_subTotal()) }}</span>
+            {% endif %}
+
+        {% else %}
+            {% if userPh.get_paymentDetails().get_shippingOption() == "FS" %}
+            <p style="display:inline;font-weight:bold;font-size:20px;">Total Price: </p><span style="font-weight:bold;font-size:20px;color:#267CFC;">${{ "{:.2f}".format(userPh.get_paymentDetails().get_shoppingCartObject().get_totalDiscountedPrice()) }}</span>
+            {% else %}
+            <p style="display:inline;font-weight:bold;font-size:20px;">Total Price: </p><span style="font-weight:bold;font-size:20px;color:#267CFC;">${{ "{:.2f}".format(userPh.get_paymentDetails().get_subTotal()) }}</span>
+            {% endif %}
+
+        {% endif %}
+        <br>
+    <p style="display:inline;font-weight:bold;font-size:20px;">Total Savings: </p><span style="font-weight:bold;font-size:20px;color:#267CFC;">${{ "{:.2f}".format(userPh.get_paymentDetails().get_shoppingCartObject().get_savings()) }}</span>
+
+        </div>
+
+        </div>
+</div>
+{% endfor %}
+    </div>
+<style>
+    .product p{
+    color:#8D8D8D;
+
+    }
+
+    p{
+    font-weight:bold;
+    }
+</style>
+{% endblock %}

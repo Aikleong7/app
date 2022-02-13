@@ -1,0 +1,90 @@
+{% extends 'partials/_merchant_side_navbar.html' %}
+{% block title %} Merchant Profile{% endblock %}
+{% block navigation %}
+<a class="navbar-brand" href="#"><span style="font-weight:bold;color:#267CFC;">| Profile</span></a>
+
+{% endblock %}
+{% block content %}
+{% from "partials/_formHelper.html" import render_field %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/merchant_products.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/merchant_setting.css') }}">
+
+<style>
+#shop, #profile{
+color:#B78BFF;
+font-weight:bold;
+}
+#col{
+margin-top:9%;
+margin-left:1%;
+}
+
+.col3{
+padding-left:6%;
+margin-left:8%;
+padding-left:5%;
+padding-top:5%;
+margin-top:2%;
+}
+.col-5 > img{
+width:100%;
+height:200px;
+}
+.active_page{
+color:blue}
+</style>
+
+<div class="merchant_products_block">
+  <div class="m-products-sec1">
+    <ul>
+      <li><img src="static/image/shop_icon.png" style="display:inline;">
+        <h4 style="display:inline; font-weight:bold;">Shop</h4></li>
+      <li><a href="#" >Shop rating</a></li>
+      <li><a href="#" class="active_page">Shop Profile</a></li>
+      <li><a href="#" >Shop Categories</a></li>
+</ul>
+  </div>
+  <div class="page_header">
+    <img src="static/image/shop_icon.png" >
+    <h6 class="page_header_e">
+      Shop Profile
+      <br>
+      <span class="page_header_note">Your Shop profile that your customers will view. Contact details and shop profile image are found under this section</span>
+    </h6>
+  </div><br>
+
+
+    <div class="row">
+        <div class="col-5" style="border-style:none; text-align:center">
+            <h3  >Shop Profile Picture</h3>
+            <img src="{{ merchant.get_profile_picture() }}"  style="height:300px;width:300px">
+
+
+        </div>
+        <div class="col-5" style="text-align:center;margin-left:11%;" >
+          <h3>Store Information</h3>
+          <br>
+          <h3 ><b>Name of store</b></h3>
+          <br>
+          <div style="text-align:left;">
+          <h5 ><b>Contact Number: </b></h5>
+            <h5>{{ merchant.get_phone() }}</h5>
+          <br>
+          <h5 ><b>Email Address: </b></h5>
+            <h5>{{ merchant.get_email() }}</h5>
+            <br>
+          <h5 ><b>Shop Description: </b></h5>
+              <h5>{{ merchant.get_shop_description() }}</h5>
+            <br>
+          <h5 ><b>Store Location: </b></h5>
+            <h5>{{ merchant.get_main_address() }}, {{merchant.get_main_address_unit() }}</h5>
+            <br>
+          </div>
+          <a href="/merchant_edit_profile">Edit Shop Profile</a>
+        </div>
+    </div>
+  <script>
+   document.getElementById("submenu6").className += " show";
+</script>
+{% endblock %}

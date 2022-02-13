@@ -1,0 +1,124 @@
+{% extends "partials/customer_sidenavbar.html" %}
+{% block title %} Profile {% endblock %}
+
+{% block content %}
+{% from "partials/_formHelper.html" import render_field %}
+
+<h1 style="font-weight:bold;text-align:center;margin-top:20px;color:white;background-color:black;padding:10px;width:100%;margin-left:40px;"> Favourites ({{favourite_num}} Items) </h1>
+<div class="row" style="background-color:#EDEDED;font-weight:bold;text-align:right;margin-top:20px;color:white;padding:10px;width:100%;margin-left:40px;">
+  <div class="col">
+      <div class="dropdown">
+          <button class="dropbtn">Previously Added</button>
+          <div class="dropdown-content" style="text-align:left;">
+              <a href="/favourites">Recently Added </a>
+              <a href="/favourites_priceHtoL">Price High to Low</a>
+              <a href="/favourites_priceLtoH">Price Low to High</a>
+          </div>
+      </div>
+  </div>
+</div>
+<div style="width:100%;margin-left:20px;">
+<ul>
+{% for product in favouriteList %}
+    <li>
+
+
+<a href="{{ url_for('show_individual_product',productID=product.get_productID()) }}">
+    <div class="favourite " style="background-color:#E8E8E8;width:390px;height:490px;margin-top:20px;float:left;margin-left:10px;">
+        <div>
+            {% if product.get_discountPromo() != 0 %}
+            <p style="color:white;background-color:#FFDE51;position:absolute;padding:10px;font-size:20px;">{{ product.get_discountPromo() }}% Off</p>
+            {% endif %}
+            <image style="width:390px;height:250px;" src="{{ product.get_productObject().get_image() }}"></image>
+            </div>
+
+        {% if product.get_productObject().get_product_name()|length <= 60 %}
+        <p style="padding:10px;font-size:20px;">{{ product.get_productObject().get_product_name() }}</p>
+        {% else %}
+        <p style="padding:10px;font-size:20px;">{{ product.get_productObject().get_product_name()[:61] }} ...</p>
+        {% endif %}
+
+        <div>
+            {% for voucher in product.get_voucherShow() %}
+            {% if voucher.get_discountType() =="fixedAmt" %}
+            <p style="color:white;background-color:#628EFF;width:100px;padding:10px;display:inline;margin-left:10px;">${{ "{:.2f}".format(voucher.get_fixedAmt()) }} OFF</p>
+            {% else %}
+            <p style="color:white;background-color:#628EFF;width:100px;padding:10px;display:inline;margin-left:10px;">{{ "{:.2f}".format(voucher.get_percentageOff()) }}% OFF</p>
+            {% endif %}
+            {% endfor %}
+        </div>
+        <br>
+        <div style="margin-left:10px;">
+        {% if product.get_discountedPrice() != 0 %}
+        <p style="color:grey;text-decoration:line-through;display:inline;">${{ "{:.2f}".format(product.get_originalPrice()) }}</p><p style="font-size:20px;display:inline;margin-left:20px;">${{ "{:.2f}".format(product.get_discountedPrice()) }}</p>
+        {% else %}
+        <p style="font-size:20px;display:inline;margin-left:10px;">${{ "{:.2f}".format(product.get_originalPrice()) }}</p>
+        {% endif %}
+            </div>
+        <br>
+    </div>
+    </a>
+
+    </li>
+    {% endfor %}
+</ul>
+    </div>
+
+<style>
+    .favourite p{
+    font-weight:bold;
+    }
+
+    a{
+    text-decoration:none;
+    color:black;
+    }
+
+    a:hover{
+    color:#606060;
+    }
+
+    li{
+    display:inline-block;
+    list-style-type:none;
+    }
+
+    .dropbtn {
+  background-color: black;
+  color: white;
+  font-weight:bold;
+  padding: 16px;
+  font-size: 20px;
+  border: none;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 180px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {background-color: #ddd;}
+
+.dropdown:hover .dropdown-content {display: block;}
+
+.dropdown:hover .dropbtn {background-color: #3e8e41;}
+
+</style>
+{% endblock %}
+

@@ -1,0 +1,105 @@
+{% extends "partials/_merchant_side_navbar.html" %}
+
+{% block title %}Merchant My Products{% endblock %}
+{%block css%}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/merchant_products.css') }}">
+<style>
+  #inventory, #product{
+color:#B78BFF;
+font-weight:bold;
+}
+</style>
+{%endblock%}
+{% block navigation %}
+<a class="navbar-brand" href="/merchant_inventory"><span style="font-weight:bold;color:#267CFC; font-size:2vw;">| Inventory</span></a>
+{% endblock %}
+{%block content%}
+
+<div class="merchant_products_block">
+  <div class="m-products-sec1">
+    <ul>
+      <li><img src="{{url_for('static', filename='image/product_icon.png')}}" style="display:inline;">
+        <h4 style="display:inline; font-weight:bold;">Products</h4></li>
+      <li><a href="/merchant_products">My Products</a></li>
+      <li><a href="/merchant_add_product">Add New Product</a></li>
+      <li><a href="#" class="active_page">Inventory</a></li>
+</ul>
+  </div>
+  <div class="page_header">
+    <img src="{{url_for('static', filename='image/inventory_icon.png')}}" style="width:5vw;">
+    <h6 class="page_header_e">
+      Inventory
+      <br>
+      <span class="page_header_note">Inventory that you currently have in your storage</span>
+    </h6>
+  </div>
+  <div class="inventory_bar">
+    <h6 style="display:inline;">My Storage</h6>
+      <input type="search" placeholder="Search Inventory..." class="inventory_bar_e" style="border:1px solid grey; border-radius:0.78vw; margin-left:47%;">
+      <button type="button" id="myBtn" class="inventory_bar_e"
+              style="border:0px; font-size:1.2vw; color:white; background-color:#32c406; font-weight:bold; padding:0.78vw;">Add New Inventory</button>
+  </div>
+  {% for inventory in inventory_list %}
+        <div class="view_inventory_items">
+       <form action="{{url_for('delete_inventory', name=inventory.get_name())}}"
+          method=POST style="float:right;">
+            <input type="submit" value="Remove" class="btn btn-danger">
+     </form>
+      <span>Inventory Category:</span> {{inventory.get_category()}}
+      <br>
+      <br>
+      <span>Inventory Name:</span> {{inventory.get_name()}}
+      <br>
+      <br>
+      <span>Inventory Quantity:</span> {{inventory.get_quantity()}}
+            <form action="{{url_for('view_inventory', name=inventory.get_name())}}" method=POST style="float:right;">
+            <input type="submit" value="View Item" style="border:none; background-color:#b865f7; color:white;
+font-weight:600; padding:0.70vw;">
+     </form>
+    </div>
+  {%endfor%}
+{% from "partials/_formHelper.html" import render_field %}
+<!-- The Modal -->
+<div id="myModal" class="modal">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close" style="margin-left:95%; font-size:3vw; color:red;">&times;</span>
+    <h3 style="font-size:2vw; text-decoration:underline;">Add New Inventory</h3>
+    <form method="post" action="">
+        <p><span>Inventory Category:</span> {{ render_field(form.inventory_category ,autocomplete="off", class="form-control") }}</p>
+        <p><span>Inventory Name:</span> {{ render_field(form.inventory_name ,autocomplete="off", class="form-control")}}</p>
+        <p><span>Inventory Unit Price:</span>{{ render_field(form.inventory_price ,autocomplete="off", class="form-control", placeholder="$")}}</p>
+        <input type="submit" value="Add+" id="submitbtn">
+    </form>
+  </div>
+</div>
+<script>
+  // Get the modal
+var modal = document.getElementById("myModal");
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+document.getElementById("submenu2").className += " show";
+</script>
+</div>
+{%endblock%}

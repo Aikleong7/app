@@ -1,0 +1,94 @@
+
+{% extends "partials/customer_sidenavbar.html" %}
+{% block title %} Personal Info {% endblock %}
+{% from "partials/_formHelper.html" import render_field %}
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+.checked {
+  color: orange;
+}
+#sidenav> :nth-child(7){
+background-color:white;
+color:black;
+</style>
+
+<form action="" method="post">
+<h1>Rate Product:</h1>
+<h1 style="text-align:center">{{product.get_product_name()}}</h1>
+
+<img src="{{ product.get_image() }}" width="300" height="300" style="margin-left:35%">
+<br>
+<div class="row">
+
+        <div class="col" style="text-align:center">
+            {{ render_field(form.rating, class="form-control", id='rating',style="display:none") }}
+            <span class="fa fa-star checked" id="1" onclick="one_star()"></span>
+            <span class="fa fa-star checked" id="2" onclick="two_star()"></span>
+            <span class="fa fa-star checked" id="3" onclick="three_star()"></span>
+            <span class="fa fa-star" id="4" onclick="four_star()"></span>
+            <span class="fa fa-star" id="5" onclick="five_star()"></span>
+        </div>
+    </div>
+    <div class="col">
+            {{ render_field(form.review, class="form-control") }}
+    </div>
+    <br>
+    <div class="row">
+             <div class="col">
+         <p id="create"><a href="/purchaseHistory">Cancel</a></p>
+             </div>
+             <div class="col">
+         <input type="submit" value="Save" id="login" class="btn btn-primary" style="float:right">
+             </div>
+     </div>
+
+
+</form>
+
+
+<script>
+document.getElementById("rating").value = 3
+function one_star() {
+document.getElementById("1").className = "fa fa-star checked"
+document.getElementById("2").className = "fa fa-star"
+document.getElementById("3").className = "fa fa-star"
+document.getElementById("4").className = "fa fa-star"
+document.getElementById("5").className = "fa fa-star"
+document.getElementById("rating").value = 1
+}
+function two_star(){
+document.getElementById("1").className = "fa fa-star checked"
+document.getElementById("2").className = "fa fa-star checked"
+document.getElementById("3").className = "fa fa-star"
+document.getElementById("4").className = "fa fa-star"
+document.getElementById("5").className = "fa fa-star"
+document.getElementById("rating").value = 2
+}
+function three_star(){
+document.getElementById("1").className = "fa fa-star checked"
+document.getElementById("2").className = "fa fa-star checked"
+document.getElementById("3").className = "fa fa-star checked"
+document.getElementById("4").className = "fa fa-star"
+document.getElementById("5").className = "fa fa-star"
+document.getElementById("rating").value = 3
+}
+function four_star(){
+document.getElementById("1").className = "fa fa-star checked"
+document.getElementById("2").className = "fa fa-star checked"
+document.getElementById("3").className = "fa fa-star checked"
+document.getElementById("4").className = "fa fa-star checked"
+document.getElementById("5").className = "fa fa-star"
+document.getElementById("rating").value = 4
+}
+function five_star(){
+document.getElementById("1").className = "fa fa-star checked"
+document.getElementById("2").className = "fa fa-star checked"
+document.getElementById("3").className = "fa fa-star checked"
+document.getElementById("4").className = "fa fa-star checked"
+document.getElementById("5").className = "fa fa-star checked"
+document.getElementById("rating").value = 5
+}
+</script>
+{% endblock %}

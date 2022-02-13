@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+{% extends "partials/admin_sidenavbar.html" %}
+{% block title %}Create campaign vouchers{% endblock %}
+
+{% block content %}
+{% from "partials/_formHelper.html" import render_field %}
+<style>
+#webcam, #createcamper {
+color: white;
+text-decoration;
+font-weight:bold;
+}
+</style>
+<div class="top_box_2">
+  <p style="font-family: Montserrat; line-height: 140px; font-size: 35px;">Website Vouchers(Percentage)</p>
+</div>
+
+<div style="100%">
+  <form method="POST" action="{{ url_for('create_campaign_vouchers2') }}">
+    <br><br>
+    <div style="float: left; margin-left: 8.5%; width:80%">
+    <label style="font-weight:bold">Discount Percentage:</label>
+    <br>
+    {{ render_field(form.discount_amt, class="form-control", value=0.0, min=0.1, max=1.0) }}
+    <br>
+
+
+    <label style="font-weight:bold">Minimum Spendage:</label>
+    <br>
+    {{ render_field(form.minimum_spendage, class="form-control", value=0, min=1, max=10000) }}
+
+
+
+
+    <br>
+    <label style="font-weight:bold">Campaign origin:</label>
+    <br><br>
+    <select name="campaign_origin" id="campaign_origin" class="form-control" required>
+        <option value=""></option>
+        {% for campaign in list_campaign %}
+        <option value="{{campaign.get_campaign_id()}}">{{campaign.get_campaign_name()}}</option>
+        {% endfor %}
+    </select>
+    <br><br>
+
+
+
+    </div><input type="submit" value="Submit" class="camp_btn">
+    <br><br><br><br>
+  </form>
+</div>
+<script>
+  document.getElementById("submenu3").className += " show";
+</script>
+{% endblock %}
+

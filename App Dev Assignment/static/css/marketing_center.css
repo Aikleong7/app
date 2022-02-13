@@ -1,0 +1,40 @@
+
+
+#marketingStratPic{
+   width:100%;
+   margin-bottom:20px;
+}
+
+.types{
+    background-color:white;
+
+}
+
+
+.vouchers{
+    background-color:#F7F7F7;
+    width:370px;
+    height:90px;
+}
+
+.vouchersInfo{
+    margin-left:20px;
+}
+
+.DiscountPromo{
+    background-color:#F7F7F7;
+    width:370px;
+    margin-left:50px;
+
+}
+
+.BundleDeal{
+    background-color:#F7F7F7;
+    width:370px;
+    margin-left:50px;
+}
+
+.AddOnDeal{
+    background-color:#F7F7F7;
+    width:370px;
+}

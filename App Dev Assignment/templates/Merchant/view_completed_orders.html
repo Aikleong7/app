@@ -1,0 +1,46 @@
+{% extends "partials/_merchant_side_navbar.html" %}
+{% block title %}Merchant Completed Orders{% endblock %}
+{%block css%}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/merchant_orders.css') }}">
+{%endblock%}
+{% block navigation %}
+<span><a class="navbar-brand" href="/merchant_orders">| My Orders</a>
+<span style="font-weight:bold;color:#267CFC; font-size:2vw;">|Completed Orders</span>
+</span>
+{% endblock %}
+{%block content%}
+<style>
+  #my_orders{
+ color:#B78BFF;
+font-weight:bold;
+  }
+</style>
+<div class="merchant_orders_block">
+  <div class="page_header">
+    <a href="/merchant_orders"><img src="{{url_for('static', filename='image/back.png')}}" style="width:5vw;"></a>
+    <img src="{{url_for('static', filename='image/completed_orders.png')}}" style="width:5vw;margin-left:5%;">
+    <div style="float:right; margin-right:55%; margin-top:1%;">
+    <span style="font-size:2vw; font-weight:700;">Completed Orders</span><br>
+      <p style="font-size:1vw;">View all your completed orders</p>
+    </div>
+  </div>
+  {%if list_length != 0 %}
+  <div>
+    <table class="table">
+      <thead><tr><td>Product Name</td><td>Unit Price</td><td>Quantity</td><td>Sales</td><td>Discount</td></tr></thead>
+      {% for order in list_orders %}
+      <tr bgcolor="#DDFFD8">
+        <td>{{order.get_productObject().get_product_name()}}</td>
+        <td>SGD${{"{:.2f}".format(order.get_productObject().get_product_price())}}</td>
+        <td>{{order.get_quantity()}}</td>
+        <td>SGD${{"{:.2f}".format(order.get_totalPrice())}}</td>
+        <td>Hello</td>
+      </tr>
+      {%endfor%}
+    </table>
+  </div>
+  {%else%}
+  <h5>You have no orders</h5>
+  {%endif%}
+</div>
+{%endblock%}

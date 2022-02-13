@@ -1,0 +1,73 @@
+{% extends 'partials/_merchant_side_navbar.html' %}
+
+{% block title %}Merchant My Products{% endblock %}
+{%block css%}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/merchant_shop.css') }}">
+<style>
+  #categories{
+color:#B78BFF;
+font-weight:bold;
+}
+</style>
+{%endblock%}
+{% block navigation %}
+<a class="navbar-brand" href="/merchant_shop_categories"></span><span style="font-weight:bold;color:#267CFC; font-size:2vw;">|Categories</span></a>
+{% endblock %}
+{%block content%}
+
+<div class="merchant_shop_block">
+  <div class="m-shop-sec1">
+    <ul>
+      <li><img src="{{url_for('static', filename='image/shop_icon.png')}}" style="display:inline; width:5vw;">
+        <h4 style="display:inline; font-weight:bold;">Shop</h4></li>
+      <li><a href="#">Shop Rating</a></li>
+      <li><a href="#">Shop Profile</a></li>
+      <li><a href="/merchant_shop_categories">Shop Categories</a></li>
+</ul>
+  </div>
+    <div class="page_header">
+    <img src="{{url_for('static', filename='image/categories.png')}}" >
+    <h6 class="page_header_e">
+      Shop Categories
+      <br>
+      <span class="page_header_note">The category of products that your shop is selling to customers can be viewed here</span>
+    </h6>
+  </div>
+  <div class="display_categories">
+          <table class="table">
+              <thead><tr><td style="font-size:2vw;">Category Name</td></tr></thead>
+            <tbody>
+                {% for category in category_list %}
+            <tr>
+                <td>
+                    {{ category.get_category() }}
+                </td>
+        <td>
+            <form action="{{url_for('delete_category',id=category.get_category())}}" method=POST>
+            <input type="submit" value="Delete" class="btn btn-danger">
+            </form>
+            </td>
+            </tr>
+                {% endfor %}
+            </tbody>
+          </table>
+      <button id="new_cat" onclick="show()">Create New Category</button>
+        </div>
+    <div id="create_category"  style="display:none;">
+        <h6>Create a new category</h6>
+        {% from "partials/_formHelper.html" import render_field %}
+        <form method=post action = "">
+            {{ render_field(form.category, class="form-control") }}
+            <input type=submit value="add">
+        </form>
+    </div>
+</div>
+<script>
+function show(){
+    var x = document.getElementById('create_category');
+    x.style.display = "block";
+    var y = document.getElementById('new_cat');
+    y.style.display = "none"
+    }
+</script>
+{%endblock%}

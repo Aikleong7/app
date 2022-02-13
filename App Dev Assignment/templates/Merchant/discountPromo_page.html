@@ -1,0 +1,96 @@
+{% extends "partials/_merchant_side_navbar.html" %}
+{% block title %}Merchant Vouchers{% endblock %}
+{% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/merchant_vouchers.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/_merchant_navbar.css') }}">
+{% endblock %}
+{% block navigation %}
+<span>
+<a class="navbar-brand" href="/marketing_strategy"><span style="font-weight:bold;">| Marketing Strategy</span></a>
+<a class="navbar-brand" href="/discountPromo_page"><span style="font-weight:bold;color:#267CFC;">| Discount Promotions</span></a>
+    </span>
+{% endblock %}
+{%block content%}
+<h1 style="font-weight:bold;margin-top:20px;padding-bottom:20px;">Discount Promotions</h1>
+
+<div class="discountPromoList" style="background-color:white;">
+    <div class="discountPromoListTitle" style="padding-top:20px;padding-left:20px;padding-bottom:20px;">
+            <div style="float:left;">
+                <h3 style="font-weight:bold;">Discount Promotions List</h3>
+                <p style="color:grey;">Create and manage your own discount promotions for your shop and products on Singtopia!</p>
+            </div>
+            <a href="/create_discountPromotion"><button class="btn btn-primary" style="font-size:20px;float:right;margin-right:20px;;font-weight:bold;" id="discountPromo" >Create Discount Promotion</button></a>
+        </div>
+    <div>
+  <!-- table for fixed amt shop vouchers -->
+  <h5 style="font-weight:bold;text-align:center;padding-top:40px;clear:both;">Table of Discount Promotions</h5>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Promotion Code</th>
+        <th>Promotion Name</th>
+        <th>Claiming Period</th>
+        <th>Status</th>
+        <th>Product</th>
+        <th>Discount</th>
+        <th>Stock</th>
+          <th>Purchase Limit</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for discount in discountList %}
+        <tr>
+          <td>{{ discount.get_code() }}</td>
+          <td>{{ discount.get_name() }}</td>
+          <td>{{ discount.get_startingDate() }} to <br> {{ discount.get_endingDate() }}</td>
+            {% if discount.get_status()=="Upcoming" %}
+          <td><p style="padding:5px;background-color:#b5ffcc;color:#61c580;">Upcoming</p></td>
+            {% elif discount.get_status()=="Ongoing" %}
+            <td><p style="background-color:#ffb1b1;color:#fc3f3f;padding:5px;">Ongoing</p></td>
+            {% elif discount.get_status()=="Expired" %}
+            <td><p style="padding:5px;background-color:#999999;color:#000000;">Expired</p></td>
+            {% endif %}
+          <td>{{ (discount.get_productObject()).get_name() }}</td>
+            <td>{{ (discount.get_productObject()).get_discount() }}</td>
+            <td>{{ (discount.get_productObject()).get_stock() }}</td>
+            {% if (discount.get_productObject()).get_purchaseLimitType()=="noLimit" %}
+            <td>No Limit</td>
+            {% else %}
+            <td>{{ (discount.get_productObject()).get_purchaseLimit() }}</td>
+            {% endif %}
+          <td><a href="/update_discountPromo_basicInfo/{{ discount.get_code() }}/" style="margin-bottom:10px;" class="btn btn-warning">Update</a>
+            <form action="{{ url_for('deleteDiscountPromo', code=discount.get_code()) }}"  method="POST">
+                <input type="submit" value="Delete" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete {{ discount.get_name() }} ?');">
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+    </div>
+    <hr style="background-color:white;">
+</div>
+
+<style>
+    body{
+    background-color:#f2f2f2;
+    }
+
+    .KeyMetrics{
+    margin-bottom:30px;
+    }
+
+    .discountPromoList{
+    background-color:white;
+    }
+
+    th{
+    text-align:center;
+    }
+
+    td{
+    font-weight:bold;
+    text-align:center;
+    }
+</style>
+{% endblock %}

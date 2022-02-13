@@ -1,0 +1,37 @@
+.merchant_sidebar{
+width:100%;
+border-right:0.15vw solid black;
+margin-top:5.2vw;
+background-color:white;
+}
+
+.merchant_sidebar a{
+color:grey;
+margin-left:3.2vw;
+font-size:1.2vw;
+padding:0.78vw;
+}
+.merchant_sidebar a:hover{
+       color:#006BC1;
+       text-decoration:none;
+    }
+.merchant_sidebar h6{
+margin-top:2.34vw;
+font-size:1.4vw;
+font-weight:600;
+}
+img{
+width:3vw;
+}
+
+.active_page{
+color:#B78BFF;
+font-weight:bold;
+}
+
+.active_page:hover{
+text-decoration:none;
+color:#B78BFF;
+cursor:context-menu;;
+}
+

@@ -1,0 +1,86 @@
+{% extends "partials/_merchant_side_navbar.html" %}
+{% block title %}Discount Promotions Creation - Add Product{% endblock %}
+{% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/merchant_vouchers.css') }}">
+{% endblock %}
+{% block navigation %}
+<span>
+<a class="navbar-brand" href="/marketing_strategy"><span style="font-weight:bold;">| Marketing Strategy</span></a>
+<a class="navbar-brand" href="/discountPromo_page"><span style="font-weight:bold;">| Discount Promotions</span></a>
+<a class="navbar-brand" href="#"><span style="font-weight:bold;color:#267CFC;">| Update Discount Promotion</span></a></span>
+{% endblock %}
+{% block content %}
+{% from "partials/_formHelper.html" import render_field %}
+
+<h1 style="margin-top:20px;font-weight:bold;">Update Discount Promotion - Product</h1>
+
+  <div style="float:left;padding-left:40px;background-color:white;padding-top:20px;padding-left:20px;" >
+  <h4 style="font-weight:bold;">Discount Promotion Product</h4>
+  <p style="font-weight:normal;">Adjust the product discount and its purchase limit, which is the maximum number of times they can purchase this item.</p></div>
+<div style="background-color:white;">
+    <a href="/create_discountPromo_addProduct" ><button class="btn btn-primary" style="font-size:20px;font-weight:bold;float:right;margin-right:20px;margin-top:20px;" id="discountPromo">Change Product</button></a>
+</div>
+  <div style="background-color:white;">
+      <form method="POST">
+          <div class="row"
+               style="margin-top:70px;background-color:black;color:white;font-weight:bold;font-size:17px;width:98%;margin-left:1%;padding:10px">
+              <div class="col-4">Product Name</div>
+              <div class="col">Price</div>
+              <div class="col">Discount</div>
+              <div class="col">Current Stock</div>
+              <div class="col-3">Purchase Limit</div>
+          </div>
+          <div class="row" style="margin-top:10px;font-weight:bold;font-size:17px;padding-bottom:20px;">
+              <div class="col-4">
+                  <image style="width:120px;height:120px;display;inline;padding-right:10px;float:left;margin-left:15px;" src="{{ chosenProduct.get_image()}}"></image>
+                  <p style="display;inline;text-align:left;padding-left:10px;" class="{{ chosenProduct.get_product_id() }}">{{ chosenProduct.get_product_name() }}</p>
+              </div>
+              <div class="col">S$ {{ "{:.2f}".format(chosenProduct.get_product_price()) }} </div>
+              <div class="col">{{ render_field(form.discount) }} %</div>
+              <div class="col">{{ chosenProduct.get_quantity() }}</div>
+              <div class="col-3">
+                  <div class="form-group" style="display:block;">
+                      <input checked style="display:inline;margin-right:5px;" type="radio" id="noLimit"
+                             name="cappedPriceType" value="noLimit" onclick="hideSetAmt()">
+                      <p style="display:inline;margin-right:10px;">No Limit</p>
+                      <input style="display:inline;margin-right:5px;" type="radio" id="setAmount" name="cappedPriceType"
+                             value="setAmt" onclick="showSetAmt()">
+                        <p style="display:inline;">Set Amount</p>
+                  </div>
+                  <div style="display:none;" id="setAmt">
+                      <p>Set Amount:</p>
+                      {{ render_field(form.purchaseLimit) }}
+                  </div>
+              </div>
+          </div>
+
+    <div style="background-color:#f2f2f2;"><button value="submit" class="btn btn-primary" style="font-size:25px;font-weight:bold;float:right;margin-top:10px;">Submit</button></div>
+</form>
+  </div>
+<script>
+    function showSetAmt(){
+    document.getElementById("setAmt").style.display="block";
+    }
+    function hideSetAmt(){
+     document.getElementById("setAmt").style.display="none";
+    }
+</script>
+
+<style>
+    body{
+    background-color:#f2f2f2;
+    }
+
+    p{
+    font-weight:bold;
+    }
+
+    th{
+    text-align:center;
+    }
+
+    td{
+    text-align:center;
+    }
+
+</style>
+{% endblock %}

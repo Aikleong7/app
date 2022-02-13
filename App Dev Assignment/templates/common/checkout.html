@@ -1,0 +1,177 @@
+{% extends "layouts/shopping_cart_base.html" %}
+{% block title %}Checkout{% endblock %}
+{% block navigation %}
+ <a class="navbar-brand" href="{{ url_for('shopping_cart') }}"><span style="font-weight:bold;">| Shopping Cart</span></a>
+<a class="navbar-brand" href="{{ url_for('checkout') }}"><span style="font-weight:bold;color:#267CFC;">| Checkout</span></a>
+{% endblock %}
+{% block content %}
+
+{% if userEmail != None %}
+<div style="margin-top:70px;">
+<div class="row shadow-lg p-3 mb-5 bg-white rounded" style="background-color:white;color:black;font-weight:bold;font-size:17px;width:98%;margin-left:1%;padding:10px">
+   <div class="col-6 col-md-6">Products</div>
+  <div class="col">Price</div>
+  <div class="col">Quantity</div>
+  <div class="col">Actions</div>
+</div>
+</div>
+<!-- depending on the number of merchant keys in the shopping cart object -->
+{% for merchantObject in merchant_dict %}
+
+<div class="row"
+     style="margin-top:30px;background-color:black;color:white;font-weight:bold;font-size:17px;width:98%;margin-left:1%;padding:10px">
+    <div class="col-6 col-md-6">{{ merchant_dict[merchantObject].get_merchantName() }}</div>
+    <div class="col"></div>
+    <div class="col"></div>
+    <div class="col"></div>
+</div>
+
+    <!-- depending on the number of keys for products in the shopping cart object -->
+    {% for productObject in merchant_dict[merchantObject].get_products() %}
+    <div class="row " style="border-style: solid; border-width: thin; border-color: #FFFFFF;background-color:white;border-color:#CACACA;font-weight:bold;font-size:17px;width:98%;margin-left:1%;padding:10px">
+        <div class="col-6 col-md-6">
+            <image src="{{ productObject.get_productObject().get_image() }}" style="float:left;width:100px;height:100px;margin-right:20px;border-radius:10px;"></image>
+                <p style="font-weight:bold;text-align:left;"> {{ productObject.get_productObject().get_product_name() }} </p>
+        </div>
+        <div class="col">
+            {% if productObject.get_discountedPrice() != 0 %}
+            <p style="display:inline;padding-right:5px;">$ {{ "{:.2f}".format(productObject.get_discountedPrice())
+                }}</p>
+            <p style="text-decoration:line-through;color:grey;margin-right:10px;display:inline;">$ {{
+                "{:.2f}".format(productObject.get_productObject().get_product_price()) }}</p>
+            {% else %}
+            <p style="display:inline;">$ {{ "{:.2f}".format(productObject.get_productObject().get_product_price())
+                }}</p>
+            {% endif %}
+        </div>
+        <div class="col">
+            <p>{{ productObject.get_quantity() }}</p>
+        </div>
+        <div class="col">
+            $ {{ "{:.2f}".format(productObject.get_totalPrice()) }}
+        </div>
+    </div>
+    {% endfor %}
+
+    <div class="row "
+         style="border-style: solid; border-width: thin; border-color: #FFFFFF;background-color:white;border-color:#CACACA;font-weight:bold;font-size:17px;width:98%;margin-left:1%;padding:10px">
+        <div class="col-6">
+            {% if merchantVouchers_dict_sc[merchantEmail] !={} %}
+                {% if merchant_dict[merchantObject].get_usedVoucher()==None %}
+                <image style="float:left;width:40px;margin-right:20px;" src="{{ url_for('static', filename='image/voucherNotChosen.png') }}"></image>
+                <p style="text-align:left;">No Shop Voucher Chosen</p>
+                {% else %}
+                <image style="float:left;width:40px;margin-right:20px;" src="{{ url_for('static', filename='image/voucherChosen.png') }}"></image>
+                {% if merchant_dict[merchantObject].get_usedVoucher().get_discountType()=="fixedAmt" %}
+                <p style="text-align:left;">${{ "{:.2f}".format(merchant_dict[merchantObject].get_usedVoucher().get_fixedAmt()) }} OFF</p>
+                {% else %}
+                <p style="text-align:left;">{{ merchant_dict[merchantObject].get_usedVoucher().get_percentageOff() }}% OFF</p>
+                {% endif %}
+                {% endif %}</div>
+        <div class="col-6" style="text-align:right;">
+            {% if merchant_dict[merchantObject].get_usedVoucher()==None %}
+                <a style="font-weight:bold;" href="{{ url_for('showingShopVoucher',merchantEmail=merchantObject) }}" class="btn btn-dark">Choose Shop Voucher</a>
+                {% else %}
+                <a style="font-weight:bold;" href="{{ url_for('showingShopVoucher',merchantEmail=merchantObject) }}" class="btn btn-dark">Change Shop Voucher</a>
+                {% endif %}
+        </div>
+        {% endif %}
+    </div>
+
+        <div class="row "
+         style="text-align:right;background-color:E5E5E5;font-weight:bold;font-size:17px;width:98%;margin-left:1%;padding:10px;border-style: solid; border-width: thin; border-color: #FFFFFF;">
+        <div class="col" >
+            {% if merchant_dict[merchantObject].get_usedVoucher() == None %}
+                <p style="font-weight:bold;display:inline;margin-right:20px;">Total Price of Products:</p><span>${{ "{:.2f}".format(merchant_dict[merchantObject].get_totalPrice()) }}</span>
+                {% else %}
+                    {% if merchant_dict[merchantObject].get_discountedTotalPrice() != 0 %}
+                    <p style="font-weight:bold;display:inline;margin-right:20px;">Total Price of Products:</p><span>${{ "{:.2f}".format(merchant_dict[merchantObject].get_discountedTotalPrice()) }}</span>
+                    {% else %}
+                    <p style="font-weight:bold;display:inline;margin-right:20px;">Total Price of Products:</p><span>$0.00</span>
+                    {% endif %}
+            {% endif %}
+        </div>
+
+        </div>
+
+    <div class="row "
+         style="border-style: solid; border-width: thin; border-color: #FFFFFF;text-align:right;background-color:#FDF9F9;font-weight:bold;font-size:17px;width:98%;margin-left:1%;padding:10px;">
+        <div class="col">
+            {% if merchant_dict[merchantObject].get_usedVoucher == None %}
+            <p style="font-weight:bold;display:inline;margin-right:20px;">Total Savings:</p><span>$0.00</span>
+            {% else %}
+                <p style="font-weight:bold;display:inline;margin-right:20px;">Total Savings:</p><span>${{ "{:.2f}".format(merchant_dict[merchantObject].get_savings()) }}</span>
+
+            {% endif %}
+        </div>
+
+    </div>
+{% endfor %}
+
+<div class="row border-top"
+     style="border-style:solid;border-width:thin;border-color:#FFFFFF;margin-top:30px;background-color:white;font-weight:bold;font-size:17px;width:98%;margin-left:1%;padding:10px">
+    <div class="col">
+        {% if userShoppingCart != None %}
+        {% if userShoppingCart.get_chosenWebsiteVoucher() == None %}
+        <image src="{{ url_for('static', filename='image/voucherNotChosen.png') }}" style="float:left;width:50px;padding-right:10px;"></image>
+        <p style="display:inline;font-weight:bold;">No Platform Vouchers Chosen</p>
+        <a href="{{ url_for('page_campaign') }}" class="btn btn-dark" style="float:right;font-weight:bold;">Select Platform Voucher</a>
+        {% else %}
+        <image style="float:left;width:40px;margin-right:10px;" src="{{ url_for('static', filename='image/voucherChosen.png') }}"></image>
+        {% if userShoppingCart.get_chosenWebsiteVoucher().get_discount_amt() < 1 %}
+            <p style="display:inline;font-weight:bold;">{{ userShoppingCart.get_chosenWebsiteVoucher().get_discount_amt()*100 }}% Off</p>
+                {% else %}
+        <p style="display:inline;font-weight:bold;">${{ userShoppingCart.get_chosenWebsiteVoucher().get_discount_amt() }} Off</p>
+        {% endif %}
+        <a href="{{ url_for('page_campaign') }}" class="btn btn-dark" style="float:right;font-weight:bold;">Change Platform Voucher</a>
+        {% endif %}
+    </div>
+</div>
+<div class="row border-top"
+     style="border-style:solid;border-width:thin;border-color:#FFFFFF;background-color:white;font-weight:bold;font-size:17px;width:98%;margin-left:1%;padding:10px">
+
+    <div class="col">
+
+        {% if userShoppingCart.get_chosenWebsiteReward() == None %}
+        <image src="{{ url_for('static', filename='image/voucherNotChosen.png') }}" style="float:left;width:50px;padding-right:10px;"></image>
+        <p style="display:inline;font-weight:bold;">No Website Rewards Chosen</p>
+        <a href="{{ url_for('web_rewards') }}" class="btn btn-dark" style="float:right;font-weight:bold;">Select Website Reward</a>
+        {% else %}
+        <image style="float:left;width:40px;margin-right:10px;" src="{{ url_for('static', filename='image/voucherChosen.png') }}"></image>
+         <p style="display:inline;font-weight:bold;">${{userShoppingCart.get_chosenWebsiteReward().get_amt_rewarded()}} Off</p>
+        <a href="{{ url_for('web_rewards') }}" class="btn btn-dark" style="float:right;font-weight:bold;">Change Website Reward</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row border-top"
+     style="text-align:right;border-style:solid;border-width:thin;border-color:#FFFFFF;background-color:white;font-weight:bold;font-size:17px;width:98%;margin-left:1%;padding:10px">
+
+    <div class="col">
+        {% if userShoppingCart.get_totalDiscountedPrice() == 0 and userShoppingCart.get_chosenWebsiteVoucher() == None
+        and userShoppingCart.get_chosenWebsiteReward() == None %}
+        <p style="display:inline;font-weight:bold;font-size:20px;">Total Price: </p><span
+            style="font-weight:bold;font-size:20px;color:#267CFC;">${{ "{:.2f}".format(userShoppingCart.get_totalPrice()) }}</span>
+        {% else %}
+        <p style="display:inline;font-weight:bold;font-size:20px;">Total Price: </p><span
+            style="font-weight:bold;font-size:20px;color:#267CFC;">${{ "{:.2f}".format(userShoppingCart.get_totalDiscountedPrice()) }}</span>
+        {% endif %}
+        <br>
+        <p style="display:inline;font-weight:bold;font-size:20px;">Total Savings: </p><span
+            style="font-weight:bold;font-size:20px;color:#267CFC;">${{ "{:.2f}".format(userShoppingCart.get_savings()) }}</span>
+    </div>
+</div>
+
+   <a href="/payment" class="btn btn-success" style="font-weight:bold;font-size:25px;float:right;margin-top:20px;margin-right:1%;">Payment</a>
+{% else %}
+    <h1 style="font-weight:bold;margin-top:90px;text-align:center;">Shopping Cart is unavailable. <br>Please log in before adding items to the cart. 😥</h1>
+    <a href="/login" class="btn btn-primary d-flex justify-content-center" style="font-size:30px;font-weight:bold;margin-top:20px;">Login</a>
+    <a href="/" class="btn btn-dark d-flex justify-content-center" style="font-size:30px;font-weight:bold;margin-top:20px;">Return to Home</a>
+{% endif %}
+{% endif %}
+<style>
+    body{
+      background-color:#f2f2f2;
+      }
+</style>
+{% endblock %}

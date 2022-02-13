@@ -1,0 +1,41 @@
+{% extends "partials/customer_sidenavbar.html" %}
+{% block title %} Purchase {% endblock %}
+
+{% block content %}
+
+<style>
+h3{
+text-align:center;
+margin-top:5%;
+}
+h5{
+text-align:center;
+color:#818181;
+}
+
+#info{
+margin-left:40%;
+width:20%;
+border: 10px solid black;
+color:black;
+background-color:black;
+}
+#sidenav> :nth-child(7){
+background-color:white;
+color:black;
+</style>
+<h3>My Purchases</h3>
+<h5>All your purchase history</h5>
+<hr id="info">
+
+{% for i in products_dict %}
+{{ products_dict[i].get_product_name() }}
+<a href="/review/{{products_dict[i].get_product_id()}}" class="btn btn-dark">Rate</a>
+{% for x in products_dict[i].get_review() %}
+{{ x.get_review() }}
+{% endfor %}
+<br>
+<br>
+{% endfor %}
+
+{% endblock %}

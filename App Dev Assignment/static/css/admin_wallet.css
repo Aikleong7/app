@@ -1,0 +1,106 @@
+
+img{
+width:3.125vw;
+}
+
+.page_header{
+border:1px solid black;
+border-radius:40px;
+width:85%;
+padding:15px;
+margin-left:5%;
+height:10vw;
+}
+
+.page_header_e{
+display:inline-block;
+margin-left:0.78vw;
+font-weight:500;
+font-size:2vw;
+margin-left:20%;
+}
+
+
+#wallet{
+margin-top:10%;
+}
+
+.wallet-e{
+border:1px solid black;
+display:inline-block;
+width:40%;
+height:12vw;
+text-align:center;
+margin-left:5%;
+padding-top:0.78vw;
+color:black;
+}
+
+.wallet-e p{
+font-size:0.78vw;
+}
+
+.wallet-e a{
+color:black;
+font-weight:500;
+font-size:1.5vw;
+}
+
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+
+.modal2 {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top:15%; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal2-content {
+  background-color: #fefefe;
+  margin-left:30%;
+  padding: 1.4vw;
+  border: 1px solid #888;
+  width: 50%;
+}
+
+
+button{
+border:0.2vw solid green;
+border-radius:0.78vw;
+font-size:1.2vw;
+background-color:white;
+}
+
+button:hover{
+background-color:#dedede;
+transition:0.5s;
+}
+
+.view_transactions{
+border:0.2vw solid green;
+border-radius:0.78vw;
+font-size:1.2vw;
+background-color:white;
+}
+
+.view_transactions:hover{
+background-color:#dedede;
+transition:0.5s;
+}
+
+

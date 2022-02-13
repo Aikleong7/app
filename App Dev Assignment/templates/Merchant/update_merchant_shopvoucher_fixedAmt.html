@@ -1,0 +1,82 @@
+{% extends "partials/_merchant_side_navbar.html" %}
+{% block title %}Merchant Vouchers{% endblock %}
+{% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/merchant_vouchers.css') }}">
+{% endblock %}
+{% block navigation %}
+<span>
+<a class="navbar-brand" href="/marketing_strategy"><span style="font-weight:bold;">| Marketing Strategy</span></a>
+<a class="navbar-brand" href="/merchant_shopvouchers"><span style="font-weight:bold;">| Vouchers</span></a>
+<a class="navbar-brand" href="{{update_merchant_fixedAmtVoucher}}"><span style="font-weight:bold;color:#267CFC;">| Update Voucher</span></a></span>
+{% endblock %}
+{% block content %}
+{% from "partials/_formHelper.html" import render_field %}
+{% if warningDate == 1 %}
+    <div class="alert" style="">
+          <span class="closebtn" onclick="this.parentElement.style.display='none';pushdown();">&times;</span>
+        <p style="font-weight:bold;font-size:20px;">{{ warningmessage }}</p>
+        </div>
+{% endif %}
+<h1 style="margin-top:20px;font-weight:bold;">Update Shop Voucher - Fixed Amount </h1>
+
+<form method="POST" action="" style="background-color:white;">
+  <div class="form-group" style="margin-top:30px; padding:20px;">
+    <label style="font-weight:bold;">Voucher Name:</label>
+    {{ render_field(form.name) }}
+  </div>
+  <div class="form-group" style="padding-left:20px;">
+    <label style="font-weight:bold;float:left;">Start of Claiming Period:</label>
+    {{ render_field(form.startingDate, class=" datepicker") }}
+    <label style="font-weight:bold;margin-left:100px;">End of Claiming Period:</label>
+    {{ render_field(form.endingDate, class=" datepicker") }}
+  </div>
+    <br>
+  <div class="form-group" style="padding-left:20px;">
+     <label style="font-weight:bold;">Minimum Amount Spent: $</label>
+    {{ render_field(form.minSpend, class="") }}
+  </div>
+
+    <br>
+     <div class="form-group" style="padding-left:20px;">
+     <label style="font-weight:bold;">Usage Quantity:</label>
+    {{ render_field(form.usageQuantity, class="") }}
+  </div>
+
+    <br>
+    <div class="form-group" style="padding-left:20px;">
+     <label style="font-weight:bold;">Fixed Amount Off: $</label>
+    {{ render_field(form.fixedAmtOff, class="") }}
+  </div>
+    <br>
+     <input style="font-weight:bold;font-size:20px;margin-left:20px;" type="submit" value="Submit" class="btn btn-primary"/>
+</form>
+<style>
+    body{
+  background-color:#f2f2f2;
+  }
+
+  /* The alert message box */
+        .alert {
+          padding: 20px;
+          background-color: #f44336; /* Red */
+          color: white;
+          margin-bottom: 15px;
+        }
+
+        /* The close button */
+        .closebtn {
+          margin-left: 15px;
+          color: white;
+          font-weight: bold;
+          float: right;
+          font-size: 22px;
+          line-height: 20px;
+          cursor: pointer;
+          transition: 0.3s;
+        }
+
+        /* When moving the mouse over the close button */
+        .closebtn:hover {
+          color: black;
+        }
+</style>
+{% endblock %}

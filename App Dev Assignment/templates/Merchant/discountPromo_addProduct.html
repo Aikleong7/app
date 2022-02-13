@@ -1,0 +1,58 @@
+{% extends "partials/_merchant_side_navbar.html" %}
+{% block title %}Discount Promotions Creation - Add Product{% endblock %}
+{% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/merchant_vouchers.css') }}">
+{% endblock %}
+{% block navigation %}
+<span>
+<a class="navbar-brand" href="/marketing_strategy"><span style="font-weight:bold;">| Marketing Strategy</span></a>
+<a class="navbar-brand" href="/discountPromo_page"><span style="font-weight:bold;">| Discount Promotions</span></a>
+<a class="navbar-brand" href="/create_discountPromotion"><span style="font-weight:bold;">| Create Discount Promotion</span></a>
+<a class="navbar-brand" href="/create_discountPromo_addProduct"><span style="font-weight:bold;color:#267CFC;">| Add Products</span></a></span>
+{% endblock %}
+{% block content %}
+<h1 style="margin-top:20px;font-weight:bold;">Select Product</h1>
+<div style="background-color:white;">
+    {% if product_list != [] %}
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Products</th>
+        <th>Price</th>
+        <th>Stock</th>
+      </tr>
+    </thead>
+    <tbody>
+
+           {% for product in product_list %}
+            <tr style="line-height:100px;">
+                <td style=" column-width:350px;">
+                    <a style="float:left;margin-top:35px;" href="/create_discountPromo/{{ product.get_product_id() }}" class="btn btn-primary">Select Product</a>
+                    <div style="display:inline;">
+                        <image style="width:100px;height:100px;display;inline;margin-left:10px;" src="{{ product.get_image()}}"></image>
+                        <p style="display;inline;" class="{{ product.get_product_id() }}">{{ product.get_product_name() }}</p>
+                    </div>
+                </td>
+                <td><p style="font-size:20px;" class="{{ product.get_product_id() }}">$ {{ "{:.2f}".format(product.get_product_price()) }}</p></td>
+              <td><p style="font-size:20px;" class="{{ product.get_product_id() }}">{{ product.get_quantity() }}</p></td>
+            </tr>
+           {% endfor %}
+    </tbody>
+    </table>
+    {% else %}
+    <div style="text-align:center;">
+    <h4 style="padding:20px;text-align:center;color:grey;">Sorry, there are currently no available products that can be picked for the discount. Please create a product first.</h4>
+    <a href="/merchant_add_product" class="btn btn-primary" style="text-align:center;font-weight:bold;font-size:20px;margin-bottom:20px;">Add Product</a>
+</div>
+        {% endif %}
+    </div>
+
+<style>
+    body{
+    background-color:#f2f2f2;
+    }
+
+    p{
+    font-weight:bold;
+    }
+</style>
+{% endblock %}

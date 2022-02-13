@@ -1,0 +1,101 @@
+{% extends "layouts/base.html" %}
+{% block title %} Home Page {% endblock %}
+
+{% block content %}
+<style>
+
+</style>
+
+<ul class="categories_top">
+    <li class="categories_display"><a href="/categories/Clothing" style="color:black">Clothing</a></li>
+    <li class="categories_display"><a href="/categories/Food&Beverage" style="color:black">Food & Beverages</a></li>
+    <li class="categories_display"><a href="/categories/Accessories" style="color:black">Accessories</a></li>
+    <li class="categories_display"><a href="/categories/Electronics" style="color:black">Electronics</a></li>
+    <li class="categories_display"><a href="/categories/Shoes" style="color:black">Shoes</a></li>
+    <li class="categories_display"><a href="/categories/Home&Living" style="color:black">Home & Living</a></li>
+    <li class="categories_display"><a href="/categories/Health&Wellness" style="color:black">Health & Wellness</a></li>
+    <li class="categories_display"><a href="/categories/Sports&Outdoors" style="color:black">Sports & Outdoors</a></li>
+    <li class="categories_display"><a href="/categories/PetNecessities" style="color:black">Pet Necessities</a></li>
+</ul>
+{% if log == "1" %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <strong>Login Successful</strong> Enjoy Shopping!.
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+{% elif log == "2" %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <strong>Logout Successful</strong> See You Again Next Time!
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
+{% else %}
+
+{% endif %}
+<div class="campaign" style="background-color:black">
+    <br><br>
+    <h3 style="text-align:center; color:white">Welcome to Singtopia</h3>
+    <br>
+    <p style="text-align:center; color:white">Become a user of Singtopia and check out the vouchers and discounts for you!</p>
+    <br><br>
+    <a href="{{ url_for('page_campaign') }}"><button id="campaign_find_out_more">Find Out More</button></a>
+    <br><br><br>
+</div>
+
+<br>
+
+<div class="SHOP_hot_box">
+    <br><br>
+    <h1 style="text-align:center; color:white; font-weight:bold">EXPLORE PRODUCTS</h1>
+    <br><br><br><br><br><br><br>
+    <a href="/explore"><button id="Shop_hot">Shop Now</button></a>
+    <br><br><br><br><br><br>
+</div>
+<br><br>
+<p style="text-align:center; font-size:45px; font-weight:bold">WHAT'S NEW</p>
+<br><br><br><br>
+
+<div class="container-xxl">
+    <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3">
+        {% for product in all_product %}
+        {% if datetoday - product.get_date() <= date_limit %}
+        {% if product.get_quantity() > 0 %}
+
+        <div class="col-2.5">
+            <div class="p-3 border bg-light">
+                <a href="{{ url_for('show_individual_product',productID=product.get_product_id()) }}">
+                <img src="{{ product.get_image() }}" width=100% height=200 style="border: solid 0.5px grey"></a>
+                <div style=" width:100%; background-color:white; text-align:center;">
+                    <span style="font-size:12px">{{ product.get_product_name() }}</span>
+                    <br><br>
+                    <span style="font-size:15px; color:#6A45FF">${{ product.get_product_price() }}</span>
+                </div>
+
+            </div>
+        </div>
+
+        {% endif %}
+        {% endif %}
+
+        {% endfor %}
+
+    </div>
+</div>
+
+
+<button id="popup" class="" onclick="myFunction()"> Get Help
+    <span class="popuptext" id="myPopup"><iframe width="350" height="370" allow="microphone;" src="https://console.dialogflow.com/api-client/demo/embedded/429e4b7c-f5c6-4562-981e-add491ba486c"></iframe></span>
+</button>
+
+
+<script>
+function myFunction() {
+  var popup = document.getElementById("myPopup");
+  popup.classList.toggle("show");
+}
+</script>
+{% endblock %}

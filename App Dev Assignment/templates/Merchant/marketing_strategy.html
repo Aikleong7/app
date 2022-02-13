@@ -1,0 +1,75 @@
+{% extends "partials/_merchant_side_navbar.html" %}
+{% block title %}Marketing Strategy{% endblock %}
+{% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/marketing_center.css') }}">
+{% endblock %}
+{% block navigation %}
+<a class="navbar-brand" href="/marketing_strategy"><span style="font-weight:bold;color:#267CFC;">| Marketing Strategy</span></a>
+{% endblock %}
+{%block content%}
+    <style>
+      #marketing_centre, #marketing{
+color:#B78BFF;
+font-weight:bold;
+}
+
+        body{
+        background-color:#f2f2f2;
+        }
+
+        a{
+        text-decoration:none;
+        }
+    </style>
+    <div class="content_marketingStrat">
+        <image id="marketingStratPic" src="../../static/image/marketingStrat.jpg"></image>
+        <div class="types" style="background-color:white;width:99%;height:60%;">
+            <h1 style="padding-top:20px;padding-left:20px;font-weight:bold;" >Marketing Tools</h1>
+            <p style="font-size:20px;padding-left:20px;">Boost Sales with Promotion</p>
+            <div style="padding-left:20px;">
+            <!--vouchers-->
+            <a href="{{url_for('merchant_shopvouchers')}}"><div class="vouchers" style="float:left;">
+                <image style="width:70px;float:left;" src="{{url_for('static', filename='image/VoucherPic.png')}}"></image>
+                <div class="vouchersInfo">
+                    <p style="font-weight:bold; padding-top:10px;">Vouchers</p>
+                    <p style="color:grey;font-size:10px; padding-bottom:10px;padding-right:10px;">Increase orders by offering buyers reduced prices at checkout with vouchers</p>
+                </div>
+            </div></a>
+            <!--Discount Promotions-->
+            <div style='float:left;'>
+            <a href="{{url_for('discountPromotions')}}"><div class="DiscountPromo">
+                <image style="width:70px;float:left; margin-right:10px;margin-top:5px;" src="{{url_for('static', filename='image/DiscountPromoPic.png')}}"></image>
+                <div class="discountPromoInfo">
+                    <p style="font-weight:bold; padding-top:10px;">Discount Promotions</p>
+                    <p style="color:grey;font-size:10px; padding-bottom:10px;padding-right:10px;">Set discounts on your products to attract buyers and increase sales</p>
+                </div>
+            </div></a></div>
+
+</div>
+        </div>
+        </div>
+    </div>
+    <style>
+    a:hover{
+       color:#006BC1;
+       text-decoration:none;
+    }
+    a:hover .vouchers{
+    background-color:#CCCCCC;
+    }
+    a:hover .DiscountPromo{
+    background-color:#CCCCCC;
+    }
+
+    a:hover .BundleDeal{
+    background-color:#CCCCCC;
+    }
+
+    a:hover .AddOnDeal{
+    background-color:#CCCCCC;
+    }
+    </style>
+
+<script>
+  document.getElementById("submenu3").className += " show";
+</script>
+{% endblock %}

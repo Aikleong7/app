@@ -1,0 +1,40 @@
+{% extends "partials/admin_sidenavbar.html" %}
+{% block title %} Admin_Orders {% endblock %}
+
+{% block content %}
+<style>
+#orders{
+color: white;
+text-decoration;
+font-weight:bold;
+}
+</style>
+
+<br>
+
+    <p style="display:inline">Total Purchase: {{ listt|length }}</p>
+
+<br>
+<table class="table table-striped">
+    <thead>
+      <tr>
+          <th> </th>
+        <th>Email:</th>
+        <th>Date of purchase: </th>
+        <th>Total Sales: </th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for x in listt %}
+        <tr>
+         <td> </td>
+          <td>{{ x.get_userEmail() }}</td>
+          <td>{{ x.get_paymentDetails().get_dateOfPayment() }}</td>
+          <td>${{ x.get_paymentDetails().get_subTotal() }} </td>
+            <td><a href="admin_orders/{{x.get_userEmail()}}/{{ x.get_paymentDetails().get_dateOfPayment() }}/{{ x.get_paymentDetails().get_subTotal() }}" class="btn btn-primary"> View</a></td>
+          </tbody>
+  {% endfor %}
+</table>
+
+{% endblock %}
+

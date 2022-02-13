@@ -1,0 +1,36 @@
+{% extends "partials/login template.html" %}
+{% block title %} Create Account2 {% endblock %}
+
+{% block content %}
+{% from "partials/_formHelper.html" import render_field %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/create.css') }}">
+<form method="POST" action="">
+<h2><a id="logo" href="/"><b>Singtopia</b> </a></h2>
+<h5>Security Question for Account Recovery</h5>
+<div class="row">
+    <div class="col">
+        {{ render_field(form.security_qn1, class="form-control") }}
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        {{ render_field(form.security_qn2, class="form-control") }}
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        {{ render_field(form.security_qn3, class="form-control") }}
+    </div>
+</div>
+<br>
+
+<div class="row">
+    <div class="col">
+        <input type="submit" value="Submit" id="login" class="btn btn-primary"/>
+    </div>
+</div>
+
+</form>
+
+{% endblock %}

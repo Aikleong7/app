@@ -1,0 +1,72 @@
+/* creating form */
+.top_box, .top_box_2{
+background: linear-gradient(135deg, #338BC2 0%, #DFFEE6 100%);
+color: white;
+width: 100%;
+height:160px;
+text-align: center}
+
+.top_box_2{
+background: linear-gradient(135deg, #FF5F6D 2.88%, #FFC371 100%);}
+
+
+.range{
+border: 2px solid rgba(0, 0, 0, 0.22);
+border-top: none;
+border-left: none;
+border-right: none;
+width: 90%;
+}
+
+.camp_btn{
+width: 80%;
+height: 40px;
+background: rgba(0, 0, 0, 0.8);
+border-radius: 10px;
+color: white;
+margin-left: 8%;
+border: none;
+font-size: 18px;
+font-weight: bold;}
+
+.camp_btn:hover{
+color: black;
+background: linear-gradient(135deg, #FF5F6D 2.88%, #FFC371 100%)}
+
+
+.web_wrd_btn{
+width: 80%;
+height: 40px;
+background: rgba(0, 0, 0, 0.8);
+border-radius: 10px;
+color: white;
+margin-left: 8%;
+border: none;
+font-size: 18px;
+font-weight: bold;}
+
+.web_wrd_btn:hover{
+color: black;
+background: linear-gradient(135deg, #338BC2 0%, #DFFEE6 100%)}
+/* -------------------------------------------------------------- */
+
+/* seeing data */
+table{
+text-align: left;
+width: 100%;
+font-size: 10px;
+overflow: scroll;}
+
+
+
+td, th{
+padding-top: 2%;
+padding-left: 2%;
+border: 0.5px solid grey;
+border-top: none;
+border-left: none;
+border-right: none;}
+
+.checkbox{
+width: 3%;
+padding-left: 1%}

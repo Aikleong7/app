@@ -1,0 +1,37 @@
+{% extends "layouts/base.html" %}
+{% block title %}Product Review {% endblock %}
+{% block content %}
+<a href="/individual_product_page/{{productID}}" class="btn btn-outline-dark" style="margin-top:1%;margin-left:1%">Back</a>
+<br>
+<div style="display:flex" class="d-flex justify-content-center">
+    <image src="{{product.get_image()}}" style="width:300;height:300;"></image>
+</div>
+<br>
+<div style="display:flex" class="d-flex justify-content-center">
+    <h4> Rated by: <b>{{rated}}</b></h4>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Rating</th>
+            <th scope="col">Review</th>
+        </tr>
+    </thead>
+    <tbody>
+     {% for x in review %}
+        <tr>
+            <td><p class="card-text">{{x.get_customer().get_first_name()}} {{x.get_customer().get_last_name()}}</p></td>
+            <td><p> <b>{{x.get_rating()}}</b></p></td>
+            <td><p><b>{{x.get_review()}}</b></p></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+
+
+
+
+{% endblock %}

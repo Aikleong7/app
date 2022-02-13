@@ -1,0 +1,52 @@
+{% extends "layouts/shopping_cart_base.html" %}
+{% block title %}Shopping Cart{% endblock %}
+{% block navigation %}
+ <a class="navbar-brand" href="{{ url_for('shopping_cart') }}"><span style="font-weight:bold;">| Shopping Cart</span></a>
+<a class="navbar-brand" href="{{ url_for('checkout') }}"><span style="font-weight:bold;">| Checkout</span></a>
+<a class="navbar-brand" href="#"><span style="font-weight:bold;color:#267CFC;">| Choosing Voucher</span></a>
+{% endblock %}
+{% block content %}
+<div class="merchantTables" style="margin-top:90px;">
+    <table style="margin-top:30px;" class="table table-striped productTable">
+        <thead>
+        <tr style="background-color:black;">
+            <th style="color:white;">{{merchantEmail}}</th>
+            <th></th>
+         <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if vouchers_dict != {} %}
+        <!-- depending on the number of vouchers in the vouchers_dict -->
+        {% for voucher in vouchers_dict %}
+        <tr style="height:200px;">
+            <td style="column-width:350px;">
+             <span style="float:left;margin-right:30px;" class="glyphicon glyphicon-user"><img class="rounded-circle" style="width:150px;" src="{{merchant.get_profile_picture()}}"/></span>
+             {% if vouchers_dict[voucher].get_discountType()=="fixedAmt" %}
+             <p style="font-weight:bold;text-align:left;margin-left:30px;">$ {{ "{:.2f}".format(vouchers_dict[voucher].get_fixedAmt()) }} OFF</p>
+             <p>Minimum Spend: ${{ "{:.2f}".format(vouchers_dict[voucher].get_minSpend()) }}</p>
+             <p>Expires on: {{ vouchers_dict[voucher].get_endingDate() }}</p>
+             <p>Number of Voucher(s) left: {{ vouchers_dict[voucher].get_usageQuantity() }}</p>
+             {% else %}
+             <p style="font-weight:bold;text-align:left;margin-left:30px;">{{ "{:.2f}".format(vouchers_dict[voucher].get_percentageOff()) }}% OFF</p>
+             <p>Minimum Spend: ${{ "{:.2f}".format(vouchers_dict[voucher].get_minSpend()) }}</p>
+             <p>Expires on: {{ vouchers_dict[voucher].get_endingDate() }}</p>
+             <p>Number of Voucher(s) left: {{ vouchers_dict[voucher].get_usageQuantity() }}</p>
+             {% endif %}
+            </td>
+           <td></td>
+            <td style="colspan=2;text-align:right;">
+             <a href="{{ url_for('choosingShopVoucher', merchantEmail=merchantEmail, count=voucher) }}" class="btn btn-dark" style="font-size:20px;font-weight:bold;margin-top:50px;margin-right:20px;">Select This Voucher</a>
+            </td>
+
+        </tr>
+        {% endfor %}
+        {% else %}
+        <tr>
+            <td colspan="3"> Sorry, No Available Vouchers at the moment! :(</td>
+        </tr>
+        {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

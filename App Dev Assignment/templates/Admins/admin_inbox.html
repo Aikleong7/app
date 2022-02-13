@@ -1,0 +1,40 @@
+{% extends "partials/admin_sidenavbar.html" %}
+{% block title %} Admin Inbox {% endblock %}
+
+{% block content %}
+<style>
+#inbox {
+color: white;
+text-decoration;
+font-weight:bold;
+}
+</style>
+<br>
+<p style="display:inline">Total Feedback: {{ feedback|length }}</p>
+<br>
+<table class="table table-striped">
+    <thead>
+      <tr>
+          <th> </th>
+        <th>Name:</th>
+        <th>Email: </th>
+        <th>Message: </th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for x in feedback %}
+        <tr id="{{ feedback[x].get_email() }}"></tr>
+    <td></td>
+          <td>{{ feedback[x].get_name() }}</td>
+          <td>{{ feedback[x].get_email() }}</td>
+          <td>{{ feedback[x].get_messge() }}</td>
+            {% if feedback[x].get_reply() == True %}
+          <td><a href="/admin_inbox_reply/{{x}}" class="btn btn-outline-primary disabled">Replied</a> <a href="/admin_inbox_delete/{{x}}" class=" btn btn-danger">Delete</a></td>
+            {% elif feedback[x].get_reply() == False %}
+            <td><a href="/admin_inbox_reply/{{x}}" class="btn btn-primary">Reply</a> <a href="/admin_inbox_delete/{{x}}" class=" btn btn-danger">Delete</a></td>
+          {% else %}
+    {%endif %}
+          </tbody>
+  {% endfor %}
+</table>
+{% endblock %}

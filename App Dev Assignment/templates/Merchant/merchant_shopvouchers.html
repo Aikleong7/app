@@ -1,0 +1,135 @@
+{% extends "partials/_merchant_side_navbar.html" %}
+{% block title %}Merchant Vouchers{% endblock %}
+{% block css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/merchant_vouchers.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/_merchant_navbar.css') }}">
+{% endblock %}
+{% block navigation %}
+<span>
+<a class="navbar-brand" href="/marketing_strategy"><span style="font-weight:bold;">| Marketing Strategy</span></a>
+<a class="navbar-brand" href="/merchant_shopvouchers"><span style="font-weight:bold;color:#267CFC;">| Vouchers</span></a>
+  </span>
+{% endblock %}
+{%block content%}
+<h1 style="font-weight:bold;margin-top:20px;">Vouchers</h1>
+
+    <div class="voucherList" id="voucherList">
+        <div class="voucherListTitle">
+            <div style="float:left;">
+                <h3 style="font-weight:bold;">Vouchers List</h3>
+                <p style="color:grey;">Create and manage your own vouchers for your shop and products on Singtopia!</p>
+            </div>
+            <a href="/merchant_create_percentage_voucher"><button class="btn btn-primary" style="font-size:20px;font-weight:bold;float:right;margin-top:20px;display:inline;margin-right:20px;" id="voucherCreatePercentage" >Create Percentage Off</button></a>
+            <a href="/merchant_create_fixed_amount_voucher"><button class="btn btn-primary" style="font-size:20px;font-weight:bold;margin-top:20px;float:right;margin-right:20px;" id="voucherCreateFixedAmt" >Create Fixed Amount</button></a>
+        </div>
+        <div>
+  <!-- table for fixed amt shop vouchers -->
+  <h5 style="font-weight:bold;text-align:center;margin-top:20px;">Table of Shop Vouchers - Fixed Amount Off</h5>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Voucher Code</th>
+        <th>Voucher Name</th>
+        <th>Claiming Period</th>
+          <th>Status</th>
+        <th>Min. Spend</th>
+        <th>Usage Quantity</th>
+        <th>Discount Type</th>
+        <th>Fixed Amt Off</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for voucher in voucher_list %}
+        <tr>
+          <td>{{ voucher.get_code() }}</td>
+          <td>{{ voucher.get_name() }}</td>
+          <td>{{ voucher.get_startingDate() }} to {{ voucher.get_endingDate() }}</td>
+             {% if voucher.get_status()=="Upcoming" %}
+          <td><p style="background-color:#b5ffcc;color:#61c580;">Upcoming</p></td>
+            {% elif voucher.get_status()=="Ongoing" %}
+            <td><p style="background-color:#ffb1b1;color:#fc3f3f;">Ongoing</p></td>
+            {% elif voucher.get_status()=="Expired" %}
+            <td><p style="background-color:#999999;color:#000000;">Expired</p></td>
+            {% endif %}
+          <td>$ {{ "{:.2f}".format(voucher.get_minSpend()) }}</td>
+          <td>{{ voucher.get_usageQuantity() }}</td>
+            <td>Fixed Amount</td>
+            <td>$ {{ "{:.2f}".format(voucher.get_fixedAmt()) }}</td>
+          <td><a href="/update_merchant_shopvoucher_fixedAmt/{{ voucher.get_code() }}/" style="margin-bottom:10px;" class="btn btn-warning">Update</a>
+            <form action="{{url_for('delete_shopvoucher', code = voucher.get_code())}}" method="POST">
+               <input type="submit" value="Delete" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete {{ voucher.get_code() }} - Name: {{ voucher.get_name() }}  ?');">
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+    </div>
+         <div>
+  <!-- table for percentage off shop vouchers -->
+    <h5 style="font-weight:bold;text-align:center;margin-top:20px;">Table of Shop Vouchers - Percentage Off</h5>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Voucher Code</th>
+        <th>Voucher Name</th>
+        <th>Claiming Period</th>
+          <th>Status</th>
+        <th>Min. Spend</th>
+        <th>Usage Quantity</th>
+        <th>Discount Type</th>
+        <th>Percentage Off</th>
+          <th>Capped Amount</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for voucher in voucherPercentage_list %}
+        <tr>
+          <td>{{ voucher.get_code() }}</td>
+          <td>{{ voucher.get_name() }}</td>
+          <td>{{ voucher.get_startingDate() }} to {{ voucher.get_endingDate() }}</td>
+            {% if voucher.get_status()=="Upcoming" %}
+          <td><p style="background-color:#b5ffcc;color:#61c580;">Upcoming</p></td>
+            {% elif voucher.get_status()=="Ongoing" %}
+            <td><p style="background-color:#ffb1b1;color:#fc3f3f;">Ongoing</p></td>
+            {% elif voucher.get_status()=="Expired" %}
+            <td><p style="background-color:#999999;color:#000000;">Expired</p></td>
+            {% endif %}
+          <td>$ {{ "{:.2f}".format(voucher.get_minSpend()) }}</td>
+          <td>{{ voucher.get_usageQuantity() }}</td>
+            <td>Percentage Off</td>
+            <td>{{ voucher.get_percentageOff() }} %</td>
+            {% if voucher.get_cappedAmt() == 0 %}
+            <td> - </td>
+            {% else %}
+            <td>$ {{ "{:.2f}".format(voucher.get_cappedAmt()) }}</td>
+            {% endif %}
+          <td><a href="/update_merchant_shopvoucher_percentage/{{ voucher.get_code() }}/" style="margin-bottom:10px;" class="btn btn-warning">Update</a>
+            <form action="{{url_for('delete_shopvoucher_percentage', code = voucher.get_code())}}" method="POST">
+              <input type="submit" value="Delete" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete {{ voucher.get_code() }} - Name: {{ voucher.get_name() }}  ?');">
+            </form>
+          </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+    </div>
+    </div>
+<style>
+   body{
+      background-color:#f2f2f2;
+      }
+    th{
+    text-align:center;
+    }
+    td{
+    font-weight:bold;
+    text-align:center;
+    }
+    .voucherListTitle{
+    margin-bottom:30px;
+    }
+</style>
+
+{% endblock %}

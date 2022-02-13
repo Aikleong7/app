@@ -1,0 +1,277 @@
+{% extends "partials/customer_sidenavbar.html" %}
+{% block title %} Personal Info {% endblock %}
+
+{% block content %}
+{% from "partials/_formHelper.html" import render_field %}
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<style>
+#sidenav> :nth-child(5){
+background-color:white;
+color:black;
+}
+h3{
+text-align:center;
+margin-top:5%;
+}
+h5{
+text-align:center;
+color:#818181;
+}
+#info{
+margin-left:40%;
+width:20%;
+border: 10px solid black;
+color:black;
+background-color:black;
+}
+#row1{
+border-style:inset;
+margin-left:4%;
+}
+#row2{
+border-style:inset;
+margin-left:4%;
+}
+#row3{
+border-style:inset;
+margin-left:4%;
+}
+#row4{
+border-style:inset;
+margin-left:4%;
+}
+
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.13.1/jquery.validate.min.js"></script>
+<h3>Personal Info</h3>
+<h5>Info about you</h5>
+<hr id="info">
+<div class="row" id="row1">
+    <div class="col">
+        <h1>Basic Info</h1>
+        <br>
+        <br>
+
+        <div class="col" style="margin-left:2%;">
+            <div class="row">
+                <div class="col-sm-3">
+                    <p>PHOTO</p>
+                </div>
+                <div class="col-sm-5">
+                    <p>A photo helps personalize your account</p>
+                </div>
+                <div class="col-sm-4" >
+
+                     <a href="/editphoto"  style="float:right;"> <img src="{{ profile_pic }}" class="rounded-pill" width="75" height="75"> </a>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="col" style="margin-left:2%;">
+            <div class="row">
+                <div class="col-sm-3">
+                        <p>NAME</p>
+                </div>
+                <div class="col-sm-5">
+                    <p>{{name}}</p>
+                </div>
+                <div class="col-sm-4" >
+                        <a href="/editname" class="btn btn-light" style="float:right;"> ></a>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="col" style="margin-left:2%;">
+            <div class="row">
+                <div class="col-sm-3">
+                        <p>BIRTHDAY</p>
+                </div>
+                <div class="col-sm-5">
+                    <p>{{birthday}}</p>
+                </div>
+                   <div class="col-sm-4" >
+                        <a href="/editbirthday" class="btn btn-light" style="float:right;"> ></a>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="col" style="margin-left:2%;">
+            <div class="row">
+                <div class="col-sm-3">
+                        <p>GENDER</p>
+                </div>
+                <div class="col-sm-5">
+                    <p>{{gender}}</p>
+                </div>
+                <div class="col-sm-4" >
+                        <a href="/editgender" class="btn btn-light" style="float:right;"> ></a>
+                </div>
+            </div>
+        </div>
+</div>
+</div>
+<br>
+<br>
+<div class="row" id="row2">
+    <div class="col">
+        <h1>Contact Info</h1>
+        <br>
+        <br>
+        <div class="col" style="margin-left:2%;">
+            <div class="row">
+                <div class="col-sm-3">
+                        <p>EMAIL</p>
+                </div>
+                <div class="col-sm-5">
+                    <p>{{email}}</p>
+                </div>
+                <div class="col-sm-4" >
+                        <a href="/editemail" class="btn btn-light" style="float:right;"> ></a>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="col" style="margin-left:2%;">
+            <div class="row">
+                <div class="col-sm-3">
+                        <p>PHONE</p>
+                </div>
+                <div class="col-sm-5">
+                    <p>{{phone}}</p>
+                </div>
+               <div class="col-sm-4" >
+                        <a href="/editphone" class="btn btn-light" style="float:right;"> ></a>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="col" style="margin-left:2%;">
+            <div class="row">
+                <div class="col-sm-3">
+                        <p>ADDRESS</p>
+                </div>
+                <div class="col-sm-5">
+                {% if address != "" %}
+
+                    <p>{{address}}, {{city}} {{zipcode}}</p>
+
+                {% endif %}
+                    </div>
+                <div class="col-sm-4" >
+                        <a href="/editaddress" class="btn btn-light" style="float:right;"> ></a>
+                </div>
+            </div>
+        </div>
+
+</div>
+</div>
+<br>
+<br>
+<div class="row" id="row3">
+    <div class="col">
+        <h1>Password</h1>
+    <br>
+    <br>
+        <div class="col" style="margin-left:2%;">
+            <div class="row">
+                <div class="col-sm-4">
+                    <p>••••••••</p>
+                </div>
+               <div class="col-sm-8" >
+                        <a href="/editpassword" class="btn btn-light" style="float:right;"> ></a>
+                </div>
+            </div>
+        </div>
+        <div class="col" style="margin-left:2%;">
+            <div class="row">
+                <p>{{password_change}}</p>
+            </div>
+</div>
+</div>
+</div>
+<br>
+<br>
+<!--__________________________________________________________________-->
+<div class="row" id="row4">
+    <div class="col">
+        <h1>Payment</h1>
+    <a href="/CreateCreditCard" class="btn btn-primary" style="float:right;">
+      +Add New Card
+    </a>
+
+        <br>
+        <br>
+        <hr>
+            <div class="col" style="margin-left:2%;">
+
+                <div class="row">
+                    {% if (payment == []) %}
+                    {% else %}
+                        {% for pay in payment %}
+                        <div class="col-sm-3">
+
+                            <p>{{pay.get_credit_card()}}</p>
+                        </div>
+                        <div class="col-sm-4">
+                            <p>{{pay.get_csv()}}</p>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <div class="row">
+                                <div class="col">
+                                    <form action="{{ url_for('delete_credit_card', name = pay.get_credit_card()) }}" method="POST">
+                                        <button>Delete</button>
+                                    </form>
+                                </div>
+                                <br />
+                                <div class="col">
+                                    {% if pay.get_default() == 1 %}
+                                    <form action="{{url_for('set_default_credit_card', name = pay.get_credit_card()) }}" method="post">
+                                        <button class="btn btn-secondary btn-sm" disabled>Set as default</button>
+                                    </form>
+                                    {% else %}
+                                    <form action="{{url_for('set_default_credit_card', name = pay.get_credit_card()) }}" method="post">
+                                        <button class="btn btn-secondary btn-sm">Set as default</button>
+                                    </form>
+
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    <hr />  
+                        {% endfor %}
+                {% endif %}
+
+                </div>
+            </div>
+    </div>
+
+
+</div>
+<br>
+<a href="/customer_delete" class="btn btn-outline-danger" style="float:right;">Delete Account </a>
+<br>
+<script>
+(function () {
+  'use strict'
+
+  // Fetch all the forms we want to apply custom Bootstrap validation styles to
+  var forms = document.querySelectorAll('.needs-validation')
+
+  // Loop over them and prevent submission
+  Array.prototype.slice.call(forms)
+    .forEach(function (form) {
+      form.addEventListener('submit', function (event) {
+        if (!form.checkValidity()) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+
+        form.classList.add('was-validated')
+      }, false)
+    })
+})()
+</script>
+{% endblock %}
+

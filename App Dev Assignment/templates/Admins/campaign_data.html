@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+{% extends "partials/admin_sidenavbar.html" %}
+{% block title %} Web Campaigns {% endblock %}
+
+{% block content %}
+<style>
+#webcam, #retrievecam {
+color: white;
+text-decoration;
+font-weight:bold;
+}
+</style>
+<br><br>
+
+  <div style="margin-left:3%; font-size: 10px;">
+    <a href="{{ url_for('create_campaign') }}" style="color:black; text-decoration: underline;"><button class="btn btn-success btn-sm">Create +</button></a>
+
+    &nbsp&nbsp&nbsp
+
+      <button type="submit" onclick="render_delete_camp()" class="btn btn-danger btn-sm" style="background:#FF7F7F;">Delete
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+        <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+        </svg>
+      </button>
+
+
+    &nbsp&nbsp&nbsp
+    Total campaigns: <span id="campaign-count">{{ count_camp }}</span>
+  </div>
+
+  <br>
+    <table class="table">
+      <thead class="thead-dark">
+        <tr>
+          <th></th>
+          <th>Campaign id:</th>
+          <th>Campaign name:</th>
+          <th>Start date:</th>
+          <th>End date:</th>
+          <th>Campaign image:</th>
+          <th>Valid:</th>
+        </tr>
+
+      {% for campaign_things in list_campaign %}
+        <tr id="{{ campaign_things.get_campaign_id() }}">
+          <td class="checkbox"><input type="checkbox" value="{{ campaign_things.get_campaign_id() }}"></td>
+          <td>{{ campaign_things.get_campaign_id() }}</td>
+          <td>{{ campaign_things.get_campaign_name() }}</td>
+          <td>{{ campaign_things.get_start_date() }}</td>
+          <td>{{ campaign_things.get_end_date() }}</td>
+          <td><img src="{{ campaign_things.get_camp_img() }}" style="width:70%;height:45px;margin-bottom:2px"></td>
+          {% if campaign_things.get_end_date() >= date and campaign_things.get_start_date() <= date %}
+            <td style="color: green">ongoing</td>
+          {% elif campaign_things.get_end_date() > date %}
+            <td style="color: grey">pending</td>
+          {% else %}
+            <td style="color: red">invalid</td>
+          {% endif %}
+        </tr>
+      {% endfor %}
+    </table>
+
+
+
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+  <script>
+    function render_delete_camp() {
+        var campaign_id = [];
+        $(':checkbox:checked').each(function(i){
+          campaign_id[i] = $(this).val()
+          })
+
+        if(campaign_id.length == 0){
+          alert("Select items to delete")
+        }else{
+          console.log(campaign_id)
+          $.ajax({
+            url : 'delete_campaign',
+            method : "POST",
+            data : JSON.stringify(campaign_id),
+            contentType: "application/json",
+            dataType: "json",
+            success: function(response){
+              console.log('remove')
+              for(var i of campaign_id){
+                $('#' + i).remove();
+              }
+              $('#campaign-count').html(parseInt($('#campaign-count').html()) - campaign_id.length)
+            }
+          })
+         }
+
+    }
+
+
+  document.getElementById("submenu3").className += " show";
+
+  </script>
+{% endblock %}

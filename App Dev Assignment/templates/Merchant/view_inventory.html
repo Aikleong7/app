@@ -1,0 +1,123 @@
+{% extends "partials/_merchant_side_navbar.html" %}
+{% block title %}Merchant View Inventory{% endblock %}
+{%block css%}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/merchant_products.css') }}">
+<style>
+  #inventory{
+color:#B78BFF;
+font-weight:bold;
+}
+</style>
+{%endblock%}
+{% block navigation %}
+<span><a href="/merchant_inventory">| My Inventory</a>
+<span style="font-weight:bold;color:#267CFC; font-size:2vw;">|View Inventory</span>
+</span>
+{% endblock %}
+{%block content%}
+{% from "partials/_formHelper.html" import render_field %}
+<div class="merchant_products_block">
+  <div class="page_header">
+    <a href="/merchant_inventory"><img src="{{url_for('static', filename='image/back.png')}}" style="width:5vw;"></a>
+    <img src="{{url_for('static', filename='image/my_orders.png')}}" style="width:4vw;margin-left:5%;">
+    <div style="float:right; margin-right:32%; margin-top:1%;">
+    <span style="font-size:2vw; font-weight:700;">Inventory Item</span><br>
+      <p style="font-size:1vw;">View details for your inventory stored and update the quantities for</p>
+    </div>
+  </div>
+  {% if inventory_item.get_category() == "Clothing"%}
+
+  <div class="display-item">
+    <div class="display_inventory_details">
+    <h5>Inventory Name: {{inventory_item.get_name()}}</h5>
+      <h5>Inventory Category: {{inventory_item.get_category()}}</h5>
+      <h5>Inventory Quantity: {{inventory_item.get_quantity()}}</h5>
+      <h5>Unit Price: <span style="color:#329630;">SGD${{"{:.2f}".format(inventory_item.get_unit_price())}}</span></h5>
+      <h5>Supplier: {{supplier}}</h5>
+      <br>
+    </div>
+    <br>
+    <table class="table" >
+      <thead>
+      <tr><td>Size</td><td>Quantity</td><td>Action</td></tr>
+      </thead>
+      <tbody class="tbody_inventory">
+      {% for size_object in shirt_size_objects %}
+        <tr><td>{{size_object.get_size_name()}}</td><td>{{size_object.get_qty()}}</td><td>
+          <button onclick="show_modal('{{size_object.get_size_name()}}');">Add Quantity</button></td></tr>
+      {%endfor%}
+      </tbody>
+    </table>
+    {%else%}
+      <div class="display-item">
+    <div class="display_inventory_details">
+    <h5>Inventory Name: {{inventory_item.get_name()}}</h5>
+      <h5>Inventory Category: {{inventory_item.get_category()}}</h5>
+      <h5>Inventory Quantity: {{inventory_item.get_quantity()}}</h5>
+      <h5>Unit Price: <span style="color:#329630;">SGD${{"{:.2f}".format(inventory_item.get_unit_price())}}</span></h5>
+      <h5>Supplier: {{supplier}}</h5>
+    </div>
+    <hr>
+        <form action="" method="POST" style="width:60%;">
+          <h5 style="font-size:1.4vw;">Add Quantity for {{inventory_item.get_name()}}</h5>
+        {{ render_field(form2.quantity_to_add ,autocomplete="off", class="form-control", oninput="show_cost_supplier_nosize()",id="input_cost_nosize") }}
+          {{ render_field(form2.total_cost_nosize ,autocomplete="off", class="form-control", id="total_cost_field_nosize", type="hidden") }}
+             <br>
+      <h4 style="color:#329630;">Cost: SGD$<span id="total_price_nosize"></span></h4>
+      <br>
+          <input type="submit" value="Add+" style="border:0; padding:0.78vw; background-color:#b15eff; margin-top:2%; font-weight:600; color:white;">
+        </form>
+      </div>
+
+    {% endif %}
+  </div>
+</div>
+<div id="myModal" class="modal" >
+  <!-- Modal content -->
+  <div class="modal-content" style="width:60%;">
+    <span class="close" style="margin-left:95%; font-size:3vw; color:red;">&times;</span>
+    <h5 style="font-size:2vw; text-decoration:underline;">Add Size Quantity</h5>
+    <form method="post" action="">
+    <p><span>Clothing Size:</span><span id="name_of_size"></span></p>
+      <h5>Quantity:</h5>{{ render_field(form.size_qty ,autocomplete="off", class="form-control", oninput="show_cost_supplier()",id="input_cost",style="display:inline-block; width:40%;") }}
+      {{ render_field(form.shirt_size ,autocomplete="off", class="form-control", id="shirt_size", type="hidden") }}
+      {{ render_field(form.total_cost ,autocomplete="off", class="form-control", id="total_cost_field", type="hidden") }}
+      <br>
+      <h4 style="color:#329630;">Cost: SGD$<span id="total_price"></span></h4>
+      <br>
+    <input type="submit" value="Add+" id="submitbtn" style="border:0; padding:0.78vw; background-color:#b15eff; margin-top:2%; font-weight:600; color:white;">
+    </form>
+  </div>
+</div>
+<script>
+
+document.getElementById("submenu2").className += " show";
+function show_cost_supplier(){
+var input_cost = document.getElementById('input_cost').value;
+var price = document.getElementById('total_price');
+var cost_total = "{{inventory_item.get_unit_price()}}" * input_cost;
+price.innerHTML = cost_total;
+document.getElementById('total_cost_field').value = cost_total;
+}
+function show_cost_supplier_nosize(){
+var input_cost = document.getElementById('input_cost_nosize').value;
+var price = document.getElementById('total_price_nosize');
+var cost_total = "{{inventory_item.get_unit_price()}}" * input_cost;
+price.innerHTML = cost_total;
+document.getElementById('total_cost_field_nosize').value = cost_total;
+}
+function show_modal(name){
+var x= document.getElementById('shirt_size');
+x.value = name;
+var y = document.getElementById('name_of_size');
+y.innerHTML = name;
+var modal = document.getElementById('myModal');
+modal.style.display="block";
+var span = document.getElementsByClassName("close")[0];
+span.onclick = function() {
+modal.style.display = "none";
+}
+}
+
+</script>
+{%endblock%}

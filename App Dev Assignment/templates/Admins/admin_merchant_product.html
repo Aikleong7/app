@@ -1,0 +1,60 @@
+{% extends 'partials/admin_sidenavbar.html' %}
+
+{% block title %}Admin Merchant Products{% endblock %}
+{%block content%}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/merchant_products.css') }}">
+
+
+
+
+<div class="merchant_products_block">
+  <div class="page_header">
+    <a href="/admin_merchant_detail/{{ merchant.get_email() }}" style="margin-right:5%;">
+        <img src="{{url_for('static', filename='image/back.png')}}" style="width:4vw;">
+    </a>
+    <img src="{{url_for('static', filename='image/my_orders.png')}}" style="width:3vw;">
+    <h6 class="page_header_e" style="font-size:1.4vw;">
+      Product Overview
+      <br>
+      <span class="page_header_note">
+        Information on your selected product.
+      </span>
+    </h6>
+  </div>
+  <div style="margin-top:5%;">
+  <div class="product_left_block" style="display:inline-block;">
+    <p>{{product.get_product_name().title()}}</p>
+    <img src="{{product.get_image() }}" style="width:40%;">
+  </div>
+    <div class="product_right_block">
+
+    <h5 style="font-size:2vw; margin-left:5%;">Product Name: {{ product.get_product_name().title() }}</h5>
+    <p>Date Listed: {{product.get_date()}}</p>
+    <p>Product Category: {{ product.get_product_cat() }}</p>
+    <p>Product Sub-Category: {{ product.get_sub_cat() }}</p>
+    <p>Quantity Left: {{product.get_quantity()}}</p>
+    <p>Selling Price: SGD${{"{:.2f}".format(product.get_product_price())}}</p>
+  </div>
+  </div>
+  <div class="view-p-sec2">
+    <div class="view-p-sec2-e">
+      <h6>Product Description</h6>
+      {% if product.get_product_desc() == "" %}
+      <p>None</p>
+      {% else %}
+      <p>{{product.get_product_desc()}}</p>
+      {% endif %}
+    </div>
+    <div class="view-p-sec2-e">
+      <h6>Product Report</h6>
+      <p>None</p>
+    </div>
+    <div class="view-p-sec2-e" style="text-align:center;">
+      <h6>Product Average Rating </h6>
+      <p>{{ avg }}</p>
+      <p></p>
+
+    </div>
+  </div>
+</div>
+{%endblock%}

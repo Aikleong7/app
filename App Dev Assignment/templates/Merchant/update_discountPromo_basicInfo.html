@@ -1,0 +1,79 @@
+{% extends "partials/_merchant_side_navbar.html" %}
+{% block title %}Merchant Vouchers{% endblock %}
+
+{% block navigation %}
+<span>
+<a class="navbar-brand" href="/marketing_strategy"><span style="font-weight:bold;">| Marketing Strategy</span></a>
+<a class="navbar-brand" href="/discountPromo_page"><span style="font-weight:bold;">| Discount Promotions</span></a>
+<a class="navbar-brand" href="#"><span style="font-weight:bold;color:#267CFC;">| Update Discount Promotion</span></a></span>
+{% endblock %}
+{% block content %}
+{% from "partials/_formHelper.html" import render_field %}
+{% if warningDate == 1 %}
+    <div class="alert" style="">
+          <span class="closebtn" onclick="this.parentElement.style.display='none';pushdown();">&times;</span>
+        <p style="font-weight:bold;font-size:20px;">{{ warningmessage }}</p>
+        </div>
+{% endif %}
+
+<h1 style="font-weight:bold;margin-top:20px;">Update Discount Promotion</h1>
+
+<div style="background-color:white;">
+  <h4 style="padding-left:40px;padding-top:20px;font-weight:bold;">Basic Information</h4>
+<form method="POST" action="" style="background-color:white;">
+  <div class="form-group" style="margin-top:30px;">
+    <label style="font-weight:bold;padding-left:40px;">Discount Promotion Name:</label>
+    {{ render_field(form.name) }}
+  </div>
+  <br>
+  <div class="form-group">
+    <label style="font-weight:bold;float:left;padding-left:40px;">Start of Claiming Period:</label>
+    {{ render_field(form.startingDate, class=" datepicker") }}
+    <label style="font-weight:bold;margin-left:100px;">End of Claiming Period:</label>
+    {{ render_field(form.endingDate, class=" datepicker") }}
+  </div>
+  <hr style="height:20px;color:#d7d7d7;">
+  <div style="padding-bottom:20px;height:90px;">
+  <div style="float:left;padding-left:40px;height:100px;">
+  <h4>Discount Promotion Product</h4>
+  <p>Update product's discount and purchase limit.</p></div>
+  <a href="#"><button class="btn btn-primary" style="font-size:20px;font-weight:bold;float:right;margin-right:20px;margin-top:10px;" id="discountPromo" >Update Product Discount Details</button></a>
+  </div>
+</form>
+</div>
+<style>
+  body{
+  background-color:#f2f2f2;
+  }
+
+  body{
+  background-color:#f2f2f2;
+  }
+
+  /* The alert message box */
+        .alert {
+          padding: 20px;
+          background-color: #f44336; /* Red */
+          color: white;
+          margin-bottom: 15px;
+        }
+
+        /* The close button */
+        .closebtn {
+          margin-left: 15px;
+          color: white;
+          font-weight: bold;
+          float: right;
+          font-size: 22px;
+          line-height: 20px;
+          cursor: pointer;
+          transition: 0.3s;
+        }
+
+        /* When moving the mouse over the close button */
+        .closebtn:hover {
+          color: black;
+        }
+
+</style>
+{% endblock %}

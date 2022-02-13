@@ -1,0 +1,85 @@
+{% extends "partials/admin_sidenavbar.html" %}
+{% block title %} Admin Wallet {% endblock %}
+
+{% block content %}
+<style>
+#wallet{
+color: white;
+text-decoration;
+font-weight:bold;
+}
+</style>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_wallet.css') }}">
+  <div class="page_header">
+    <img src="{{url_for('static', filename='image/wallet.png')}}" style="width:5vw;">
+    <h6 class="page_header_e">
+      My Balance as of November 2021
+    </h6>
+      <br>
+      <span style="margin-left:45%; font-size:1.5vw; color:#2A9C28; font-weight:bold;">SGD${{"{:.2f}".format(user.get_balance())}}</span>
+  </div>
+
+<div id="wallet">
+    <div class="wallet-e">
+      <img src="{{url_for('static', filename='image/completed_orders.png')}}">
+      <br>
+      <a>Withdraw Funds</a>
+      <br>
+      <p>Withdraw funds from your e-wallet
+to your personal bank account</p>
+      <button id="myBtn">Withdraw</button>
+      <!-- The Modal -->
+<div id="myModal" class="modal2">
+  <div class="modal2-content">
+    <span class="close">&times;</span>
+    <span style="font-size:2vw; font-weight:bold; text-decoration:underline;">Withdraw from Wallet</span>
+    <div style="border:0.5px solid black;  padding:7px;border-radius:25px; width:70%; height:6vw; margin:auto; margin-top:5%;">
+      <img src="{{url_for('static', filename='image/wallet.png')}}" style="width:4.7vw; float:left; ">
+    <h6 style="">My Balance as of November 2021</h6>
+      <span style="font-size:1.5vw; color:#2A9C28; font-weight:bold;">SGD${{"{:.2f}".format(user.get_balance())}}</span>
+  </div>
+    {% from "partials/_formHelper.html" import render_field %}
+    <form method=POST action="">
+      Amount to withdraw:{{ render_field(form1.withdraw_amount,autocomplete="off", class="form-control") }}
+      <input type="submit" value="Withdraw">
+    </form>
+  </div>
+</div>
+    </div>
+      <div class="wallet-e">
+      <img src="{{url_for('static', filename='image/completed_orders.png')}}">
+      <br>
+      <a>View Transactions</a>
+      <p>Expenses and sales are recorded
+in your transactions</p>
+       <button class="view_transactions"><a href="/view_admin_transactions" style="font-size:1.2vw; text-decoration:none; font-weight:400;">View</a></button>
+    </div>
+</div>
+<script>
+// Get the modal
+var modal = document.getElementById("myModal");
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+</script>
+{% endblock %}

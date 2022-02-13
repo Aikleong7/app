@@ -1,0 +1,201 @@
+{% extends "layouts/base.html" %}
+{% block title %} Home Page {% endblock %}
+
+{% block content %}
+<ul class="categories_top">
+    <li class="categories_display"><a href="/categories/Clothing" style="color:black">Clothing</a></li>
+    <li class="categories_display"><a href="/categories/Food&Beverage" style="color:black">Food & Beverages</a></li>
+    <li class="categories_display"><a href="/categories/Accessories" style="color:black">Accessories</a></li>
+    <li class="categories_display"><a href="/categories/Electronics" style="color:black">Electronics</a></li>
+    <li class="categories_display"><a href="/categories/Shoes" style="color:black">Shoes</a></li>
+    <li class="categories_display"><a href="/categories/Home&Living" style="color:black">Home & Living</a></li>
+    <li class="categories_display"><a href="/categories/Health&Wellness" style="color:black">Health & Wellness</a></li>
+    <li class="categories_display"><a href="/categories/Sports&Outdoors" style="color:black">Sports & Outdoors</a></li>
+    <li class="categories_display"><a href="/categories/PetNecessities" style="color:black">Pet Necessities</a></li>
+</ul>
+<div class="campaign">
+    <br><br>
+    <h3 style="text-align:center; color:white">Welcome to Singtopia</h3>
+    <br>
+    <p style="text-align:center; color:white">Become a user of Singtopia and check out the vouchers and discounts for you!</p>
+
+    <br><br><br>
+</div>
+
+<br><br><br>
+{% for camp in camp_list %}
+    {% if camp.get_end_date() >= date and camp.get_start_date() <= date %}
+    <img src="{{ camp.get_camp_img() }}" width="100%" height="300" >
+    {% endif %}
+{% endfor %}
+<br><br><br>
+
+
+
+<div class="container-fluid">
+    <div class="row">
+    {% for camp_vch in show_list %}
+            {% if CD_dict[camp_vch.get_campaign_origin()].get_end_date() >= date and CD_dict[camp_vch.get_campaign_origin()].get_start_date() <= date %}
+            {% if camp_vch.get_discount_amt() > 0.99 and camp_vch.get_discount_amt() < 50 %}
+            <div class="col-sm-12 col-lg-4">
+                <div class="voucher" style="width:100%; margin-top:7px">
+                    <div class="VHDeal">
+                    <br><p></p>
+                    <b style="font-size:22px;">
+                        {{ CD_dict[camp_vch.get_campaign_origin()].get_campaign_name() }}
+                    <br>
+                    deals
+                    </b>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="VHcontent">
+                        {% if camp_vch.get_discount_amt() >= 1 %}
+                        <b style="font-size: 20px;">
+                            Discount: ${{ camp_vch.get_discount_amt() }} off
+                        </b>
+                        {% elif camp_vch.get_discount_amt() < 1 and camp_vch.get_discount_amt() > 0 %}
+                        <b style="font-size: 20px;">
+                            Discount: {{ camp_vch.get_discount_amt() * 100 }}% off
+                        </b>
+                        {% endif %}
+                        <p style="font-size: 12px; font-weight: 500">
+                        Minimum Spendage: ${{ camp_vch.get_minimum_spendage() }}
+                        <br><br>
+
+                        </p>
+                        {% if userShoppingCart != None %}
+                            {% if userShoppingCart.get_chosenWebsiteVoucher() == None %}
+                            <a href="{{ url_for('gettingCampaignVoucher',voucherid=camp_vch.get_voucher_id()) }}"><button class="claim_button">Claim now</button></a>
+                            {% else %}
+                            <a href="{{ url_for('changingCampaignVoucher',voucherid=camp_vch.get_voucher_id()) }}"><button class="claim_button">Claim now</button></a>
+                            {% endif %}
+                        {% else %}
+                        <a href="{{ url_for('gettingCampaignVoucher',voucherid=camp_vch.get_voucher_id()) }}"><button class="claim_button">Claim now</button></a>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+            {% endif %}
+            {% endif %}
+    {% endfor %}
+    </div>
+</div>
+
+
+<br>
+<hr style="width:95%; margin-left:2.5%">
+<br><br>
+<div style="border:none; background-color:#C4C4C4; text-align:center; font-size:28px;font-weight:semi-bold; width:40%; margin-left:30%; height:70px; border-radius: 242px;padding-top:11px">Discounts % vouchers</div>
+<br>
+<br>
+
+<div class="container-xxl">
+    <div class="row">
+    {% for camp_vch in show_list %}
+            {% if CD_dict[camp_vch.get_campaign_origin()].get_end_date() >= date and CD_dict[camp_vch.get_campaign_origin()].get_start_date() <= date %}
+            {% if camp_vch.get_discount_amt() < 1 %}
+            <div class="col-sm-12 col-lg-4">
+                <div class="voucher" style="width:100%; margin-top:7px">
+                    <div class="VHDeal">
+                    <br><p></p>
+                    <b style="font-size:22px;">
+                        {{ CD_dict[camp_vch.get_campaign_origin()].get_campaign_name() }}
+                    <br>
+                    deals
+                    </b>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="VHcontent">
+                        {% if camp_vch.get_discount_amt() >= 1 %}
+                        <b style="font-size: 20px;">
+                            Discount: ${{ camp_vch.get_discount_amt() }} off
+                        </b>
+                        {% elif camp_vch.get_discount_amt() < 1 and camp_vch.get_discount_amt() > 0 %}
+                        <b style="font-size: 20px;">
+                            Discount: {{ camp_vch.get_discount_amt() * 100 }}% off
+                        </b>
+                        {% endif %}
+                        <p style="font-size: 12px; font-weight: 500">
+                        Minimum Spendage: ${{ camp_vch.get_minimum_spendage() }}
+                        <br>
+                        category: {{ camp_vch.get_product_category() }}
+                        </p>
+                        {% if userShoppingCart != None %}
+                            {% if userShoppingCart.get_chosenWebsiteVoucher() == None %}
+                            <a href="{{ url_for('gettingCampaignVoucher',voucherid=camp_vch.get_voucher_id()) }}"><button class="claim_button">Claim now</button></a>
+                            {% else %}
+                            <a href="{{ url_for('changingCampaignVoucher',voucherid=camp_vch.get_voucher_id()) }}"><button class="claim_button">Claim now</button></a>
+                            {% endif %}
+                        {% else %}
+                        <a href="{{ url_for('gettingCampaignVoucher',voucherid=camp_vch.get_voucher_id()) }}"><button class="claim_button">Claim now</button></a>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+            {% endif %}
+            {% endif %}
+    {% endfor %}
+    </div>
+</div>
+
+
+<br>
+<hr style="width:95%; margin-left:2.5%">
+<br><br>
+<div style="border:none; background-color:#C4C4C4; text-align:center; font-size:30px;font-weight:semi-bold; width:40%; margin-left:30%; height:70px; border-radius: 242px;padding-top:11px">Huge discounts</div>
+<br><br>
+<div class="container-fluid">
+    <div class="row">
+    {% for camp_vch in show_list %}
+            {% if CD_dict[camp_vch.get_campaign_origin()].get_end_date() >= date and CD_dict[camp_vch.get_campaign_origin()].get_start_date() <= date %}
+            {% if camp_vch.get_discount_amt() > 50 %}
+            <div class="col-sm-12 col-lg-4">
+                <div class="voucher" style="width:100%; margin-top:7px">
+                    <div class="VHDeal">
+                    <br><p></p>
+                    <b style="font-size:22px;">
+                        {{ CD_dict[camp_vch.get_campaign_origin()].get_campaign_name() }}
+                    <br>
+                    deals
+                    </b>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="VHcontent">
+                        {% if camp_vch.get_discount_amt() >= 1 %}
+                        <b style="font-size: 20px;">
+                            Discount: ${{ camp_vch.get_discount_amt() }} off
+                        </b>
+                        {% elif camp_vch.get_discount_amt() < 1 and camp_vch.get_discount_amt() > 0 %}
+                        <b style="font-size: 20px;">
+                            Discount: {{ camp_vch.get_discount_amt() * 100 }}% off
+                        </b>
+                        {% endif %}
+                        <p style="font-size: 12px; font-weight: 500">
+                        Minimum Spendage: ${{ camp_vch.get_minimum_spendage() }}
+                        <br>
+                        category: {{ camp_vch.get_product_category() }}
+                        </p>
+                        {% if userShoppingCart != None %}
+                            {% if userShoppingCart.get_chosenWebsiteVoucher() == None %}
+                            <a href="{{ url_for('gettingCampaignVoucher',voucherid=camp_vch.get_voucher_id()) }}"><button class="claim_button">Claim now</button></a>
+                            {% else %}
+                            <a href="{{ url_for('changingCampaignVoucher',voucherid=camp_vch.get_voucher_id()) }}"><button class="claim_button">Claim now</button></a>
+                            {% endif %}
+                        {% else %}
+                        <a href="{{ url_for('gettingCampaignVoucher',voucherid=camp_vch.get_voucher_id()) }}"><button class="claim_button">Claim now</button></a>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+            {% endif %}
+            {% endif %}
+    {% endfor %}
+    </div>
+</div>
+
+
+
+{% endblock %}

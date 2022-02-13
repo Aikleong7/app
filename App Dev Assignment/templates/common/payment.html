@@ -1,0 +1,90 @@
+{% extends "layouts/shopping_cart_base.html" %}
+{% block title %}Shopping Cart{% endblock %}
+{% block navigation %}
+ <a class="navbar-brand" href="{{ url_for('shopping_cart') }}"><span style="font-weight:bold;">| Shopping Cart</span></a>
+<a class="navbar-brand" href="{{ url_for('checkout') }}"><span style="font-weight:bold;">| Checkout</span></a>
+<a class="navbar-brand" href="#"><span style="font-weight:bold;color:#267CFC;">| Payment</span></a>
+{% endblock %}
+{% block content %}
+
+<div style="margin-top:80px;margin-bottom:20px;width;100%;" class="row ">
+    <div class="col-6 shadow p-3 mb-5 bg-white rounded">
+        <div style="background-color:white;padding:20px;height:540px;">
+            <h4 style="font-weight:bold;padding-bottom:20px;padding-left:20px;background-color:black;color:white;padding-top:20px;">
+                Delivery & Billing Address</h4>
+            <div style="background-color:#E5E5E5;">
+                {% if address == "" %}
+                <h5 style="color:red">Address is required before placing order </h5>
+                <a href="/personal" class="btn btn-danger" style="font-weight:bold;float:right;">Change Address</a>
+                {% else %}
+                <p style="font-weight:bold;padding-left:20px;padding-top:20px;">Address: {{ address }}</p>
+                <p style="font-weight:bold;padding-left:20px;">Zip Code: {{ zipcode }}</p>
+                <p style="font-weight:bold;padding-left:20px;padding-bottom:20px;">City: {{ city }}</p>
+                <a href="/personal" class="btn btn-dark" style="font-weight:bold;float:right;">Change Address</a>
+                {% endif %}
+
+            </div>
+            <h4 style="font-weight:bold;padding-bottom:20px;padding-left:20px;background-color:black;color:white;margin-top:60px;padding-top:20px;">
+                Credit Card Details</h4>
+            <div style="background-color:#E5E5E5;padding-bottom:20px;">
+                {% if card == None %}
+                <h5 style="color:red">No Credit Card set in the account, Add a card or set a card to default to pay with it </h5>
+                <a href="/personal" class="btn btn-danger" style="font-weight:bold;float:right;margin-top:30px;">Change
+                    Credit Card</a>
+                {% else %}
+                <p style="font-weight:bold;padding-left:20px;padding-top:20px;">Credit Card: {{ card }}</p>
+                <a href="/personal" class="btn btn-dark" style="font-weight:bold;float:right;margin-top:30px;">Change
+                    Credit Card</a>
+                {% endif %}
+
+
+            </div>
+        </div>
+        <hr style="background-color:#f2f2f2;">
+        <div style="background-color:white;padding:10px;height:270px;">
+            <h4 style="font-weight:bold;padding-bottom:20px;padding-left:20px;background-color:black;color:white;padding-top:20px;">
+                Shipping Option</h4>
+            <p style="font-weight:bold;font-size:20px;background-color:#E5E5E5;padding:20px;">Current Shipping Option:
+                Free Shipping</p>
+            <a href="/payment2" class="btn btn-dark" style="font-weight:bold;float:right;">Change to Express Shipping</a>
+        </div>
+    </div>
+    <div class="col-6 ">
+        <div class="shadow p-3 mb-5 bg-white rounded" style="background-color:white;height:400px;">
+            <h4 style="font-weight:bold;padding-bottom:20px;padding-left:20px;background-color:black;color:white;padding-top:20px;">
+                Order Summary</h4>
+            <p style="font-weight:bold;margin-left:20px;display:inline;font-size:25px;">Total Price:</p><span
+                style="float:right;padding-right:50px;font-weight:bold;font-size:25px;">${{ "{:.2f}".format(paymentDetail.get_totalPrice()) }}</span>
+            <br>
+            <p style="font-weight:bold;margin-left:20px;display:inline;font-size:25px;">Savings:</p><span
+                style="float:right;padding-right:50px;font-weight:bold;font-size:25px;">${{ "{:.2f}".format(paymentDetail.get_savings()) }}</span>
+            <br>
+            {% if paymentDetail.get_shippingOption() != "FS" %}
+            <p style="font-weight:bold;margin-left:20px;display:inline;font-size:25px;">Express Shipping:</p><span
+                style="float:right;padding-right:50px;font-weight:bold;font-size:25px;">$3.00</span>
+            {% endif %}
+            <hr style="height:10px;width:90%;margin-left:20px;color:black;">
+            <p style="font-weight:bold;margin-left:20px;display:inline;font-size:25px;">Subtotal:</p><span
+                style="color:#267CFC;float:right;padding-right:50px;font-weight:bold;font-size:25px;">${{ "{:.2f}".format(paymentDetail.get_subTotal()) }}</span>
+            <br>
+            {% if card == None or address == "" %}
+            <a style="font-size:30px;font-weight:bold;float:right;margin-top:20px;margin-right:40px;"
+               href="{{ url_for('placeOrder') }}" class="btn btn-success disabled">Place Order</a>
+            {% else %}
+            <a style="font-size:30px;font-weight:bold;float:right;margin-top:20px;margin-right:40px;"
+               href="{{ url_for('placeOrder') }}" class="btn btn-success ">Place Order</a>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+<style>
+    body{
+  background-color:#f2f2f2;
+  }
+
+
+</style>
+
+
+{% endblock %}

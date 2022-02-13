@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Homepage</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+</head>
+<body>
+<nav class="navbar navbar-dark bg-dark justify-content-between">
+  <a href="/" class="navbar-brand" style="color:white;font-weight:bold;">Singtopia</a>
+    <ul class="navbar-home">
+        {% if session == None %}
+            <li style="color:white"><a href="/login" style="color:white">Login</a> </li>
+        {% elif session == 0 %}
+            <li><a href="/login" style="color:white">Login</a> </li>
+        {% else %}
+            <li ><a href="/logout" style="color:white">Logout</a> </li>
+        {% endif %}
+        <li ><a href="/login_merchant" style="color:white">Merchant Club</a> </li>
+        <li><a href="/admin" style="color:white">Admins</a> </li>
+
+        <li><a href="/about_us" style="color:white"> About Us </a> </li>
+        <br>
+        <li> <input type="search" placeholder="Search"> </li>
+        <li><a href="/profile"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="white" class="bi bi-person" viewBox="0 0 16 16">
+  <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
+</svg> </a></li>
+         <li><a href="{{ url_for('favourites') }}"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="white" class="bi bi-heart" viewBox="0 0 16 16">
+  <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+</svg></a></li>
+         {% if userShoppingCart == None %}
+            {% if session == 0 or session == None %}
+            <li>
+                <div class="dropdown">
+                    <a href="{{ url_for('shopping_cart') }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="white" class="bi bi-cart2"
+                             viewBox="0 0 16 16">
+                            <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5zM3.14 5l1.25 5h8.22l1.25-5H3.14zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0zm9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0z"/>
+                        </svg>
+                    </a>
+                    <div class="dropdown-content">
+                        <p style="text-align:center;font-size:15px;padding:10px;">Please Log In To Access Shopping Cart
+                            😄</p>
+                        <a href="/login" class="btn btn-primary" style="font-weight:bold;color:white;">Log In</a>
+                    </div>
+                </div>
+            </li>
+            {% else %}
+            <li>
+                <div class="dropdown">
+                    <a href="{{ url_for('shopping_cart') }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="white" class="bi bi-cart2"
+                             viewBox="0 0 16 16">
+                            <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5zM3.14 5l1.25 5h8.22l1.25-5H3.14zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0zm9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0z"/>
+                        </svg>
+                    </a>
+                    <div class="dropdown-content">
+                        <p style="text-align:center;font-size:15px;padding:10px;">Nothing in Cart at the moment!😥</p>
+                    </div>
+                </div>
+            </li>
+            {% endif %}
+
+
+
+        {% else %}
+           {% if noOfItems == 0 %}
+
+           <li>
+               <div class="dropdown">
+               <a href="{{ url_for('shopping_cart') }}"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="white" class="bi bi-cart2" viewBox="0 0 16 16">
+  <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5zM3.14 5l1.25 5h8.22l1.25-5H3.14zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0zm9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0z"/>
+        </svg></a>
+                <div class="dropdown-content">
+                    <p style="text-align:center;font-size:15px;padding:10px;">Nothing in Cart at the moment!😥</p>
+                  </div>
+               </div></li>
+           {% else %}
+           <li>
+               <div class="dropdown" style="display:inline;">
+           <a class="dropbtn" href="{{ url_for('shopping_cart') }}"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="white" class="bi bi-cart2" viewBox="0 0 16 16">
+  <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5zM3.14 5l1.25 5h8.22l1.25-5H3.14zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0zm9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0z"/>
+        </svg></a>
+               <span class="dot" style="position:relative;right:20px;bottom:10px;color:white;text-align:center;font-weight:bold;">{{ noOfItems }}</span>
+                <div class="dropdown-content-product">
+                    {% for productObject in productList %}
+                    <a style="text-decoration:none;" href="{{ url_for('show_individual_product',productID=productObject.get_productID()) }}">
+                    <image src="{{ productObject.get_productObject().get_image() }}" style="width:100px;height:90px;float:left;padding:10px;"></image>
+                    <p style="padding:10px;padding-bottom:5px;">{{ productObject.get_productObject().get_product_name() }}</p>
+                        <span style="">Quantity: {{ productObject.get_quantity() }}</span>
+                    {% if productObject.get_discountedPrice() == 0 %}
+                    <p style="color:#6A45FF;">${{ "{:.2f}".format(productObject.get_originalPrice()) }}</p>
+                    {% else %}
+                    <p style="color:#6A45FF;">${{ "{:.2f}".format(productObject.get_discountedPrice()) }}</p>
+                    {% endif %}
+
+                        </a>
+                    {% endfor %}
+                    <hr>
+                    <p style="font-size:17px;padding:10px;">Total Price: <span style="color:#6A45FF;">$ {{ "{:.2f}".format(totalPrice) }}</span></p>
+                  </div>
+               </div>
+               </li>
+               {% endif %}
+           {% endif %}
+    </ul>
+
+</nav>
+
+    <!-- Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+<style>
+    .dot {
+  height: 25px;
+  width: 25px;
+  background-color:red;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+    .dropbtn {
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content{
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 400px;
+  font-weight:bold;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 3;
+  right:10px;
+}
+
+.dropdown-content-product{
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 400px;
+  font-weight:bold;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 3;
+  right:10px;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content-product a{
+    color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content-product a:hover {background-color: #f1f1f1}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown:hover .dropdown-content-product{
+  display: block;
+}
+
+</style>
+</html>

@@ -1,0 +1,28 @@
+{% extends "partials/admin_sidenavbar.html" %}
+{% block title %} Admin Reply {% endblock %}
+
+{% block content %}
+{% from "partials/_formHelper.html" import render_field %}
+<h1> Reply to {{recipient}}</h1>
+<form method="post">
+<div class="row">
+            <div class="col">
+              {{ render_field(form.subject, class="form-control") }}
+            </div>
+</div>
+    <div class="row">
+     <div class="col">
+              {{ render_field(form.message, class="form-control") }}
+     </div>
+    </div>
+    <br>
+     <div class="row">
+             <div class="col">
+         <p id="create"><a href="/admin_inbox">Cancel</a></p>
+             </div>
+             <div class="col" >
+         <input type="submit" value="Send" id="login" class="btn btn-primary" style="float:right"/>
+             </div>
+     </div>
+    </form>
+{% endblock %}

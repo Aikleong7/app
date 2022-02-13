@@ -1,0 +1,57 @@
+{% extends "layouts/base.html" %}
+{% block title %} Merchant Product Page {% endblock %}
+
+{% block content %}
+<style>
+.prod{
+    width: 19%;
+    display: inline-block;
+    margin-top: 2%;
+    margin-left: 4%;
+}
+
+.all_prods, .new_prods{
+    border: 0.5px solid rgba(0, 0, 0, 0.28);
+    width: 95%;
+    margin-left: 2.5%;
+    background-color: rgba(196, 196, 196, 0.17);
+}
+
+.prod_desc{
+    background-color: #D3D3D3;
+    width: 220px;
+}
+</style>
+
+
+
+
+<br>
+<div class="all_prods">
+    <br>
+    <span style="margin-left:2%; font-size:22px">Products</span>
+    <br><br>
+    <div class="container">
+      <div class="row row-cols-auto">
+          {% for x in product_list_show_all %}
+            <div style="margin-top:2%">
+                <img src="{{x.get_image() }}" style="width:220px; height:200px; border: solid 0.5px grey">
+                    <div class="prod_desc">
+                        <p style="text-align:center; font-size:12px;">{{ x.get_product_name() }}</p>
+                        <span style="margin-left:4%; float:left; font-size:12px">SGD${{"{:.2f}".format(x.get_product_price())}}</span>
+                        {% if x.get_quantity() > 0 %}
+                            <span style="margin-right:4%; float:right; font-size:12px">stocks: {{ x.get_quantity() }}</span>
+                        {% else %}
+                            <span style="margin-right:4%; float:right; font-size:12px; color:red">Out of stock</span>
+                        {% endif %}
+                        <br>
+                    </div>
+            </div>
+          {% endfor %}
+      </div>
+    </div>
+
+    <br>
+</div>
+
+{% endblock %}

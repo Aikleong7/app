@@ -1,0 +1,66 @@
+{% extends "partials/admin_sidenavbar.html" %}
+{% block title %} Admin Customer {% endblock %}
+
+{% block content %}
+<style>
+#all_merchant, #merchant {
+color: white;
+text-decoration;
+font-weight:bold;
+}
+</style>
+<br>
+<form method="post" action="{{ url_for('delete_merchant') }}" style="display:inline">
+<button type="submit" onclick="render_delete()" class="btn btn-outline-danger">Delete</button>
+
+    <input type="text" style="display:none;" id="delete_email" value=" " name="email">
+    <p style="display:inline">Total Merchant: {{ merchant|length }}</p>
+</form>
+
+<br>
+<table class="table table-striped">
+    <thead>
+      <tr>
+          <th> </th>
+        <th>Name:</th>
+        <th>Phone: </th>
+        <th>Email: </th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for x in merchant %}
+        <tr id="{{ merchant[x].get_email() }}">
+         <td class="checkbox"><input type="checkbox" value="{{ merchant[x].get_email() }}"> </td>
+          <td>{{ merchant[x].get_first_name() }} {{ merchant[x].get_last_name() }}</td>
+          <td>{{ merchant[x].get_phone() }}</td>
+          <td>{{ merchant[x].get_email() }}</td>
+          <td><a href="/admin_merchant_detail/{{merchant[x].get_email()}}" class="btn btn-primary">View</a></td>
+          </tbody>
+  {% endfor %}
+</table>
+
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"> </script>
+<script>
+
+function render_delete() {
+    var email_id = [];
+    $(':checkbox:checked').each(function(i){
+      email_id[i] = $(this).val()
+      })
+
+    if(email_id.length == 0){
+      alert("Select items to delete")
+    }else{
+      console.log(email_id)
+      document.getElementById("delete_email").value = email_id;
+
+        }
+      }
+
+
+</script>
+
+{% endblock %}
+
+
+

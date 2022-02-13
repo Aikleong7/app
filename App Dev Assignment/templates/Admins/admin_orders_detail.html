@@ -1,0 +1,28 @@
+{% extends "partials/admin_sidenavbar.html" %}
+{% block title %} Detailed Order {% endblock %}
+
+{% block content %}
+<style>
+#orders{
+color: white;
+text-decoration;
+font-weight:bold;
+}
+</style><div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for x in merdict.get_merchants() %}
+  <div class="col">
+      {% for product in merdict.get_merchants()[x].get_products() %}
+    <div class="card">
+      <image src="{{ product.get_productObject().get_image() }}" style="width:200px;margin:10px;float:left;height:140px;"></image>
+      <div class="card-body">
+        <p>Merchant: {{merdict.get_merchants()[x].get_merchantName()}}</p>
+        <p style="margin-top:10px;font-weight:bold;font-size:20px;margin-top:10px;max-width:80%;color:black;">{{ product.get_productObject().get_product_name() }}</p>
+        <p> Quantity: {{product.get_quantity()}}</p>
+        <p> Total Price: ${{product.get_totalPrice()}}</p>
+      </div>
+    </div>
+  </div>
+
+{% endfor %}
+{% endfor %}
+{% endblock %}

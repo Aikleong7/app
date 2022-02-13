@@ -1,0 +1,42 @@
+{% extends "partials/_merchant_side_navbar.html" %}
+{% block title %}Merchant My Wallet{% endblock %}
+{%block css%}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/merchant_finances.css') }}">
+{%endblock%}
+{% block navigation %}
+<span><a class="navbar-brand" href="/merchant_mywallet">| My Wallet</a>
+<span style="font-weight:bold;color:#267CFC; font-size:2vw;">|View Transactions</span>
+</span>
+{% endblock %}
+{%block content%}
+<div class="merchant_finances_block">
+  <div class="page_header">
+    <a href="/merchant_mywallet"><img src="{{url_for('static', filename='image/back.png')}}" style="width:5vw;"></a>
+    <img src="{{url_for('static', filename='image/my_transactions.png')}}" style="width:5vw;margin-left:5%;">
+    <div style="float:right; margin-right:25%; margin-top:1%;">
+    <span style="font-size:2vw; font-weight:700;">View Transactions</span><br>
+      <p style="font-size:1vw;">View all your transactions that took place through and flow from your E-Wallet</p>
+    </div>
+  </div>
+  {%if list_length != 0 %}
+  <div>
+    <table class="table">
+      <thead><tr><td>Date(DD/MM/YYYY)</td><td>Transaction Type</td><td>Amount</td><td>Balance</td></tr></thead>
+      {% for transaction in transaction_list %}
+      {%if transaction.get_transaction_type() == "Top-Up" or transaction.get_transaction_type() == "Sales" %}
+      <tr bgcolor="#DDFFD8"><td>{{transaction.get_transaction_date()}}</td><td>{{transaction.get_transaction_type()}}</td><td>+${{transaction.get_amount()}}</td>
+        <td>${{transaction.get_balance_after_transaction()}}</td>
+      </tr>
+      {%elif transaction.get_transaction_type() == "Withdrawal" or transaction.get_transaction_type() == "Supplies" or transaction.get_transaction_type() == "Admin Tax" %}
+      <tr bgcolor="#FFD8D8"><td>{{transaction.get_transaction_date()}}</td><td>{{transaction.get_transaction_type()}}</td><td>-${{transaction.get_amount()}}</td>
+        <td>${{transaction.get_balance_after_transaction()}}</td>
+      </tr>
+      {%endif%}
+      {%endfor%}
+    </table>
+  </div>
+  {%else%}
+  <h5>You have no current transactions for your E-wallet</h5>
+  {%endif%}
+</div>
+{%endblock%}
