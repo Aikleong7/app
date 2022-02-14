@@ -1,10 +1,11 @@
 import json,shelve
 from datetime import date
+import uuid
 
 class discountPromo():
     def __init__(self,name,startingDate,endingDate,productCode,productObject):
         self.__name=name
-        self.__code=0
+        self.__code=str(uuid.uuid4())
         self.__startingDate=startingDate
         self.__endingDate=endingDate
         self.__productCode=productCode

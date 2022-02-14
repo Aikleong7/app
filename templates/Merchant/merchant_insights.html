@@ -39,7 +39,7 @@ font-weight:bold;
     <div class="insights_section">
     <img src="{{ url_for('static', filename='image/gender.png') }}">
         <h5>Most Popular Category</h5>
-        {%if category_dict == None %}
+        {%if category_dict != None %}
         <h5 style="font-weight:400;">
             {{popular_category}} is your most popular product category selling over
             {{category_dict.get(popular_category).get_quantity()}} products.
@@ -111,7 +111,7 @@ new Chart("myChart2", {
   options: {
     legend: {display: false},
     scales: {
-      yAxes: [{ticks: {min: 0, max:1000}}],
+      yAxes: [{ticks: {min: -5000, max:5000}}],
     },
     title: {
       display: true,

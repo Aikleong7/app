@@ -1,5 +1,6 @@
 import shelve
 from datetime import date
+import uuid
 
 class shopVoucherFixedAmt():
     def __init__(self,name,startingDate,endingDate,minSpend,usageQuantity):
@@ -10,7 +11,7 @@ class shopVoucherFixedAmt():
         self.__usageQuantity=usageQuantity
         self.__discountType="fixedAmt"
         self.__voucherType="shop"
-        self.__code=0
+        self.__code=str(uuid.uuid4())
         self.status=""
 
 

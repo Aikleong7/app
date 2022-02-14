@@ -85,11 +85,14 @@ color:black;
 
     <div class="cust_name">
         <h2>{{details}}</h2>
+        <img src="{{customer.get_profile_picture()}}" style="float:left;height: 20vh;width:20vh">
+
 </div>
 
-<div style="border-left: 1px solid black; height: 150px; float:left; margin-left:30%;"></div>
+<div style="border-left: 1px solid black; height: 150px; float:left; margin-left:10%;"></div>
 
     <div class="points_box">
+
         <div class="rank_of_cust">
             {% if customer_point >= 0 and customer_point < 500 %}
                 &nbspRank: Iron<p></p>

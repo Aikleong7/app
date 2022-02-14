@@ -838,7 +838,7 @@ def web_rewards():
     List_diamond = []
 
     cust_chosen_wr_cart = list(dict.fromkeys(customer.get_rewards_indiv()))
-    print(cust_chosen_wr_cart)
+    # print(cust_chosen_wr_cart)
 
     cust_wr_inlist = []
     for key in CWR_dict:
@@ -858,7 +858,7 @@ def web_rewards():
     #     pass
 
     cust_wr_inlist = list(dict.fromkeys(cust_wr_inlist))
-    print(correct, "smlj")
+    # print(correct, "smlj")
     # print(CWR_dict, "sui")
     for i in correct:
         if i.get_rank() == "Iron":
@@ -894,7 +894,7 @@ def web_rewards():
         print("Error occured in dictionary.")
     shoppingCartDB.close()
 
-    return render_template("customer/customer_web_rewards.html", profile_pic=profile_pic, details=detail, customer_point=customer_point,
+    return render_template("customer/customer_web_rewards.html", profile_pic=profile_pic, customer=customer, details=detail, customer_point=customer_point,
                            customer_point_usable=customer_point_usable, list_Web_rewards=correct,
                            userShoppingCart=userShoppingCart, List_iron=List_iron, List_bronze=List_bronze,
                            List_silver=List_silver, List_gold=List_gold, List_platinum=List_platinum,
@@ -1133,15 +1133,13 @@ def create_merchant_shop_voucher_fixed_amount():
                 shopVoucher_dict[session['user']] = merchantShopVoucher_dict
         except:
             print("Error occured in shop voucher dictionary.")
-        count = len(merchantShopVoucher_dict)
-        count += 1
 
         voucher = shopVoucherFixedAmt(create_shopvoucher_fixedAmt_form.name.data,
                                       create_shopvoucher_fixedAmt_form.startingDate.data,
                                       create_shopvoucher_fixedAmt_form.endingDate.data,
                                       create_shopvoucher_fixedAmt_form.minSpend.data,
                                       create_shopvoucher_fixedAmt_form.usageQuantity.data)
-        voucher.set_code(count)
+
         voucher.set_status()
 
         voucher.set_fixedAmt(create_shopvoucher_fixedAmt_form.fixedAmtOff.data)
@@ -1164,7 +1162,7 @@ def create_merchant_shop_voucher_fixed_amount():
                            warningDate=warningDate, warningmessage=warningmessage)
 
 
-@app.route('/update_merchant_shopvoucher_fixedAmt/<int:code>/', methods=['GET', 'POST'])
+@app.route('/update_merchant_shopvoucher_fixedAmt/<code>/', methods=['GET', 'POST'])
 def update_merchant_fixedAmtVoucher(code):
     warningmessage = ""
     warningDate = 0
@@ -1244,7 +1242,7 @@ def update_merchant_fixedAmtVoucher(code):
                                warningDate=warningDate, warningmessage=warningmessage)
 
 
-@app.route("/deleteShopVoucher/<int:code>", methods=['POST'])
+@app.route("/deleteShopVoucher/<code>", methods=['POST'])
 def delete_shopvoucher(code):
     shopVoucher_dict = {}
     db = shelve.open('shopVoucherFixedAmt.db', 'w')
@@ -1321,8 +1319,7 @@ def create_merchant_shop_voucher_percentage():
                 shopVoucher_dict[session['user']] = merchantShopVoucher_dict
         except:
             print("Error occured in shop voucher dictionary.")
-        print(merchantShopVoucher_dict)
-        count = len(merchantShopVoucher_dict) + 1
+
 
         voucher = shopVoucherPercentage(create_shopvoucher_percentage_form.name.data,
                                         create_shopvoucher_percentage_form.startingDate.data,
@@ -1330,7 +1327,7 @@ def create_merchant_shop_voucher_percentage():
                                         create_shopvoucher_percentage_form.minSpend.data,
                                         create_shopvoucher_percentage_form.usageQuantity.data,
                                         create_shopvoucher_percentage_form.percentageOff.data)
-        voucher.set_code(count)
+
         voucher.set_status()
 
         if create_shopvoucher_percentage_form.CappedPrice.data == 0:
@@ -1357,7 +1354,7 @@ def create_merchant_shop_voucher_percentage():
                            warningDate=warningDate, warningmessage=warningmessage)
 
 
-@app.route('/update_merchant_shopvoucher_percentage/<int:code>/', methods=['GET', 'POST'])
+@app.route('/update_merchant_shopvoucher_percentage/<code>/', methods=['GET', 'POST'])
 def update_merchant_percentageVoucher(code):
     warningmessage = ""
     warningDate = 0
@@ -1469,7 +1466,7 @@ def update_merchant_percentageVoucher(code):
                                warningDate=warningDate, warningmessage=warningmessage)
 
 
-@app.route("/deleteShopVoucherPercentage/<int:code>", methods=['POST'])
+@app.route("/deleteShopVoucherPercentage/<code>", methods=['POST'])
 def delete_shopvoucher_percentage(code):
     shopVoucher_dict = {}
     db = shelve.open('shopVouchersPercentage.db', 'c')
@@ -1684,8 +1681,6 @@ def editing_product_discountPromo(id):
         except:
             print("Error occured in shop discounts dictionary.")
 
-        count = len(merchantDiscounts_dict) + 1
-        print(count)
 
         discountProduct = DiscountProduct(chosenProduct.get_product_name(), id, chosenProduct.get_quantity(),
                                           chosenProduct.get_product_price(),
@@ -1710,7 +1705,7 @@ def editing_product_discountPromo(id):
                                  discountPromoBasicInfo_dict["endingDate"],
                                  id, discountProduct)
         discount.set_status()
-        discount.set_code(count)
+
 
         merchantDiscounts_dict[discount.get_code()] = discount
         discountPromo_dict[session['user']] = merchantDiscounts_dict
@@ -1724,7 +1719,7 @@ def editing_product_discountPromo(id):
                            form=create_discountPromo_form_1)
 
 
-@app.route('/update_discountPromo_basicInfo/<int:code>/', methods=['GET', 'POST'])
+@app.route('/update_discountPromo_basicInfo/<code>/', methods=['GET', 'POST'])
 def update_discountPromo_basicInfo(code):
     db = shelve.open("customer.db", "r")
     m_dict = db["Merchant"]
@@ -1919,7 +1914,7 @@ def update_discountPromo_productInfo():
                                form=update_discountPromo_productInfo_form, chosenProduct=chosenProduct)
 
 
-@app.route("/deleteDiscountPromo/<int:code>", methods=['POST'])
+@app.route("/deleteDiscountPromo/<code>", methods=['POST'])
 def deleteDiscountPromo(code):
     discountPromo_dict = {}
     DiscountPromodb = shelve.open('discountPromo.db', 'c')
@@ -3237,8 +3232,11 @@ def placeOrder():
     except:
         db = shelve.open("customer.db", "c")
         db["Orders"] = admin_order
+
+
     admin_order[str(uuid4())] = currentPurchaseHist
     db["Orders"] = admin_order
+
     db.close()
     userPurchaseHist.add_purchaseHistory(currentPurchaseHist)
     purchaseHistory_dict[session['user']] = userPurchaseHist
@@ -3816,7 +3814,7 @@ def merchant_home():
     today_day = today.strftime("%d")
     list_seven_days = []
     for i in range(0, 7):
-        week_day = int(today_day) - (7 - i)
+        week_day = int(today_day) - 6 + i
         week_date = today.strftime("%b") + " " + str(week_day)
         list_seven_days.append(week_date)
     weekly_products_purchased_dict = {}
@@ -3825,11 +3823,15 @@ def merchant_home():
     today_day = today.strftime("%d")
     week_dates = []
     for i in range(0, 7):
-        week_day = int(today_day) - 7 + i
-        week_date = today_year + "-" + today_month + "-0" + str(week_day)
+        week_day = int(today_day) - 6 + i
+        if week_day < 10:
+            week_date = today_year + "-" + today_month + "-0" + str(week_day)
+        else:
+            week_date = today_year + "-" + today_month + "-" + str(week_day)
         week_dates.append(week_date)
     for date1 in week_dates:
         weekly_products_purchased_dict[date1] = 0
+    print(weekly_products_purchased_dict)
     purchaseHistoryDB = shelve.open('purchaseHistory.db', 'c')
     purchase_history_dict = {}
     try:
@@ -3845,14 +3847,11 @@ def merchant_home():
             list_purchases.append(customer_purchase_history.get(count))
     for purchase_history in list_purchases:
         payment_date = purchase_history.get_paymentDetails().get_dateOfPayment()
-        if str(payment_date) == today.strftime("%Y-%m-%d"):
-            print("no showing of data on todays date")
-        else:
-            for sbm_obj in purchase_history.get_merchants():
-                if sbm_obj.get_merchantEmail() == session["user"]:
-                    for sbp_obj in sbm_obj.get_products():
-                        updated_amount = weekly_products_purchased_dict.get(str(payment_date)) + sbp_obj.get_quantity()
-                        weekly_products_purchased_dict[str(payment_date)] = updated_amount
+        for sbm_obj in purchase_history.get_merchants():
+            if sbm_obj.get_merchantEmail() == session["user"]:
+                for sbp_obj in sbm_obj.get_products():
+                    updated_amount = weekly_products_purchased_dict.get(str(payment_date)) + sbp_obj.get_quantity()
+                    weekly_products_purchased_dict[str(payment_date)] = updated_amount
     db = shelve.open("customer.db", "r")
     muser_dict = {}
     try:
@@ -5365,16 +5364,20 @@ def admin_dashboard(type):
 def all_orders():
     admin_order = {}
     try:
-        db = shelve.open("customer.db", "r")
+        db = shelve.open("customer.db", "c")
         admin_order = db["Orders"]
     except:
         db = shelve.open("customer.db", "c")
         db["Orders"] = admin_order
+
+
     abc = []
     for x in admin_order:
         abc.append(admin_order[x])
     abc.sort(key=lambda x: x.get_paymentDetails().get_dateOfPayment(), reverse=True)
-    print(abc)
+    db["Orders"] = admin_order
+    db.close()
+    # print(abc)
     return render_template("Admins/admin_orders.html", listt=abc)
 
 @app.route("/admin_orders/<email>/<DOP>/<subtotal>")
@@ -6103,4 +6106,4 @@ def page_merchant2(m_email):
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000, debug=True)
