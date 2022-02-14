@@ -111,8 +111,7 @@ def home():
 @app.route("/explore")
 def home_explore():
     log = request.args.get('id')
-
-
+    ses = None
     try:
         if session["user"] is not None:
             ses = session['user']
@@ -177,8 +176,41 @@ def home_explore():
 
 @app.route("/about_us")
 def bout_us():
+    # Aaralyn Part
+    shoppingCarts = {}
+    shoppingCartDB = shelve.open('shoppingCartDB.db', 'c')
+    try:
+        if "shoppingCart" in shoppingCartDB:  # is key exist?
+            shoppingCarts = shoppingCartDB["shoppingCart"]  # retrieve data
+        else:
+            print("Shopping carts has an error.")  # start with empty
+    except:
+        print("Error in retrieving shopVouchers from vouchers.db.")
 
-    return render_template("common/about_us.html")
+    userShoppingCart = None  # retrieves the shopping cart object
+    try:
+        if session['user'] in shoppingCarts:
+            userShoppingCart = shoppingCarts[session['user']]
+        else:
+            print("Can't retrieve the user's shopping cart.")
+    except:
+        print("Error occured in dictionary.")
+    shoppingCartDB.close()
+
+    noOfItems = 0
+    productList = []
+    totalPrice = 0
+    if userShoppingCart != None:
+        merchant_dict = userShoppingCart.get_merchants()
+        for merchantEmail in merchant_dict:
+            merchantObject = merchant_dict[merchantEmail]
+            product_list = merchantObject.get_products()
+            for product in product_list:
+                productList.append(product)
+                noOfItems += 1
+                totalPrice += round(product.get_totalPrice(), 2)
+    return render_template("common/about_us.html", userShoppingCart=userShoppingCart, noOfItems=noOfItems,
+                           productList=productList, totalPrice=totalPrice)
 
 
 @app.route("/categories/<cat>")
@@ -1068,8 +1100,8 @@ def merchant_shopvouchers():
     db['shopVouchersPercentage'] = shopVoucher_dict
     db.close()
 
-    return render_template("merchant/merchant_shopvouchers.html",voucher_list=voucher_list,
-                           voucherPercentage_list=voucherPercentage_list,merchant=merchant)
+    return render_template("merchant/merchant_shopvouchers.html", voucher_list=voucher_list,
+                           voucherPercentage_list=voucherPercentage_list, merchant=merchant)
 
 
 @app.route("/merchant_create_fixed_amount_voucher", methods=['GET', 'POST'])
@@ -1139,7 +1171,6 @@ def create_merchant_shop_voucher_fixed_amount():
                                       create_shopvoucher_fixedAmt_form.endingDate.data,
                                       create_shopvoucher_fixedAmt_form.minSpend.data,
                                       create_shopvoucher_fixedAmt_form.usageQuantity.data)
-
         voucher.set_status()
 
         voucher.set_fixedAmt(create_shopvoucher_fixedAmt_form.fixedAmtOff.data)
@@ -1320,14 +1351,12 @@ def create_merchant_shop_voucher_percentage():
         except:
             print("Error occured in shop voucher dictionary.")
 
-
         voucher = shopVoucherPercentage(create_shopvoucher_percentage_form.name.data,
                                         create_shopvoucher_percentage_form.startingDate.data,
                                         create_shopvoucher_percentage_form.endingDate.data,
                                         create_shopvoucher_percentage_form.minSpend.data,
                                         create_shopvoucher_percentage_form.usageQuantity.data,
                                         create_shopvoucher_percentage_form.percentageOff.data)
-
         voucher.set_status()
 
         if create_shopvoucher_percentage_form.CappedPrice.data == 0:
@@ -1681,7 +1710,6 @@ def editing_product_discountPromo(id):
         except:
             print("Error occured in shop discounts dictionary.")
 
-
         discountProduct = DiscountProduct(chosenProduct.get_product_name(), id, chosenProduct.get_quantity(),
                                           chosenProduct.get_product_price(),
                                           create_discountPromo_form_1.discount.data,
@@ -1705,7 +1733,6 @@ def editing_product_discountPromo(id):
                                  discountPromoBasicInfo_dict["endingDate"],
                                  id, discountProduct)
         discount.set_status()
-
 
         merchantDiscounts_dict[discount.get_code()] = discount
         discountPromo_dict[session['user']] = merchantDiscounts_dict
@@ -2788,6 +2815,7 @@ def showingShopVoucher(merchantEmail):
     merchant_dict = userShoppingCart.get_merchants()
     merchantObject = merchant_dict[merchantEmail]
     vouchers_dict = merchantObject.get_availableVouchers()  # {count:voucherObject}
+    print(vouchers_dict)
 
     # getting user object
     db = shelve.open("customer.db", "r")
@@ -3232,11 +3260,8 @@ def placeOrder():
     except:
         db = shelve.open("customer.db", "c")
         db["Orders"] = admin_order
-
-
     admin_order[str(uuid4())] = currentPurchaseHist
     db["Orders"] = admin_order
-
     db.close()
     userPurchaseHist.add_purchaseHistory(currentPurchaseHist)
     purchaseHistory_dict[session['user']] = userPurchaseHist
@@ -3279,35 +3304,38 @@ def placeOrder():
                 db['shopVouchers'] = shopVoucher_dict
                 db.close()
             else:
-                shopVoucher_dict={}
+                percentageShopVoucherdict={}
+
                 percentagedb = shelve.open('shopVouchersPercentage.db', 'c')
                 # shopVoucher_dict={merchant email:{shop voucher code: shop voucher object}}
                 try:
                     if 'shopVouchersPercentage' in percentagedb:  # is key exist?
-                        shopVoucher_dict = percentagedb['shopVouchersPercentage']  # retrieve data
+                        percentageShopVoucherdict = percentagedb['shopVouchersPercentage']  # retrieve data
                     else:
-                        print("Error in retrieiving the percentage shop vouchers.")
+                        print("Unable to retreive from the percentage shopvoucher dict")
                 except:
                     print("Error in retrieving shopVouchers from vouchers.db.")
-                merchantShopVoucherPercentage_dict = {}
+                merchantPercentageShopVoucher_dict = {}
                 try:
-                    if merchantEmail in shopVoucher_dict:
-                        merchantShopVoucher_dict = shopVoucher_dict[merchantEmail]
+                    if merchantEmail in percentageShopVoucherdict:
+                        merchantPercentageShopVoucher_dict = percentageShopVoucherdict[merchantEmail]
                     else:
-                        print("Unable to retreive from shop voucher percentage.")
+                        print("Unable to retreive from the percentage shopvoucher dict")
                 except:
                     print("Error occured in shop voucher dictionary.")
 
-                for key in merchantShopVoucherPercentage_dict:
+                for key in merchantPercentageShopVoucher_dict:
                     if usedVoucher is not None:
-                        if merchantShopVoucherPercentage_dict[key].get_code() == usedVoucher.get_code() and merchantShopVoucherPercentage_dict[key].get_percentageOff() == usedVoucher.get_percentageOff():
-                            currentquantity = merchantShopVoucherPercentage_dict[key].get_usageQuantity()
+                        if merchantPercentageShopVoucher_dict[key].get_code() == usedVoucher.get_code():
+                            currentquantity = merchantPercentageShopVoucher_dict[key].get_usageQuantity()
                             currentquantity -= 1
-                            merchantShopVoucherPercentage_dict[key].set_usageQuantity(currentquantity)
-                            break
+                            print("Percentage current quantity:", currentquantity)
+                            merchantPercentageShopVoucher_dict[key].set_usageQuantity(currentquantity)
 
-                shopVoucher_dict[merchantEmail] = merchantShopVoucherPercentage_dict
-                percentagedb['shopVouchersPercentage'] = shopVoucher_dict
+
+
+                percentageShopVoucherdict[merchantEmail] = merchantPercentageShopVoucher_dict
+                percentagedb['shopVouchersPercentage'] = percentageShopVoucherdict
                 percentagedb.close()
 
 
@@ -3738,8 +3766,13 @@ def favourites_priceHtoL():
                     favouriteList.append(x)
                     currentLen+=1
                     break
-
-    return render_template("customer/favourites_priceHtoL.html",favouriteList=favouriteList,favourite_num=favourite_num)
+    db = shelve.open("customer.db", "r")
+    customer_dict = db['Customer']
+    customer = customer_dict.get(session['user'])
+    profile_pic = customer.get_profile_picture()
+    details = "{} {}".format(customer.get_first_name(), customer.get_last_name())
+    db.close()
+    return render_template("customer/favourites_priceHtoL.html",details=details, profile_pic=profile_pic, favouriteList=favouriteList,favourite_num=favourite_num)
 
 @app.route("/favourites_priceLtoH",methods=['GET','POST'])
 def favourites_priceLtoH():
@@ -3802,7 +3835,13 @@ def favourites_priceLtoH():
                     currentLen+=1
                     break
 
-    return render_template("customer/favourites_priceLtoH.html",favouriteList=favouriteList,favourite_num=favourite_num)
+    db = shelve.open("customer.db", "r")
+    customer_dict = db['Customer']
+    customer = customer_dict.get(session['user'])
+    profile_pic = customer.get_profile_picture()
+    details = "{} {}".format(customer.get_first_name(), customer.get_last_name())
+    db.close()
+    return render_template("customer/favourites_priceLtoH.html", profile_pic=profile_pic, details=details, favouriteList=favouriteList,favourite_num=favourite_num)
 
 # MERCHANT SIDE
 
@@ -3831,7 +3870,7 @@ def merchant_home():
         week_dates.append(week_date)
     for date1 in week_dates:
         weekly_products_purchased_dict[date1] = 0
-    print(weekly_products_purchased_dict)
+    # print(weekly_products_purchased_dict)
     purchaseHistoryDB = shelve.open('purchaseHistory.db', 'c')
     purchase_history_dict = {}
     try:
