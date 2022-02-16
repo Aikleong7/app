@@ -116,6 +116,7 @@ class Review_form(Form):
     review = TextAreaField("Review", [validators.data_required()])
 
 
+
 class GetQuantity(Form):
     quantity = IntegerField("", [validators.DataRequired(), validators.NumberRange(min=1)], default=1)
 

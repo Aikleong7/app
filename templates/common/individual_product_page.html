@@ -173,12 +173,12 @@
                         </dd>
                     </dl>
 
-                    <dl class="param param-feature" style="">
+                    <dl class="item-property">
                         <dt>Description</dt>
                         <dd>
-                            {% if chosenProduct.get_product_desc() != "" %}
-                            <p style="">{{
-                                chosenProduct.get_product_desc() }}</p>
+
+                             {% if chosenProduct.get_product_desc() != "" %}
+                            <p>{{ chosenProduct.get_product_desc() }}</p>
                             {% else %}
                             <p style="">No Available Description
                                 For the Product. :(</p>
@@ -221,11 +221,11 @@
                                                     type="submit"
                                                     class="btn btn-dark">
                                                 {% if loggedIn == True %}
-                                                {% if inShoppingCart == False %}
-                                                Add to Cart
-                                                {% else %}
-                                                Added to Cart
-                                                {% endif %}
+                                                    {% if inShoppingCart == False %}
+                                                    Add to Cart
+                                                    {% else %}
+                                                    Added to Cart
+                                                    {% endif %}
                                                 {% else %}
                                                 Add to Cart
                                                 {% endif%}
@@ -353,53 +353,48 @@
     {% endif %}
 </div>
 
+<br>
+
 <!-- same category products -->
 <div style="margin-left:30px;margin-top:40px;clear:both;">
     {% if sameCat_productList != [] %}
-    <h3 style="font-weight:bold;margin-bottom:20px;padding-top:40px;">Other Products From the Same Category</h3>
-    {% for product in sameCat_productList %}
-        <a style="text-decoration:none;" href="{{ url_for('show_individual_product',productID=product.get_product_id()) }}">
-    <div style="background-color:white;width:350px;margin-left:10px;float:left;height:400px;margin-bottom:15px;">
-        <div style="font-weight:bold;">
-            <div>
-            {% if product.get_product_id() in otherProductDP_dict %}
-            <p class="position-absolute" style="color:white;background-color:#FFDE51;padding:10px;font-size:20px;">{{ (otherProductDP_dict[product.get_product_id()])[0] }}% Off</p>
-            {% endif %}
-                <image style="width:350px;height:200px;" src="{{product.get_image()}}"></image>
-            </div>
-            {% if product.get_product_name()|length <= 60 %}
-                <p style="padding:10px;font-size:20px;">{{ product.get_product_name() }}</p>
-                {% else %}
-                <p style="padding:10px;font-size:20px;">{{ product.get_product_name()[:61] }} ...</p>
-                {% endif %}
-        </div>
+    <h3 style="font-weight:bold;margin-bottom:20px;">Other Products From the Same Category</h3>
+{% for product in sameCat_productList %}
+    <a style="text-decoration:none;" href="{{ url_for('show_individual_product',productID=product.get_product_id()) }}">
+    <div style="background-color:white;width:350px;margin-left:10px;float:left;height:400px;margin-bottom:15px;font-weight:bold;">
 
         <div style="font-weight:bold;">
-            {% if product.get_product_id() in otherProductDP_dict %}
-            <p style="color:white;background-color:#FFDE51;position:absolute;padding:10px;font-size:20px;">{{ (otherProductDP_dict[product.get_product_id()])[0] }}% Off</p>
+            {% if product.get_product_id() in otherMerchantDiscounts %}
+            <p style="position:absolute;color:white;background-color:#FFDE51;padding:10px;font-size:20px;">{{ (otherMerchantDiscounts[product.get_product_id()])[0] }}% Off</p>
             {% endif %}
+                <image style="width:350px;height:200px;" src="{{product.get_image()}}"></image>
         </div>
+        {% if product.get_product_name()|length <= 60 %}
+        <p style="padding:10px;font-size:20px;">{{ product.get_product_name() }}</p>
+        {% else %}
+        <p style="padding:10px;font-size:20px;">{{ product.get_product_name()[:61] }} ...</p>
+        {% endif %}
         <div style="display:inline;margin-top:5px;margin-left:10px;">
-            {% for voucher in voucherFixedAmt_list %}
-                {% if voucher.get_status()=="Ongoing" %}
+            {% if product.get_product_id() in otherMerchantShopVouchers %}
+            {% for voucher in otherMerchantShopVouchers[product.get_product_id()] %}
+                {% if voucher.get_discountType()=="fixedAmt" %}
                     <a><span class="vouchersBlock">$ {{ "{:.2f}".format(voucher.get_fixedAmt()) }} OFF</span></a>
-                {% endif %}
-            {% endfor %}
-            {% for voucher in voucherPercentage_list %}
-                {% if voucher.get_status()=="Ongoing" %}
+                {% elif voucher.get_discountType()=="percentageOff" %}
                     <a><span class="vouchersBlock">{{ voucher.get_percentageOff() }} % OFF</span></a>
                 {% endif %}
             {% endfor %}
+            {% endif %}
         </div>
         <div style="margin-top:10px;">
-            {% if product.get_product_id() in otherProductDP_dict %}
-            <p style="color:grey;text-decoration:line-through;display:inline;font-weight:bold;padding:10px;">${{ "{:.2f}".format(product.get_product_price()) }}</p><p style="font-size:20px;display:inline;font-weight:bold;">${{ "{:.2f}".format(otherProductDP_dict[product.get_product_id()][1]) }}</p>
+            {% if product.get_product_id() in otherMerchantDiscounts %}
+            <p style="color:grey;text-decoration:line-through;display:inline;font-weight:bold;padding:10px;">${{ "{:.2f}".format(product.get_product_price()) }}</p><p style="font-size:20px;display:inline;font-weight:bold;">${{ "{:.2f}".format(otherMerchantDiscounts[product.get_product_id()][1]) }}</p>
             {% else %}
             <p style="font-size:20px;display:inline;margin-left:10px;font-weight:bold;">${{ "{:.2f}".format(product.get_product_price()) }}</p>
             {% endif %}
         </div>
     </div>
 </a>
+
     {% endfor %}
     {% endif %}
 </div>

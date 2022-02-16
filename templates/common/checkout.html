@@ -97,8 +97,12 @@
     <div class="row "
          style="border-style: solid; border-width: thin; border-color: #FFFFFF;text-align:right;background-color:#FDF9F9;font-weight:bold;font-size:17px;width:98%;margin-left:1%;padding:10px;">
         <div class="col">
-            {% if merchant_dict[merchantObject].get_usedVoucher == None %}
+            {% if merchant_dict[merchantObject].get_usedVoucher() == None %}
+            {% if merchant_dict[merchantObject].get_Productsavings() != 0 %}
+            <p style="font-weight:bold;display:inline;margin-right:20px;">Total Savings:</p><span>${{ "{:.2f}".format(merchant_dict[merchantObject].get_Productsavings()) }}</span>
+            {% else %}
             <p style="font-weight:bold;display:inline;margin-right:20px;">Total Savings:</p><span>$0.00</span>
+            {% endif %}
             {% else %}
                 <p style="font-weight:bold;display:inline;margin-right:20px;">Total Savings:</p><span>${{ "{:.2f}".format(merchant_dict[merchantObject].get_savings()) }}</span>
 

@@ -2063,16 +2063,128 @@ def show_individual_product(productID):
                 discountedPrice=((100-discount)/100)*product.get_product_price()
                 otherProductDP_dict[product.get_product_id()]=[discount,discountedPrice]
 
+    db = shelve.open('customer.db', "c")
+    muser_dict = {}
+    try:
+        muser_dict = db["Merchant"]
+    except:
+        print("Error in retrieving products from customer.db.")
+
+
+    #recieiving other merchant discountPromos
+
+    Percentagedb = shelve.open('shopVouchersPercentage.db', 'c')
+    PercentageshopVoucher_dict = {}
+    # shopVoucher_dict={merchant email:{shop voucher code: shop voucher object}}
+    try:
+        if 'shopVouchersPercentage' in Percentagedb:  # is key exist?
+            PercentageshopVoucher_dict = Percentagedb['shopVouchersPercentage']  # retrieve data
+        else:
+            print("Error in retrieving from shopVouchersPercentage.db")
+    except:
+        print("Error in retrieving shopVouchers from vouchers.db.")
+    print("PercentageshopVoucher_dict", PercentageshopVoucher_dict)
+
+    otherMerchantDiscounts={} #{productID:[discount,discountedPrice]}
+    otherMerchantShopVouchers={} #{productID:[voucherObject]}
+    for productCode in sameCat_productList:
+        for mEmail in muser_dict:
+            merchant = muser_dict.get(mEmail)
+            m_products_dict = merchant.get_products()
+            for x in m_products_dict:
+                if x == productCode.get_product_id():
+                    print("merchantEmail for other products:",mEmail)
+                    currentEmail=mEmail
+                    discountPromo_dict = {}
+                    DiscountPromodb = shelve.open('discountPromo.db', 'c')
+                    try:
+                        if 'discountPromo' in DiscountPromodb:  # is key exist?
+                            discountPromo_dict = DiscountPromodb['discountPromo']  # retrieve data
+                        else:
+                            print("Error")
+                    except:
+                        print("Error in retrieving discountPromo from discountPromo.db.")
+                    merchantDiscounts_dict = {}
+                    try:
+                        if mEmail in discountPromo_dict:
+                            merchantDiscounts_dict = discountPromo_dict[mEmail]
+                        else:
+                            print("Error")
+                    except:
+                        print("Error occured in shop discounts dictionary.")
+                    DiscountPromodb.close()
+
+                    OthermdiscountPrice = 0
+                    for discountCode in merchantDiscounts_dict:
+                        merchantDiscountPromo = merchantDiscounts_dict[discountCode]  # discountPromo Object
+                        if (merchantDiscountPromo.get_productObject()).get_code() == productCode.get_product_id():
+                            if merchantDiscountPromo.get_status() == "Ongoing":
+                                discountPromo = (merchantDiscountPromo.get_productObject()).get_discount()
+                                OthermdiscountPrice = round(productCode.get_product_price() * (100 - discountPromo) / 100, 2)
+                                otherMerchantDiscounts[productCode.get_product_id()] = [discountPromo,
+                                                                                        OthermdiscountPrice]
+                                break
+
+                    voucher_list=[]
+                    voucher_listPercentage=[]
+                    shopVoucher_dict = {}
+                    FixedAmtdb = shelve.open('shopVoucherFixedAmt.db', 'c')
+                    # shopVoucher_dict={merchant email:{shop voucher code: shop voucher object}}
+                    try:
+                        if 'shopVouchers' in FixedAmtdb:  # is key exist?
+                            shopVoucher_dict = FixedAmtdb['shopVouchers']  # retrieve data
+                        else:
+                            print("Error")
+                    except:
+                        print("Error in retrieving shopVouchers from vouchers.db.")
+                    merchantShopVoucher_dict = {}
+                    try:
+                        if mEmail in shopVoucher_dict:
+                            merchantShopVoucher_dict = shopVoucher_dict[mEmail]
+                        else:
+                            print("Error")
+                    except:
+                        print("Error occured in shop voucher dictionary.")
+                    FixedAmtdb.close()
+
+                    for fixedCode in merchantShopVoucher_dict:
+                        voucher=merchantShopVoucher_dict.get(fixedCode)
+                        if voucher.get_usageQuantity() > 0 and voucher.get_status()=="Ongoing":
+                            voucher_list.append(voucher)
+
+                    PercentagemerchantShopVoucher_dict = {}
+                    print("heckintesting: ",currentEmail)
+                    try:
+                        if currentEmail in PercentageshopVoucher_dict:
+                            PercentagemerchantShopVoucher_dict = PercentageshopVoucher_dict[currentEmail]
+
+                        else:
+                            print("Error in retrieving from shop voucher percentage dictionary.")
+                    except:
+                        print("Error occured in shop voucher percentage dictionary.")
+                    Percentagedb.close()
+
+                    print("PercentagemerchantShopVoucher_dict",PercentagemerchantShopVoucher_dict)
+
+                    for percentagecode in PercentagemerchantShopVoucher_dict:
+                        Percentagevoucher=PercentagemerchantShopVoucher_dict.get(percentagecode)
+                        if Percentagevoucher.get_usageQuantity() > 0 and Percentagevoucher.get_status()=="Ongoing":
+                            voucher_list.append(Percentagevoucher)
+
+                    otherMerchantShopVouchers[productCode.get_product_id()]=voucher_list
+
+
+    print("otherMerchantShopVouchers",otherMerchantShopVouchers)
 
 
     #getting the merchant discounts promotions
     discountPromo_dict = {}
-    DiscountPromodb = shelve.open('discountPromo.db', 'r')
+    DiscountPromodb = shelve.open('discountPromo.db', 'c')
     try:
         if 'discountPromo' in DiscountPromodb:  # is key exist?
             discountPromo_dict = DiscountPromodb['discountPromo']  # retrieve data
         else:
-            DiscountPromodb['discountPromo'] = discountPromo_dict  # start with empty
+            print("Error")  # start with empty
     except:
         print("Error in retrieving discountPromo from discountPromo.db.")
     merchantDiscounts_dict = {}
@@ -2080,9 +2192,10 @@ def show_individual_product(productID):
         if merchantEmail in discountPromo_dict:
             merchantDiscounts_dict = discountPromo_dict[merchantEmail]
         else:
-            discountPromo_dict[merchantEmail] = merchantDiscounts_dict
+            print("Error")
     except:
         print("Error occured in shop discounts dictionary.")
+    DiscountPromodb.close()
 
     discountPrice=0
     purchaseLimit=0
@@ -2279,7 +2392,8 @@ def show_individual_product(productID):
                                        merchantProductList=merchantproductlist,
                                        otherProductDP_dict=otherProductDP_dict,
                                        warning=warning,loggedIn=loggedIn,noOfItems=noOfItems,
-                                       productList=productList,totalPrice=totalPrice,sameCat_productList=sameCat_productList)
+                                       productList=productList,totalPrice=totalPrice,sameCat_productList=sameCat_productList,
+                                       otherMerchantDiscounts=otherMerchantDiscounts,otherMerchantShopVouchers=otherMerchantShopVouchers)
 
         if quantity > chosenProduct.get_quantity():
             warning = 2
@@ -2296,7 +2410,8 @@ def show_individual_product(productID):
                                    otherProductDP_dict=otherProductDP_dict,
                                    warning=warning, loggedIn=loggedIn, noOfItems=noOfItems,
                                    productList=productList, totalPrice=totalPrice,
-                                   sameCat_productList=sameCat_productList)
+                                   sameCat_productList=sameCat_productList,otherMerchantDiscounts=otherMerchantDiscounts,
+                                   otherMerchantShopVouchers=otherMerchantShopVouchers)
 
         db = shelve.open('temporary.db', 'c')
         db["individualProductQuantity"] = quantity
@@ -2315,7 +2430,8 @@ def show_individual_product(productID):
                            voucherPercentage_list=voucherPercentage_list, productID=productID, quantity_form=quantity_form,
                            inShoppingCart=inShoppingCart, inFavourites=inFavourites, merchantProductList=merchantproductlist,
                            otherProductDP_dict=otherProductDP_dict, warning=warning, loggedIn=loggedIn, noOfItems=noOfItems,
-                           productList=productList, totalPrice=totalPrice,sameCat_productList=sameCat_productList)
+                           productList=productList, totalPrice=totalPrice,sameCat_productList=sameCat_productList,
+                           otherMerchantDiscounts=otherMerchantDiscounts,otherMerchantShopVouchers=otherMerchantShopVouchers)
 
 
 @app.route("/display_comment/<email>/<productID>")
@@ -2452,6 +2568,7 @@ def addingToCart(productID, merchantEmail, discountedPrice):
         userChosenMerchant = SortByMerchant(merchantEmail, vouchers_dict, merchantName)
         userChosenMerchant.add_product(product)
         userChosenMerchant.calculate_totalPrice()
+        userChosenMerchant.delete_voucher()
         userChosenMerchant.set_savings_for_products()
         print("total Price for userChosenMerchant:", userChosenMerchant.get_totalPrice())
     new = True
@@ -2461,12 +2578,14 @@ def addingToCart(productID, merchantEmail, discountedPrice):
             userChosenMerchant = merchants_dict[key]
             userChosenMerchant.add_product(product)
             userChosenMerchant.calculate_totalPrice()
+            userChosenMerchant.delete_voucher()
             userChosenMerchant.set_savings_for_products()
             print("total Price for userChosenMerchant:", userChosenMerchant.get_totalPrice())
     if new:
         userChosenMerchant = SortByMerchant(merchantEmail, vouchers_dict, merchantName)
         userChosenMerchant.add_product(product)
         userChosenMerchant.calculate_totalPrice()
+        userChosenMerchant.delete_voucher()
         userChosenMerchant.set_savings_for_products()
         print("total Price for userChosenMerchant:", userChosenMerchant.get_totalPrice())
 
@@ -2525,18 +2644,25 @@ def updateQuantity(productID, merchantEmail):
         print("Error occured in shop Temporary dictionary.")
     db.close()
 
-    product_list = []
     product_list = sortbymerchantObject.get_products()
+    for productObject in product_list:
+        print("product id in the merchant:",productObject.get_productObject().get_product_name())
     for sortbyproductObject in product_list:
         if sortbyproductObject.get_productID() == productID:
             sortbyproductObject.set_quantity(quantity)
             sortbyproductObject.set_totalPrice()
+            print("total price of current updating merchant:",sortbyproductObject.get_totalPrice())
             break
 
     merchant_dict[merchantEmail].set_productList(product_list)
+    print("Merchant Product List when updating" ,merchant_dict[merchantEmail].get_products())
+    merchant_dict[merchantEmail].set_savings_for_products()
+    merchant_dict[merchantEmail].calculate_totalPrice()
+    merchant_dict[merchantEmail].delete_voucher()
 
     userShoppingCart.set_merchants(merchant_dict)
     userShoppingCart.calculate_totalPrice()
+    userShoppingCart.clear_savings()
     userShoppingCart.calculate_savings()
 
     shoppingCarts[session['user']] = userShoppingCart
@@ -2749,11 +2875,18 @@ def checkout():
                     count += 1
                     vouchers_dict[count] = voucher
 
-            print(vouchers_dict)
             merchant_dict[merchantEmail].set_availableVouchers(vouchers_dict)
             merchantVouchers_dict_sc[merchantEmail] = vouchers_dict
+            product_list = merchant_dict[merchantEmail].get_products()
+            for productObject in product_list:
+                print("product id in the",merchantEmail,":",productObject.get_productObject().get_product_name())
 
+            merchant_dict[merchantEmail].calculate_totalPrice()
+            print(merchantEmail,"total price of products:",merchant_dict[merchantEmail].get_totalPrice())
+
+        userShoppingCart.calculate_savings()
         userShoppingCart.set_merchants(merchant_dict)
+        userShoppingCart.calculate_totalPrice()
 
         chosenwebvoucher = None
         if userShoppingCart.get_chosenWebsiteVoucher() != None:
@@ -2779,6 +2912,8 @@ def checkout():
         shoppingCarts[session['user']] = userShoppingCart
         shoppingCartDB["shoppingCart"] = shoppingCarts
         shoppingCartDB.close()
+
+        print("cart savings", userShoppingCart.get_savings())
 
     # getting user object
     db = shelve.open("customer.db", "r")

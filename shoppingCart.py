@@ -46,6 +46,17 @@ class ShoppingCart():
                 self.__Merchantsavings+=float(self.__merchants[merchantObject].get_savings())
                 self.__savings=self.__Merchantsavings
 
+    def clear_savings(self):
+        self.__savings=0
+        merchantSavings=0
+        for merchantObject in self.__merchants:
+            print("MerchantObject Product Savings:",self.__merchants[merchantObject].get_Productsavings())
+            if self.__merchants[merchantObject].get_Productsavings() > 0:
+                merchantSavings+=float(self.__merchants[merchantObject].get_Productsavings())
+                print("merchant Savings:",merchantSavings)
+                self.__savings=merchantSavings
+
+
 
     #do neccessary methods to include website vouchers - need to open db here and change things with the points
     #need to run the set web rewards and voucher whenever the user loads the checkout page
@@ -158,6 +169,7 @@ class SortByProduct():
         else:
             total=int(self.__quantity)*float(self.__discountedPrice)
         self.__totalPriceOfProduct=total
+        print("total:",total)
 
     def get_quantity(self):
         return self.__quantity
@@ -183,6 +195,7 @@ class SortByMerchant():
         self.__totalProducts=0
         self.__availableVouchers=availableVouchers #{count: voucherObject}
         self.__usedVoucher=None #voucher object
+        self.__Productsavings=0
 
     def add_product(self,SortByProductObject):
         self.__products.append(SortByProductObject)
@@ -246,6 +259,9 @@ class SortByMerchant():
         self.__savings=0
         self.__discountedTotalPrice=0
         self.__usedVoucher=None
+
+    def get_Productsavings(self):
+        return self.__Productsavings
 
     def get_products(self):
         return self.__products
