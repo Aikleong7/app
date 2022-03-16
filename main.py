@@ -6278,6 +6278,6 @@ def page_merchant2(m_email):
     return render_template("common/merchant_products2.html", product_list_show_all=product_list_show_all, userShoppingCart=userShoppingCart,noOfItems=noOfItems,
                            productList=productList, totalPrice=totalPrice, merchant_num=merchant_num)
 
-
+import os
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=os.environ.get("PORT"), debug=True)
